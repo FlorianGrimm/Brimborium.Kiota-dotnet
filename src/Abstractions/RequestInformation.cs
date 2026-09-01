@@ -23,6 +23,18 @@ namespace Brimborium.Kiota.Abstractions {
     /// </summary>
     public class RequestInformation {
         /// <summary>
+        /// UriTemplateCache
+        /// </summary>
+        public global::Brimborium.UriTemplate.UriTemplateCache? UriTemplateCache { get; set; }
+
+        /// <summary>
+        /// UriTemplateCache
+        /// </summary>
+        /// <returns>non null</returns>
+        public global::Brimborium.UriTemplate.UriTemplateCache GetUriTemplateCache()
+            => this.UriTemplateCache ??= global::Brimborium.UriTemplate.UriTemplateCache.Default;
+
+        /// <summary>
         /// Creates a new instance of <see cref="RequestInformation"/>.
         /// </summary>
         public RequestInformation() {
@@ -82,11 +94,12 @@ namespace Brimborium.Kiota.Abstractions {
                     return _RawUri!;
                 }
                 else {
-                    if(UrlTemplate?.IndexOf("{+baseurl}", StringComparison.OrdinalIgnoreCase) >= 0 && !PathParameters.ContainsKey("baseurl")) {
+                    if((this.UrlTemplate is null)
+                        || UrlTemplate.IndexOf("{+baseurl}", StringComparison.OrdinalIgnoreCase) >= 0 && !PathParameters.ContainsKey("baseurl")) {
                         throw new InvalidOperationException($"{nameof(PathParameters)} must contain a value for \"baseurl\" for the url to be built.");
                     }
 
-                    var substitutions = new Dictionary<string, object>();
+                    var substitutions = new Dictionary<string, object?>();
                     foreach(var urlTemplateParameter in PathParameters) {
                         substitutions.Add(urlTemplateParameter.Key, GetSanitizedValues(urlTemplateParameter.Value));
                     }
@@ -97,7 +110,9 @@ namespace Brimborium.Kiota.Abstractions {
                         }
                     }
 
-                    return new Uri(Std.UriTemplate.Expand(UrlTemplate, substitutions));
+                    // return new Uri(Std.UriTemplate.Expand(UrlTemplate, substitutions));
+                    var resultUrl = this.GetUriTemplateCache().Expand(this.UrlTemplate, substitutions);
+                    return new Uri(resultUrl);
                 }
             }
         }
