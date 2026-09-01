@@ -1,0 +1,31 @@
+<Project>
+  <!-- Common default project properties for ALL projects-->
+  <PropertyGroup>
+    <VersionPrefix>2.0.2</VersionPrefix>
+    <VersionSuffix/>
+    <!-- This is overidden in test projects by setting to true-->
+    <IsTestProject>false</IsTestProject>
+    <!-- This is overidden in test projects by setting to true-->
+    <IsAnalyzerProject>false</IsAnalyzerProject>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <SignAssembly>false</SignAssembly>
+    <DelaySign>false</DelaySign>
+     <Deterministic>true</Deterministic>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <NoWarn>$(NoWarn);NU5048;NETSDK1138;</NoWarn>
+    <IsTrimmable >true</IsTrimmable>
+    <IsAotCompatible>true</IsAotCompatible>
+    <ArtifactsPath>$(MSBuildThisFileDirectory)artifacts</ArtifactsPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(IsTestProject)' == 'true'">
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- The target application is the one which will resolve the correct version.
+     When the version range is updated to > 8.0.4 in the future, remove the GHSA suppression -->
+    <NuGetAuditSuppress Include="https://github.com/advisories/GHSA-hh2w-p6rv-4g7w"/>
+    <NuGetAuditSuppress Include="https://github.com/advisories/GHSA-8g4q-xg66-9fp4"/>
+  </ItemGroup>
+</Project>

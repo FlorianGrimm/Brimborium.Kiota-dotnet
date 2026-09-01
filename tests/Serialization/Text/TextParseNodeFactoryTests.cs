@@ -1,0 +1,46 @@
+using System;
+using System.IO;
+using System.Threading.Tasks;
+using Xunit;
+
+namespace Brimborium.Kiota.Serialization.Text.Tests
+{
+    public class TextParseNodeFactoryTests
+    {
+        [Fact]
+        public async Task GetRootParseNodeAsync_ThrowsArgumentNullException_WhenContentTypeIsNull()
+        {
+            // Arrange
+            var factory = new TextParseNodeFactory();
+            string? contentType = null;
+            using var content = new MemoryStream();
+
+            // Act and Assert
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await factory.GetRootParseNodeAsync(contentType!, content, TestContext.Current.CancellationToken));
+        }
+
+        [Fact]
+        public async Task GetRootParseNodeAsync_ThrowsArgumentOutOfRangeException_WhenContentTypeIsInvalid()
+        {
+            // Arrange
+            var factory = new TextParseNodeFactory();
+            string contentType = "application/json";
+            using var content = new MemoryStream();
+
+            // Act and Assert
+            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () => await factory.GetRootParseNodeAsync(contentType, content, TestContext.Current.CancellationToken));
+        }
+
+        [Fact]
+        public async Task GetRootParseNodeAsync_ThrowsArgumentNullException_WhenContentIsNull()
+        {
+            // Arrange
+            var factory = new TextParseNodeFactory();
+            string contentType = "text/plain";
+            Stream? content = null;
+
+            // Act and Assert
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await factory.GetRootParseNodeAsync(contentType, content!, TestContext.Current.CancellationToken));
+        }
+    }
+}

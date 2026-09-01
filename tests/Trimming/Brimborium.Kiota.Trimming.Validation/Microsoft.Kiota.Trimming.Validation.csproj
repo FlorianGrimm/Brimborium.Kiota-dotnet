@@ -1,0 +1,44 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <TrimmerSingleWarn>false</TrimmerSingleWarn>
+    <IsPackable>false</IsPackable>
+    <NoWarn>NETSDK1138</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup
+    Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net10.0'))">
+    <PublishAot>true</PublishAot>
+  </PropertyGroup>
+  <PropertyGroup
+    Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))">
+    <PublishTrimmed>true</PublishTrimmed>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\abstractions\Brimborium.Kiota.Abstractions.csproj" />
+    <ProjectReference
+      Include="..\..\..\src\authentication\azure\Brimborium.Kiota.Authentication.Azure.csproj" />
+    <ProjectReference
+      Include="..\..\..\src\http\httpClient\Brimborium.Kiota.Http.HttpClientLibrary.csproj" />
+    <ProjectReference
+      Include="..\..\..\src\serialization\form\Brimborium.Kiota.Serialization.Form.csproj" />
+    <ProjectReference
+      Include="..\..\..\src\serialization\json\Brimborium.Kiota.Serialization.Json.csproj" />
+    <ProjectReference
+      Include="..\..\..\src\serialization\multipart\Brimborium.Kiota.Serialization.Multipart.csproj" />
+    <ProjectReference
+      Include="..\..\..\src\serialization\text\Brimborium.Kiota.Serialization.Text.csproj" />
+    <TrimmerRootAssembly Include="Brimborium.Kiota.Abstractions" />
+    <TrimmerRootAssembly Include="Brimborium.Kiota.Authentication.Azure" />
+    <TrimmerRootAssembly Include="Brimborium.Kiota.Http.HttpClientLibrary" />
+    <TrimmerRootAssembly Include="Brimborium.Kiota.Serialization.Form" />
+    <TrimmerRootAssembly Include="Brimborium.Kiota.Serialization.Json" />
+    <TrimmerRootAssembly Include="Brimborium.Kiota.Serialization.Text" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <PackageReference Include="coverlet.MTP">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Testing.Platform" />
+    <PackageReference Include="Moq" />
+    <PackageReference Include="xunit.v3.mtp-v2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\serialization\json\Brimborium.Kiota.Serialization.Json.csproj" />
+    <ProjectReference Include="..\..\..\src\serialization\multipart\Brimborium.Kiota.Serialization.Multipart.csproj" />
+  </ItemGroup>
+
+</Project>
