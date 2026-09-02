@@ -2,9 +2,9 @@
 //  Copyright (c) Microsoft Corporation.  All Rights Reserved.  Licensed under the MIT License.  See License in the project root for license information.
 // ------------------------------------------------------------------------------
 
-using Brimborium.Kiota.Abstractions.Serialization;
+using Microsoft.Kiota.Abstractions.Serialization;
 
-namespace Brimborium.Kiota.Abstractions.Store
+namespace Microsoft.Kiota.Abstractions.Store
 {
     /// <summary>
     /// Proxy implementation of <see cref="ISerializationWriterFactory"/> for the <see cref="IBackingStore">backing store</see> that automatically sets the state of the backing store when serializing.

@@ -1,7 +1,7 @@
 using System;
-using Brimborium.Kiota.Abstractions;
+using Microsoft.Kiota.Abstractions;
 
-namespace Brimborium.Kiota.Serialization.Json;
+namespace Microsoft.Kiota.Serialization.Json;
 
 static internal class TypeConstants
 {

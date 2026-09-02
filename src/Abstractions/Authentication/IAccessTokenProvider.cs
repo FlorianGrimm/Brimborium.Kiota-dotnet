@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Brimborium.Kiota.Abstractions.Authentication;
+namespace Microsoft.Kiota.Abstractions.Authentication;
 
 /// <summary>
 /// Defines a contract for obtaining access tokens for a given url.

@@ -3,9 +3,9 @@
 // ------------------------------------------------------------------------------
 
 using System.IO;
-using Brimborium.Kiota.Abstractions;
+using Microsoft.Kiota.Abstractions;
 
-namespace Brimborium.Kiota.Http.HttpClientLibrary.Middleware.Options;
+namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware.Options;
 
 /// <summary>
 /// The Body Inspection Option allows the developer to inspect the body of the request and response.

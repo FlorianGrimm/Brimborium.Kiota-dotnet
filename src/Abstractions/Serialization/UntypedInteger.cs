@@ -2,7 +2,7 @@
 //  Copyright (c) Microsoft Corporation.  All Rights Reserved.  Licensed under the MIT License.  See License in the project root for license information.
 // ------------------------------------------------------------------------------
 
-namespace Brimborium.Kiota.Abstractions.Serialization
+namespace Microsoft.Kiota.Abstractions.Serialization
 {
     /// <summary>
     /// Represents an untyped node with integer value.

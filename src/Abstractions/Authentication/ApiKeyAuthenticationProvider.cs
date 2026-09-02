@@ -8,7 +8,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Brimborium.Kiota.Abstractions.Authentication;
+namespace Microsoft.Kiota.Abstractions.Authentication;
 
 /// <summary>
 /// This authentication provider authenticates requests using an API key.
@@ -57,14 +57,14 @@ public class ApiKeyAuthenticationProvider : IAuthenticationProvider
         using var span = _activitySource?.StartActivity(nameof(AuthenticateRequestAsync));
         if(!AllowedHostsValidator.IsUrlHostValid(request.URI))
         {
-            _ = (span?.SetTag("com.Brimborium.Kiota.authentication.is_url_valid", false));
+            _ = (span?.SetTag("com.Microsoft.Kiota.authentication.is_url_valid", false));
             return Task.CompletedTask;
         }
 
         var uri = request.URI;
         if(!uri.Scheme.Equals("https", StringComparison.OrdinalIgnoreCase))
         {
-            _ = (span?.SetTag("com.Brimborium.Kiota.authentication.is_url_valid", false));
+            _ = (span?.SetTag("com.Microsoft.Kiota.authentication.is_url_valid", false));
             throw new ArgumentException("Only https is supported");
         }
 
@@ -80,7 +80,7 @@ public class ApiKeyAuthenticationProvider : IAuthenticationProvider
             default:
                 throw new ArgumentOutOfRangeException(nameof(KeyLoc));
         }
-        _ = (span?.SetTag("com.Brimborium.Kiota.authentication.is_url_valid", true));
+        _ = (span?.SetTag("com.Microsoft.Kiota.authentication.is_url_valid", true));
         return Task.CompletedTask;
     }
     /// <summary>

@@ -10,11 +10,11 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Brimborium.Kiota.Abstractions;
-using Brimborium.Kiota.Http.HttpClientLibrary.Extensions;
-using Brimborium.Kiota.Http.HttpClientLibrary.Middleware.Options;
+using Microsoft.Kiota.Abstractions;
+using Microsoft.Kiota.Http.HttpClientLibrary.Extensions;
+using Microsoft.Kiota.Http.HttpClientLibrary.Middleware.Options;
 
-namespace Brimborium.Kiota.Http.HttpClientLibrary.Middleware
+namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware
 {
     /// <summary>
     /// A <see cref="DelegatingHandler"/> implementation using standard .NET libraries.
@@ -61,7 +61,7 @@ namespace Brimborium.Kiota.Http.HttpClientLibrary.Middleware
             {
                 activitySource = ActivitySourceRegistry.DefaultInstance.GetOrCreateActivitySource(obsOptions.TracerInstrumentationName);
                 activity = activitySource?.StartActivity($"{nameof(RetryHandler)}_{nameof(SendAsync)}");
-                _ = (activity?.SetTag("com.Brimborium.Kiota.handler.retry.enable", true));
+                _ = (activity?.SetTag("com.Microsoft.Kiota.handler.retry.enable", true));
             }
             else
             {

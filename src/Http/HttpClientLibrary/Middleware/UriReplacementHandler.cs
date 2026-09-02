@@ -1,10 +1,10 @@
 using System.Diagnostics;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Brimborium.Kiota.Http.HttpClientLibrary.Extensions;
-using Brimborium.Kiota.Http.HttpClientLibrary.Middleware.Options;
+using Microsoft.Kiota.Http.HttpClientLibrary.Extensions;
+using Microsoft.Kiota.Http.HttpClientLibrary.Middleware.Options;
 
-namespace Brimborium.Kiota.Http.HttpClientLibrary.Middleware;
+namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware;
 
 /// <summary>
 /// Replaces a portion of the URL.
@@ -40,7 +40,7 @@ public class UriReplacementHandler<TUriReplacementHandlerOption> : DelegatingHan
         {
             var activitySource = ActivitySourceRegistry.DefaultInstance.GetOrCreateActivitySource(obsOptions.TracerInstrumentationName);
             activity = activitySource.StartActivity($"{nameof(UriReplacementHandler<TUriReplacementHandlerOption>)}_{nameof(SendAsync)}");
-            _ = (activity?.SetTag("com.Brimborium.Kiota.handler.uri_replacement.enable", uriReplacement.IsEnabled()));
+            _ = (activity?.SetTag("com.Microsoft.Kiota.handler.uri_replacement.enable", uriReplacement.IsEnabled()));
         }
         else
         {

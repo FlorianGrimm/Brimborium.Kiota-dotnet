@@ -10,9 +10,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Azure.Core;
-using Brimborium.Kiota.Abstractions.Authentication;
+using Microsoft.Kiota.Abstractions.Authentication;
 
-namespace Brimborium.Kiota.Authentication.Azure;
+namespace Microsoft.Kiota.Authentication.Azure;
 /// <summary>
 /// Provides an implementation of <see cref="IAccessTokenProvider"/> for Azure.Identity.
 /// </summary>
@@ -83,28 +83,28 @@ public class AzureIdentityAccessTokenProvider : IAccessTokenProvider, IDisposabl
         using var span = _activitySource?.StartActivity(nameof(GetAuthorizationTokenAsync));
         if(!AllowedHostsValidator.IsUrlHostValid(uri))
         {
-            _ = (span?.SetTag("com.Brimborium.Kiota.authentication.is_url_valid", BoxedFalse));
+            _ = (span?.SetTag("com.Microsoft.Kiota.authentication.is_url_valid", BoxedFalse));
             return string.Empty;
         }
 
         if(!uri.Scheme.Equals("https", StringComparison.OrdinalIgnoreCase) && !_localHostStrings.Contains(uri.Host))
         {
-            _ = (span?.SetTag("com.Brimborium.Kiota.authentication.is_url_valid", BoxedFalse));
+            _ = (span?.SetTag("com.Microsoft.Kiota.authentication.is_url_valid", BoxedFalse));
             throw new ArgumentException("Only https is supported");
         }
-        _ = (span?.SetTag("com.Brimborium.Kiota.authentication.is_url_valid", BoxedTrue));
+        _ = (span?.SetTag("com.Microsoft.Kiota.authentication.is_url_valid", BoxedTrue));
 
         string? decodedClaim = null;
         if(additionalAuthenticationContext is not null &&
                     additionalAuthenticationContext.ContainsKey(ClaimsKey) &&
                     additionalAuthenticationContext[ClaimsKey] is string claims)
         {
-            _ = (span?.SetTag("com.Brimborium.Kiota.authentication.additional_claims_provided", BoxedTrue));
+            _ = (span?.SetTag("com.Microsoft.Kiota.authentication.additional_claims_provided", BoxedTrue));
             var decodedBase64Bytes = Convert.FromBase64String(claims);
             decodedClaim = Encoding.UTF8.GetString(decodedBase64Bytes);
         }
         else {
-            _ = (span?.SetTag("com.Brimborium.Kiota.authentication.additional_claims_provided", BoxedFalse));
+            _ = (span?.SetTag("com.Microsoft.Kiota.authentication.additional_claims_provided", BoxedFalse));
         }
 
         string[] scopes;
@@ -117,7 +117,7 @@ public class AzureIdentityAccessTokenProvider : IAccessTokenProvider, IDisposabl
             scopes = [$"{uri.Scheme}://{uri.Host}/.default"];
         }
 
-        _ = (span?.SetTag("com.Brimborium.Kiota.authentication.scopes", string.Join(",", scopes)));
+        _ = (span?.SetTag("com.Microsoft.Kiota.authentication.scopes", string.Join(",", scopes)));
 
         var result = await _credential.GetTokenAsync(new TokenRequestContext(scopes, claims: decodedClaim, isCaeEnabled: _isCaeEnabled), cancellationToken).ConfigureAwait(false);
         return result.Token;

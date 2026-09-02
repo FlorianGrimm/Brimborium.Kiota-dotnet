@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Brimborium.Kiota.Abstractions;
+namespace Microsoft.Kiota.Abstractions;
 
 /// <summary>Represents a collection of request headers.</summary>
 public class RequestHeaders : IDictionary<string, IEnumerable<string>>

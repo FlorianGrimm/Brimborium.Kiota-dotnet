@@ -3,9 +3,9 @@
 // ------------------------------------------------------------------------------
 
 using System;
-using Brimborium.Kiota.Abstractions;
+using Microsoft.Kiota.Abstractions;
 
-namespace Brimborium.Kiota.Http.HttpClientLibrary;
+namespace Microsoft.Kiota.Http.HttpClientLibrary;
 
 /// <summary>
 /// Holds the tracing, metrics and logging configuration for the request adapter

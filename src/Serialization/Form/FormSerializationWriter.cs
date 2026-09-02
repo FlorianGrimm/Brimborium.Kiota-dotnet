@@ -2,19 +2,19 @@ using System.Globalization;
 using System.Reflection;
 using System.Text;
 using System.Xml;
-using Brimborium.Kiota.Abstractions;
-using Brimborium.Kiota.Abstractions.Extensions;
-using Brimborium.Kiota.Abstractions.Serialization;
+using Microsoft.Kiota.Abstractions;
+using Microsoft.Kiota.Abstractions.Extensions;
+using Microsoft.Kiota.Abstractions.Serialization;
 using System.IO;
 #if NET5_0_OR_GREATER
 using System.Diagnostics.CodeAnalysis;
 #endif
 using System;
 using System.Collections.Generic;
-using Brimborium.Kiota.Abstractions.Helpers;
+using Microsoft.Kiota.Abstractions.Helpers;
 using Microsoft.IO;
 
-namespace Brimborium.Kiota.Serialization.Form;
+namespace Microsoft.Kiota.Serialization.Form;
 /// <summary>Represents a serialization writer that can be used to write a form url encoded string.</summary>
 public class FormSerializationWriter : ISerializationWriter
 {

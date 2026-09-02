@@ -5,7 +5,7 @@
 using System.Text;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Brimborium.Kiota.Abstractions.Serialization;
+namespace Microsoft.Kiota.Abstractions.Serialization;
 
 public static partial class KiotaSerializer {
     private static ParsableFactory<T> GetFactoryFromType<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods)] T>() where T : IParsable {

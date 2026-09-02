@@ -4,7 +4,7 @@
 
 using System.Collections.Generic;
 
-namespace Brimborium.Kiota.Abstractions;
+namespace Microsoft.Kiota.Abstractions;
 /// <summary>
 /// Request configuration type for the request builders
 /// </summary>

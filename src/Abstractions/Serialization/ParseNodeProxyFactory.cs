@@ -7,7 +7,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Brimborium.Kiota.Abstractions.Serialization
+namespace Microsoft.Kiota.Abstractions.Serialization
 {
     /// <summary>
     /// Proxy factory that allows the composition of before and after callbacks on existing factories.

@@ -2,7 +2,7 @@
 //  Copyright (c) Microsoft Corporation.  All Rights Reserved.  Licensed under the MIT License.  See License in the project root for license information.
 // ------------------------------------------------------------------------------
 
-namespace Brimborium.Kiota.Abstractions.Store
+namespace Microsoft.Kiota.Abstractions.Store
 {
     /// <summary>
     ///     This class is used to create instances of <see cref="InMemoryBackingStore" />.

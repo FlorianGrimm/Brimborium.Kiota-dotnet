@@ -13,10 +13,10 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
-using Brimborium.Kiota.Http.HttpClientLibrary.Extensions;
-using Brimborium.Kiota.Http.HttpClientLibrary.Middleware.Options;
+using Microsoft.Kiota.Http.HttpClientLibrary.Extensions;
+using Microsoft.Kiota.Http.HttpClientLibrary.Middleware.Options;
 
-namespace Brimborium.Kiota.Http.HttpClientLibrary.Middleware
+namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware
 {
     /// <summary>
     /// A <see cref="DelegatingHandler"/> implementation that is used for simulating server failures.
@@ -41,7 +41,7 @@ namespace Brimborium.Kiota.Http.HttpClientLibrary.Middleware
         /// <summary>
         /// The key used for the open telemetry event.
         /// </summary>
-        public const string ChaosHandlerTriggeredEventKey = "com.Brimborium.Kiota.chaos_handler_triggered";
+        public const string ChaosHandlerTriggeredEventKey = "com.Microsoft.Kiota.chaos_handler_triggered";
         /// <summary>
         /// Sends the request
         /// </summary>
@@ -61,7 +61,7 @@ namespace Brimborium.Kiota.Http.HttpClientLibrary.Middleware
             {
                 var activitySource = ActivitySourceRegistry.DefaultInstance.GetOrCreateActivitySource(obsOptions.TracerInstrumentationName);
                 activity = activitySource?.StartActivity($"{nameof(ChaosHandler)}_{nameof(SendAsync)}");
-                _ = (activity?.SetTag("com.Brimborium.Kiota.handler.chaos.enable", true));
+                _ = (activity?.SetTag("com.Microsoft.Kiota.handler.chaos.enable", true));
             }
             else
             {
@@ -75,7 +75,7 @@ namespace Brimborium.Kiota.Http.HttpClientLibrary.Middleware
                 {
                     plannedResponse.RequestMessage = request;
                     _ = (activity?.AddEvent(new(ChaosHandlerTriggeredEventKey)));
-                    _ = (activity?.SetTag("com.Brimborium.Kiota.handler.chaos.planned", true));
+                    _ = (activity?.SetTag("com.Microsoft.Kiota.handler.chaos.planned", true));
                     return plannedResponse;
                 }
                 else if(_random.Next(100) < chaosHandlerOptions.ChaosPercentLevel)
@@ -83,7 +83,7 @@ namespace Brimborium.Kiota.Http.HttpClientLibrary.Middleware
                     var chaosResponse = CreateChaosResponse(chaosHandlerOptions.KnownChaos ?? _knownFailures!);
                     chaosResponse.RequestMessage = request;
                     _ = (activity?.AddEvent(new(ChaosHandlerTriggeredEventKey)));
-                    _ = (activity?.SetTag("com.Brimborium.Kiota.handler.chaos.planned", false));
+                    _ = (activity?.SetTag("com.Microsoft.Kiota.handler.chaos.planned", false));
                     return chaosResponse;
                 }
 

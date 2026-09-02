@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Brimborium.Kiota.Abstractions.Authentication;
+namespace Microsoft.Kiota.Abstractions.Authentication;
 
 /// <summary>
 /// This authentication provider authenticates requests using HTTP Basic authentication.

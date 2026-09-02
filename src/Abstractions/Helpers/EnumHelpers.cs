@@ -5,9 +5,9 @@ using System.Runtime.Serialization;
 using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
 
-using Brimborium.Kiota.Abstractions.Extensions;
+using Microsoft.Kiota.Abstractions.Extensions;
 
-namespace Brimborium.Kiota.Abstractions.Helpers {
+namespace Microsoft.Kiota.Abstractions.Helpers {
     /// <summary>
     /// Helper methods for enums
     /// </summary>

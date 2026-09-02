@@ -6,9 +6,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using Brimborium.Kiota.Abstractions.Serialization;
+using Microsoft.Kiota.Abstractions.Serialization;
 
-namespace Brimborium.Kiota.Serialization;
+namespace Microsoft.Kiota.Serialization;
 
 /// <summary>
 /// Extension methods for <see cref="IParsable"/> instances.
@@ -20,7 +20,7 @@ public static class ParsableExtensions
     /// </summary>
     /// <param name="contentType">Content type to serialize the object t </param>
     /// <param name="value">The object to serialize.</param>
-    /// <param name="serializeOnlyChangedValues">If this object uses the <see cref="Brimborium.Kiota.Abstractions.Store.IBackingStore"/>, use this to control if you want all properties or just the changed once.</param>
+    /// <param name="serializeOnlyChangedValues">If this object uses the <see cref="Microsoft.Kiota.Abstractions.Store.IBackingStore"/>, use this to control if you want all properties or just the changed once.</param>
     /// <returns>The serialized representation as a stream.</returns>
     public static Stream SerializeAsStream<T>(this T value, string contentType, bool serializeOnlyChangedValues = false) where T : IParsable
     => KiotaSerializer.SerializeAsStream(contentType, value, serializeOnlyChangedValues);
@@ -31,7 +31,7 @@ public static class ParsableExtensions
     /// </summary>
     /// <param name="contentType">Content type to serialize the object to </param>
     /// <param name="value">The object to serialize.</param>
-    /// <param name="serializeOnlyChangedValues">If this object uses the <see cref="Brimborium.Kiota.Abstractions.Store.IBackingStore"/>, use this to control if you want all properties or just the changed once.</param>
+    /// <param name="serializeOnlyChangedValues">If this object uses the <see cref="Microsoft.Kiota.Abstractions.Store.IBackingStore"/>, use this to control if you want all properties or just the changed once.</param>
     /// <param name="cancellationToken">Cancel the request during execution.</param>
     /// <returns>The serialized representation as a string.</returns>
     public static async Task<string> SerializeAsStringAsync<T>(this T value, string contentType, bool serializeOnlyChangedValues = false, CancellationToken cancellationToken = default) where T : IParsable
@@ -42,7 +42,7 @@ public static class ParsableExtensions
     /// </summary>
     /// <param name="contentType">Content type to serialize the object t </param>
     /// <param name="value">The object to serialize.</param>
-    /// <param name="serializeOnlyChangedValues">If this object uses the <see cref="Brimborium.Kiota.Abstractions.Store.IBackingStore"/>, use this to control if you want all properties or just the changed once.</param>
+    /// <param name="serializeOnlyChangedValues">If this object uses the <see cref="Microsoft.Kiota.Abstractions.Store.IBackingStore"/>, use this to control if you want all properties or just the changed once.</param>
     /// <returns>The serialized representation as a stream.</returns>
     public static Stream SerializeAsStream<T>(this IEnumerable<T> value, string contentType, bool serializeOnlyChangedValues = false) where T : IParsable
     => KiotaSerializer.SerializeAsStream(contentType, value, serializeOnlyChangedValues);
@@ -52,7 +52,7 @@ public static class ParsableExtensions
     /// </summary>
     /// <param name="contentType">Content type to serialize the object to.</param>
     /// <param name="value">The object to serialize.</param>
-    /// <param name="serializeOnlyChangedValues">If this object uses the <see cref="Brimborium.Kiota.Abstractions.Store.IBackingStore"/>, use this to control if you want all properties or just the changed once.</param>
+    /// <param name="serializeOnlyChangedValues">If this object uses the <see cref="Microsoft.Kiota.Abstractions.Store.IBackingStore"/>, use this to control if you want all properties or just the changed once.</param>
     /// <param name="cancellationToken">Cancel the request during execution.</param>
     /// <returns>The serialized representation as a string.</returns>
     public static async Task<string> SerializeAsStringAsync<T>(this IEnumerable<T> value, string contentType, bool serializeOnlyChangedValues = false, CancellationToken cancellationToken = default) where T : IParsable
@@ -63,7 +63,7 @@ public static class ParsableExtensions
     /// </summary>
     /// <param name="contentType">Content type to serialize the object t </param>
     /// <param name="value">The object to serialize.</param>
-    /// <param name="serializeOnlyChangedValues">If this object uses the <see cref="Brimborium.Kiota.Abstractions.Store.IBackingStore"/>, use this to control if you want all properties or just the changed once.</param>
+    /// <param name="serializeOnlyChangedValues">If this object uses the <see cref="Microsoft.Kiota.Abstractions.Store.IBackingStore"/>, use this to control if you want all properties or just the changed once.</param>
     /// <returns>The serialized representation as a stream.</returns>
     public static Stream SerializeAsStream<T>(this T[] value, string contentType, bool serializeOnlyChangedValues = false) where T : IParsable
     => KiotaSerializer.SerializeAsStream(contentType, value, serializeOnlyChangedValues);
@@ -73,7 +73,7 @@ public static class ParsableExtensions
     /// </summary>
     /// <param name="contentType">Content type to serialize the object to.</param>
     /// <param name="value">The object to serialize.</param>
-    /// <param name="serializeOnlyChangedValues">If this object uses the <see cref="Brimborium.Kiota.Abstractions.Store.IBackingStore"/>, use this to control if you want all properties or just the changed once.</param>
+    /// <param name="serializeOnlyChangedValues">If this object uses the <see cref="Microsoft.Kiota.Abstractions.Store.IBackingStore"/>, use this to control if you want all properties or just the changed once.</param>
     /// <param name="cancellationToken">Cancel the request during execution.</param>
     /// <returns>The serialized representation as a string.</returns>
     public static async Task<string> SerializeAsStringAsync<T>(this T[] value, string contentType, bool serializeOnlyChangedValues = false, CancellationToken cancellationToken = default) where T : IParsable

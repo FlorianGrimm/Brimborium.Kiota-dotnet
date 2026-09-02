@@ -5,7 +5,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Brimborium.Kiota.Abstractions.Store
+namespace Microsoft.Kiota.Abstractions.Store
 {
     /// <summary>
     /// Stores model information in a different location than the object properties. Implementations can provide dirty tracking capabilities, caching capabilities or integration with 3rd party stores.

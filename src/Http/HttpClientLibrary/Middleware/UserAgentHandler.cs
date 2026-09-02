@@ -4,10 +4,10 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
-using Brimborium.Kiota.Http.HttpClientLibrary.Extensions;
-using Brimborium.Kiota.Http.HttpClientLibrary.Middleware.Options;
+using Microsoft.Kiota.Http.HttpClientLibrary.Extensions;
+using Microsoft.Kiota.Http.HttpClientLibrary.Middleware.Options;
 
-namespace Brimborium.Kiota.Http.HttpClientLibrary.Middleware
+namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware
 {
     /// <summary>
     /// <see cref="UserAgentHandler"/> appends the current library version to the user agent header.
@@ -35,7 +35,7 @@ namespace Brimborium.Kiota.Http.HttpClientLibrary.Middleware
             {
                 var activitySource = ActivitySourceRegistry.DefaultInstance.GetOrCreateActivitySource(obsOptions.TracerInstrumentationName);
                 activity = activitySource?.StartActivity($"{nameof(UserAgentHandler)}_{nameof(SendAsync)}");
-                _ = (activity?.SetTag("com.Brimborium.Kiota.handler.useragent.enable", true));
+                _ = (activity?.SetTag("com.Microsoft.Kiota.handler.useragent.enable", true));
             }
             else
             {

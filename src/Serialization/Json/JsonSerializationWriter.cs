@@ -11,9 +11,9 @@ using System.Text;
 using System.Text.Json;
 using System.Xml;
 using Microsoft.IO;
-using Brimborium.Kiota.Abstractions;
-using Brimborium.Kiota.Abstractions.Helpers;
-using Brimborium.Kiota.Abstractions.Serialization;
+using Microsoft.Kiota.Abstractions;
+using Microsoft.Kiota.Abstractions.Helpers;
+using Microsoft.Kiota.Abstractions.Serialization;
 
 #if NET5_0_OR_GREATER
 using System.Diagnostics.CodeAnalysis;
@@ -23,7 +23,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Buffers;
 #endif
 
-namespace Brimborium.Kiota.Serialization.Json
+namespace Microsoft.Kiota.Serialization.Json
 {
     /// <summary>
     /// The <see cref="ISerializationWriter"/> implementation for json content types.

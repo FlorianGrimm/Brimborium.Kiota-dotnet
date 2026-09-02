@@ -9,11 +9,11 @@ using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
 using System.Xml;
 
-using Brimborium.Kiota.Abstractions.Extensions;
-using Brimborium.Kiota.Abstractions.Helpers;
-using Brimborium.Kiota.Abstractions.Serialization;
+using Microsoft.Kiota.Abstractions.Extensions;
+using Microsoft.Kiota.Abstractions.Helpers;
+using Microsoft.Kiota.Abstractions.Serialization;
 
-namespace Brimborium.Kiota.Serialization.Json {
+namespace Microsoft.Kiota.Serialization.Json {
     /// <summary>
     /// The <see cref="IParseNode"/> implementation for the json content type
     /// </summary>

@@ -4,10 +4,10 @@
 
 using System;
 using System.Linq;
-using Brimborium.Kiota.Abstractions.Serialization;
-using Brimborium.Kiota.Abstractions.Store;
+using Microsoft.Kiota.Abstractions.Serialization;
+using Microsoft.Kiota.Abstractions.Store;
 
-namespace Brimborium.Kiota.Abstractions
+namespace Microsoft.Kiota.Abstractions
 {
     /// <summary>
     ///     Provides a builder for creating an ApiClient and register the default serializers/deserializers.

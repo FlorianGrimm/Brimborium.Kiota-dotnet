@@ -4,7 +4,7 @@
 
 using System;
 
-namespace Brimborium.Kiota.Abstractions.Serialization;
+namespace Microsoft.Kiota.Abstractions.Serialization;
 
 /// <summary>
 /// Defines the factory for creating parsable objects.

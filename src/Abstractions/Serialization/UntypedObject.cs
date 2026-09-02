@@ -4,7 +4,7 @@
 
 using System.Collections.Generic;
 
-namespace Brimborium.Kiota.Abstractions.Serialization
+namespace Microsoft.Kiota.Abstractions.Serialization
 {
     /// <summary>
     /// Represents an untyped node with object value.

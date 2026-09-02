@@ -3,16 +3,16 @@
 // ------------------------------------------------------------------------------
 
 using System.Net.Http;
-using Brimborium.Kiota.Abstractions;
-using Brimborium.Kiota.Abstractions.Authentication;
-using Brimborium.Kiota.Abstractions.Serialization;
-using Brimborium.Kiota.Http.HttpClientLibrary;
-using Brimborium.Kiota.Serialization.Form;
-using Brimborium.Kiota.Serialization.Json;
-using Brimborium.Kiota.Serialization.Multipart;
-using Brimborium.Kiota.Serialization.Text;
+using Microsoft.Kiota.Abstractions;
+using Microsoft.Kiota.Abstractions.Authentication;
+using Microsoft.Kiota.Abstractions.Serialization;
+using Microsoft.Kiota.Http.HttpClientLibrary;
+using Microsoft.Kiota.Serialization.Form;
+using Microsoft.Kiota.Serialization.Json;
+using Microsoft.Kiota.Serialization.Multipart;
+using Microsoft.Kiota.Serialization.Text;
 
-namespace Brimborium.Kiota.Bundle
+namespace Microsoft.Kiota.Bundle
 {
     /// <summary>
     /// The <see cref="IRequestAdapter"/> implementation that derived from <see cref="HttpClientRequestAdapter"/> with registrations configured.

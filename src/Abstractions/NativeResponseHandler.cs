@@ -5,9 +5,9 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Brimborium.Kiota.Abstractions.Serialization;
+using Microsoft.Kiota.Abstractions.Serialization;
 
-namespace Brimborium.Kiota.Abstractions
+namespace Microsoft.Kiota.Abstractions
 {
     /// <summary>
     /// Default response handler to access the native response object.

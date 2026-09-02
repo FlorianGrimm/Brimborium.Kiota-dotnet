@@ -5,9 +5,9 @@
 using System;
 using System.ComponentModel;
 using Azure.Core;
-using Brimborium.Kiota.Abstractions.Authentication;
+using Microsoft.Kiota.Abstractions.Authentication;
 
-namespace Brimborium.Kiota.Authentication.Azure;
+namespace Microsoft.Kiota.Authentication.Azure;
 /// <summary>
 /// The <see cref="BaseBearerTokenAuthenticationProvider"/> implementation that supports implementations of <see cref="TokenCredential"/> from Azure.Identity.
 /// </summary>

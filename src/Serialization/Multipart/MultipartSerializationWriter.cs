@@ -6,13 +6,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.IO;
-using Brimborium.Kiota.Abstractions;
-using Brimborium.Kiota.Abstractions.Serialization;
+using Microsoft.Kiota.Abstractions;
+using Microsoft.Kiota.Abstractions.Serialization;
 #if NET5_0_OR_GREATER
 using System.Diagnostics.CodeAnalysis;
 #endif
 
-namespace Brimborium.Kiota.Serialization.Multipart;
+namespace Microsoft.Kiota.Serialization.Multipart;
 /// <summary>
 /// Serialization writer for multipart payloads.
 /// </summary>

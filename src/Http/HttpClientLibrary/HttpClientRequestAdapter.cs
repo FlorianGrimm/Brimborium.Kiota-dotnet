@@ -19,15 +19,15 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-using Brimborium.Kiota.Abstractions;
-using Brimborium.Kiota.Abstractions.Authentication;
-using Brimborium.Kiota.Abstractions.Extensions;
-using Brimborium.Kiota.Abstractions.Helpers;
-using Brimborium.Kiota.Abstractions.Serialization;
-using Brimborium.Kiota.Abstractions.Store;
-using Brimborium.Kiota.Http.HttpClientLibrary.Middleware;
+using Microsoft.Kiota.Abstractions;
+using Microsoft.Kiota.Abstractions.Authentication;
+using Microsoft.Kiota.Abstractions.Extensions;
+using Microsoft.Kiota.Abstractions.Helpers;
+using Microsoft.Kiota.Abstractions.Serialization;
+using Microsoft.Kiota.Abstractions.Store;
+using Microsoft.Kiota.Http.HttpClientLibrary.Middleware;
 
-namespace Brimborium.Kiota.Http.HttpClientLibrary
+namespace Microsoft.Kiota.Http.HttpClientLibrary
 {
     /// <summary>
     /// The <see cref="IRequestAdapter"/> implementation for sending requests.
@@ -307,7 +307,7 @@ namespace Brimborium.Kiota.Http.HttpClientLibrary
         /// <summary>
         /// The key for the tracing event raised when a response handler is called.
         /// </summary>
-        public const string EventResponseHandlerInvokedKey = "com.Brimborium.Kiota.response_handler_invoked";
+        public const string EventResponseHandlerInvokedKey = "com.Microsoft.Kiota.response_handler_invoked";
         /// <summary>
         /// Send a <see cref="RequestInformation"/> instance with an instance of <typeparam name="ModelType"></typeparam>
         /// </summary>
@@ -541,7 +541,7 @@ namespace Brimborium.Kiota.Http.HttpClientLibrary
         {
             if(result != null)
             {
-                _ = (activity?.SetTag("com.Brimborium.Kiota.response.type", result.GetType().FullName));
+                _ = (activity?.SetTag("com.Microsoft.Kiota.response.type", result.GetType().FullName));
             }
         }
         private static async Task DrainAsync(HttpResponseMessage response, CancellationToken cancellationToken)
@@ -568,11 +568,11 @@ namespace Brimborium.Kiota.Http.HttpClientLibrary
         /// <summary>
         /// The attribute name used to indicate whether an error code mapping was found.
         /// </summary>
-        public const string ErrorMappingFoundAttributeName = "com.Brimborium.Kiota.error.mapping_found";
+        public const string ErrorMappingFoundAttributeName = "com.Microsoft.Kiota.error.mapping_found";
         /// <summary>
         /// The attribute name used to indicate whether the error response contained a body.
         /// </summary>
-        public const string ErrorBodyFoundAttributeName = "com.Brimborium.Kiota.error.body_found";
+        public const string ErrorBodyFoundAttributeName = "com.Microsoft.Kiota.error.body_found";
         private async Task ThrowIfFailedResponseAsync(HttpResponseMessage response, Dictionary<string, ParsableFactory<IParsable>>? errorMapping, Activity? activityForAttributes, CancellationToken cancellationToken)
         {
             using var span = _ActivitySource?.StartActivity(nameof(ThrowIfFailedResponseAsync));
@@ -698,7 +698,7 @@ namespace Brimborium.Kiota.Http.HttpClientLibrary
         /// <summary>
         /// The key for the event raised by tracing when an authentication challenge is received
         /// </summary>
-        public const string AuthenticateChallengedEventKey = "com.Brimborium.Kiota.authenticate_challenge_received";
+        public const string AuthenticateChallengedEventKey = "com.Microsoft.Kiota.authenticate_challenge_received";
 
         internal const string RetryCountAttributeName = "http.request.resend_count";
 

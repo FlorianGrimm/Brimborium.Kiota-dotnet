@@ -2,9 +2,9 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using Brimborium.Kiota.Abstractions.Serialization;
+using Microsoft.Kiota.Abstractions.Serialization;
 
-namespace Brimborium.Kiota.Serialization.Form;
+namespace Microsoft.Kiota.Serialization.Form;
 
 /// <summary>
 /// The <see cref="IParseNodeFactory"/> implementation for form content types

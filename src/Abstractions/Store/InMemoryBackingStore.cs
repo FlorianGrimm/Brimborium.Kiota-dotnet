@@ -7,7 +7,7 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 
-namespace Brimborium.Kiota.Abstractions.Store
+namespace Microsoft.Kiota.Abstractions.Store
 {
     /// <summary>
     ///     In-memory implementation of the backing store. Allows for dirty tracking of changes.

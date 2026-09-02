@@ -1,7 +1,7 @@
 using System;
-using Brimborium.Kiota.Abstractions.Serialization;
+using Microsoft.Kiota.Abstractions.Serialization;
 
-namespace Brimborium.Kiota.Serialization.Form;
+namespace Microsoft.Kiota.Serialization.Form;
 /// <summary>Represents a serialization writer factory that can be used to create a form url encoded serialization writer.</summary>
 public class FormSerializationWriterFactory : ISerializationWriterFactory
 {

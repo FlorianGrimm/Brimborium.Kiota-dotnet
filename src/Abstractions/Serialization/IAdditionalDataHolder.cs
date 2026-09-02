@@ -5,7 +5,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Brimborium.Kiota.Abstractions.Serialization
+namespace Microsoft.Kiota.Abstractions.Serialization
 {
     /// <summary>
     /// Defines a contract for models that can hold additional data besides the described properties.

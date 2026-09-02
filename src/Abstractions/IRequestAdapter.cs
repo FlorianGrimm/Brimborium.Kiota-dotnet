@@ -6,10 +6,10 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
-using Brimborium.Kiota.Abstractions.Serialization;
-using Brimborium.Kiota.Abstractions.Store;
+using Microsoft.Kiota.Abstractions.Serialization;
+using Microsoft.Kiota.Abstractions.Store;
 
-namespace Brimborium.Kiota.Abstractions
+namespace Microsoft.Kiota.Abstractions
 {
     /// <summary>
     ///   Service responsible for translating abstract Request Info into concrete native HTTP requests.

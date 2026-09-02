@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using System.Diagnostics.CodeAnalysis;
 #endif
 
-namespace Brimborium.Kiota.Abstractions.Serialization;
+namespace Microsoft.Kiota.Abstractions.Serialization;
 
 /// <summary>
 /// Set of helper methods for JSON serialization

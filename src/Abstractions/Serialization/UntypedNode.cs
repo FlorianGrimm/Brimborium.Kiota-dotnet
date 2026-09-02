@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace Brimborium.Kiota.Abstractions.Serialization
+namespace Microsoft.Kiota.Abstractions.Serialization
 {
     /// <summary>
     /// Base class for untyped node.

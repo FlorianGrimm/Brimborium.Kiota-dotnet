@@ -3,8 +3,8 @@
 // ------------------------------------------------------------------------------
 
 using System;
-using Brimborium.Kiota.Abstractions.Serialization;
-namespace Brimborium.Kiota.Serialization.Multipart;
+using Microsoft.Kiota.Abstractions.Serialization;
+namespace Microsoft.Kiota.Serialization.Multipart;
 /// <summary>
 /// Factory to create multipart serialization writers.
 /// </summary>

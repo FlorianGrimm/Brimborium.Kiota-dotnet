@@ -1,8 +1,8 @@
 using System;
 using System.Text.Json.Serialization;
-using Brimborium.Kiota.Abstractions;
+using Microsoft.Kiota.Abstractions;
 
-namespace Brimborium.Kiota.Serialization.Json;
+namespace Microsoft.Kiota.Serialization.Json;
 
 /// <summary>
 /// Json serialization context for Kiota.

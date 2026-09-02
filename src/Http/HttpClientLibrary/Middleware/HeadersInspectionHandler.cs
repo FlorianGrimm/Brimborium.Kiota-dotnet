@@ -8,10 +8,10 @@ using System.Diagnostics;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Brimborium.Kiota.Http.HttpClientLibrary.Extensions;
-using Brimborium.Kiota.Http.HttpClientLibrary.Middleware.Options;
+using Microsoft.Kiota.Http.HttpClientLibrary.Extensions;
+using Microsoft.Kiota.Http.HttpClientLibrary.Middleware.Options;
 
-namespace Brimborium.Kiota.Http.HttpClientLibrary.Middleware;
+namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware;
 
 /// <summary>
 /// The Headers Inspection Handler allows the developer to inspect the headers of the request and response.
@@ -43,7 +43,7 @@ public class HeadersInspectionHandler : DelegatingHandler
         {
             var activitySource = ActivitySourceRegistry.DefaultInstance.GetOrCreateActivitySource(obsOptions.TracerInstrumentationName);
             activity = activitySource?.StartActivity($"{nameof(HeadersInspectionHandler)}_{nameof(SendAsync)}");
-            _ = (activity?.SetTag("com.Brimborium.Kiota.handler.headersInspection.enable", true));
+            _ = (activity?.SetTag("com.Microsoft.Kiota.handler.headersInspection.enable", true));
         }
         else
         {

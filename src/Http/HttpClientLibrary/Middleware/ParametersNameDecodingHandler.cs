@@ -8,10 +8,10 @@ using System.Diagnostics;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Brimborium.Kiota.Http.HttpClientLibrary.Extensions;
-using Brimborium.Kiota.Http.HttpClientLibrary.Middleware.Options;
+using Microsoft.Kiota.Http.HttpClientLibrary.Extensions;
+using Microsoft.Kiota.Http.HttpClientLibrary.Middleware.Options;
 
-namespace Brimborium.Kiota.Http.HttpClientLibrary.Middleware;
+namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware;
 
 /// <summary>
 /// This handlers decodes special characters in the request query parameters that had to be encoded due to RFC 6570 restrictions names before executing the request.
@@ -44,7 +44,7 @@ public class ParametersNameDecodingHandler : DelegatingHandler
         {
             var activitySource = ActivitySourceRegistry.DefaultInstance.GetOrCreateActivitySource(obsOptions.TracerInstrumentationName);
             activity = activitySource.StartActivity($"{nameof(ParametersNameDecodingHandler)}_{nameof(SendAsync)}");
-            _ = (activity?.SetTag("com.Brimborium.Kiota.handler.parameters_name_decoding.enable", true));
+            _ = (activity?.SetTag("com.Microsoft.Kiota.handler.parameters_name_decoding.enable", true));
         }
         else
         {

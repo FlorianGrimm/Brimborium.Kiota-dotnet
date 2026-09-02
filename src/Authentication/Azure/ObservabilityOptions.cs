@@ -4,7 +4,7 @@
 
 using System;
 
-namespace Brimborium.Kiota.Authentication.Azure;
+namespace Microsoft.Kiota.Authentication.Azure;
 /// <summary>
 /// Holds the tracing, metrics and logging configuration for the authentication provider
 /// </summary>

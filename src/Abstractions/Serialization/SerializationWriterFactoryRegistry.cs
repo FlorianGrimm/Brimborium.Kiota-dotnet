@@ -5,7 +5,7 @@
 using System;
 using System.Collections.Concurrent;
 
-namespace Brimborium.Kiota.Abstractions.Serialization
+namespace Microsoft.Kiota.Abstractions.Serialization
 {
     /// <summary>
     ///  This factory holds a list of all the registered factories for the various types of nodes.

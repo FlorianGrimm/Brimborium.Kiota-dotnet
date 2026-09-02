@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using Brimborium.Kiota.Abstractions.Serialization;
+using Microsoft.Kiota.Abstractions.Serialization;
 
-namespace Brimborium.Kiota.Serialization;
+namespace Microsoft.Kiota.Serialization;
 
 /// <summary>
 /// Extension methods for <see cref="IParsable"/> instances specifically for JSON.

@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Brimborium.Kiota.Abstractions;
+namespace Microsoft.Kiota.Abstractions;
 
 /// <summary>
 /// Parent type for exceptions thrown by the client when receiving failed responses to its requests.

@@ -2,9 +2,9 @@
 //  Copyright (c) Microsoft Corporation.  All Rights Reserved.  Licensed under the MIT License.  See License in the project root for license information.
 // ------------------------------------------------------------------------------
 
-using Brimborium.Kiota.Abstractions;
+using Microsoft.Kiota.Abstractions;
 
-namespace Brimborium.Kiota.Http.HttpClientLibrary.Middleware.Options;
+namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware.Options;
 /// <summary>
 /// The Headers Inspection Option allows the developer to inspect the headers of the request and response.
 /// </summary>

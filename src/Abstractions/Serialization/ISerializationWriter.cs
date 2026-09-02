@@ -4,7 +4,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-namespace Brimborium.Kiota.Abstractions.Serialization {
+namespace Microsoft.Kiota.Abstractions.Serialization {
     /// <summary>
     /// Defines an interface for serialization of objects to a stream.
     /// </summary>

@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Xml;
-using Brimborium.Kiota.Abstractions;
-using Brimborium.Kiota.Abstractions.Helpers;
-using Brimborium.Kiota.Abstractions.Serialization;
+using Microsoft.Kiota.Abstractions;
+using Microsoft.Kiota.Abstractions.Helpers;
+using Microsoft.Kiota.Abstractions.Serialization;
 #if NET5_0_OR_GREATER
 using System.Diagnostics.CodeAnalysis;
 #endif
 
-namespace Brimborium.Kiota.Serialization.Text;
+namespace Microsoft.Kiota.Serialization.Text;
 /// <summary>
 /// The <see cref="IParseNode"/> implementation for the text/plain content type
 /// </summary>

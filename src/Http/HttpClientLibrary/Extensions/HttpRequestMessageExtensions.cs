@@ -8,10 +8,10 @@ using System.IO;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Brimborium.Kiota.Abstractions;
-using Brimborium.Kiota.Abstractions.Extensions;
+using Microsoft.Kiota.Abstractions;
+using Microsoft.Kiota.Abstractions.Extensions;
 
-namespace Brimborium.Kiota.Http.HttpClientLibrary.Extensions
+namespace Microsoft.Kiota.Http.HttpClientLibrary.Extensions
 {
     /// <summary>
     /// Contains extension methods for <see cref="HttpRequestMessage"/>

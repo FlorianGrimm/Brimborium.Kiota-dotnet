@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Net.Http;
-using Brimborium.Kiota.Abstractions;
+using Microsoft.Kiota.Abstractions;
 
-namespace Brimborium.Kiota.Http.HttpClientLibrary.Middleware.Options
+namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware.Options
 {
     /// <summary>
     /// The Telemetry request option class

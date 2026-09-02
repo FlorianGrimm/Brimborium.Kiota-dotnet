@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Brimborium.Kiota.Abstractions.Authentication;
+namespace Microsoft.Kiota.Abstractions.Authentication;
 /// <summary>
 ///     Provides a base class for implementing <see cref="IAuthenticationProvider" /> for Bearer token scheme.
 /// </summary>

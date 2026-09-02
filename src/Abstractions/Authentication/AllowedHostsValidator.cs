@@ -5,7 +5,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Brimborium.Kiota.Abstractions.Authentication
+namespace Microsoft.Kiota.Abstractions.Authentication
 {
     /// <summary>
     /// Validator for handling allowed hosts for authentication

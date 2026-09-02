@@ -10,9 +10,9 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
-using Brimborium.Kiota.Http.HttpClientLibrary.Extensions;
+using Microsoft.Kiota.Http.HttpClientLibrary.Extensions;
 
-namespace Brimborium.Kiota.Http.HttpClientLibrary.Middleware
+namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware
 {
     /// <summary>
     /// A <see cref="DelegatingHandler"/> implementation that handles compression.
@@ -40,7 +40,7 @@ namespace Brimborium.Kiota.Http.HttpClientLibrary.Middleware
             {
                 var activitySource = ActivitySourceRegistry.DefaultInstance.GetOrCreateActivitySource(obsOptions.TracerInstrumentationName);
                 activity = activitySource?.StartActivity($"{nameof(CompressionHandler)}_{nameof(SendAsync)}");
-                activity?.SetTag("com.Brimborium.Kiota.handler.compression.enable", true);
+                activity?.SetTag("com.Microsoft.Kiota.handler.compression.enable", true);
             }
             else
             {

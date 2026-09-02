@@ -7,9 +7,9 @@ using System.IO;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using Brimborium.Kiota.Abstractions.Serialization;
+using Microsoft.Kiota.Abstractions.Serialization;
 
-namespace Brimborium.Kiota.Serialization.Json
+namespace Microsoft.Kiota.Serialization.Json
 {
     /// <summary>
     /// The <see cref="IParseNodeFactory"/> implementation for json content types

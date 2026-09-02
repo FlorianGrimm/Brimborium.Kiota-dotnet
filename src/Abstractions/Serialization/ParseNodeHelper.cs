@@ -5,7 +5,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Brimborium.Kiota.Abstractions.Serialization;
+namespace Microsoft.Kiota.Abstractions.Serialization;
 
 /// <summary>
 /// Helper methods for intersection wrappers

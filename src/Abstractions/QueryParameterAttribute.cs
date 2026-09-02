@@ -3,7 +3,7 @@
 // ------------------------------------------------------------------------------
 using System;
 
-namespace Brimborium.Kiota.Abstractions;
+namespace Microsoft.Kiota.Abstractions;
 
 /// <summary>
 /// This attribute allows mapping between the query parameter name in the template and the property name in the class.

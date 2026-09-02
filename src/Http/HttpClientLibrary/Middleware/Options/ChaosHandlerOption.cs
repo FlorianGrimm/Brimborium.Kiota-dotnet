@@ -5,9 +5,9 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using Brimborium.Kiota.Abstractions;
+using Microsoft.Kiota.Abstractions;
 
-namespace Brimborium.Kiota.Http.HttpClientLibrary.Middleware.Options
+namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware.Options
 {
     /// <summary>
     /// The Chaos Handler Option request class

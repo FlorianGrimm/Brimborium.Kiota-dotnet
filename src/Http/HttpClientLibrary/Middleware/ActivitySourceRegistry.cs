@@ -6,7 +6,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 
-namespace Brimborium.Kiota.Http.HttpClientLibrary.Middleware;
+namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware;
 
 /// <summary>
 /// Internal static registry for activity sources during tracing.

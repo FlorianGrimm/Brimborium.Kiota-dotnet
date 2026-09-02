@@ -4,7 +4,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.RegularExpressions;
 
-namespace Brimborium.Kiota.Http.HttpClientLibrary
+namespace Microsoft.Kiota.Http.HttpClientLibrary
 {
     /// <summary>
     /// Process continuous access evaluation

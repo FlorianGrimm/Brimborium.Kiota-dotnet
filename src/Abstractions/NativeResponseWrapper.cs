@@ -8,7 +8,7 @@ using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Brimborium.Kiota.Abstractions
+namespace Microsoft.Kiota.Abstractions
 {
     /// <summary>
     /// This class can be used to wrap a request using the fluent API and get the native response object in return.

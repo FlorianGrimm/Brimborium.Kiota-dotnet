@@ -2,9 +2,9 @@
 //  Copyright (c) Microsoft Corporation.  All Rights Reserved.  Licensed under the MIT License.  See License in the project root for license information.
 // ------------------------------------------------------------------------------
 
-using Brimborium.Kiota.Abstractions;
+using Microsoft.Kiota.Abstractions;
 
-namespace Brimborium.Kiota.Http.HttpClientLibrary.Middleware.Options
+namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware.Options
 {
     /// <summary>
     /// The User Agent Handler Option request class
@@ -22,6 +22,6 @@ namespace Brimborium.Kiota.Http.HttpClientLibrary.Middleware.Options
         /// <summary>
         /// The product version to append to the user agent header
         /// </summary>
-        public string ProductVersion { get; set; } = "2.0.2";//Brimborium.Kiota.Http.Generated.Version.Current();
+        public string ProductVersion { get; set; } = "2.0.2";//Microsoft.Kiota.Http.Generated.Version.Current();
     }
 }

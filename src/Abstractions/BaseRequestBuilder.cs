@@ -5,7 +5,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Brimborium.Kiota.Abstractions;
+namespace Microsoft.Kiota.Abstractions;
 
 /// <summary>
 /// Base class for all request builders

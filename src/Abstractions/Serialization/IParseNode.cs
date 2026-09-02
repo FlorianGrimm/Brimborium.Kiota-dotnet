@@ -4,7 +4,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-namespace Brimborium.Kiota.Abstractions.Serialization {
+namespace Microsoft.Kiota.Abstractions.Serialization {
     /// <summary>
     /// Interface for a deserialization node in a parse tree. This interace provides an abstraction layer over serialiation formats, libararies and implementations.
     /// </summary>

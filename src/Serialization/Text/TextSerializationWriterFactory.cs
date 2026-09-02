@@ -1,7 +1,7 @@
 using System;
-using Brimborium.Kiota.Abstractions.Serialization;
+using Microsoft.Kiota.Abstractions.Serialization;
 
-namespace Brimborium.Kiota.Serialization.Text;
+namespace Microsoft.Kiota.Serialization.Text;
 
 /// <summary>
 /// The <see cref="ISerializationWriterFactory"/> implementation for the text content type

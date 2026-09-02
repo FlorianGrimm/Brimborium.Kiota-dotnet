@@ -6,7 +6,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Brimborium.Kiota.Abstractions.Extensions
+namespace Microsoft.Kiota.Abstractions.Extensions
 {
     /// <summary>
     /// Extension methods for the <see cref="IDictionary"/>

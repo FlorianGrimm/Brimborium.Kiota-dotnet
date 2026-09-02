@@ -4,16 +4,16 @@ using System.Globalization;
 using System.IO;
 using System.Xml;
 using Microsoft.IO;
-using Brimborium.Kiota.Abstractions;
-using Brimborium.Kiota.Abstractions.Extensions;
-using Brimborium.Kiota.Abstractions.Helpers;
-using Brimborium.Kiota.Abstractions.Serialization;
+using Microsoft.Kiota.Abstractions;
+using Microsoft.Kiota.Abstractions.Extensions;
+using Microsoft.Kiota.Abstractions.Helpers;
+using Microsoft.Kiota.Abstractions.Serialization;
 
 #if NET5_0_OR_GREATER
 using System.Diagnostics.CodeAnalysis;
 #endif
 
-namespace Brimborium.Kiota.Serialization.Text;
+namespace Microsoft.Kiota.Serialization.Text;
 
 /// <summary>
 /// The <see cref="ISerializationWriter"/> implementation for text content types.

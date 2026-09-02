@@ -3,9 +3,9 @@
 // ------------------------------------------------------------------------------
 
 using System;
-using Brimborium.Kiota.Abstractions.Serialization;
+using Microsoft.Kiota.Abstractions.Serialization;
 
-namespace Brimborium.Kiota.Serialization.Json
+namespace Microsoft.Kiota.Serialization.Json
 {
     /// <summary>
     /// The <see cref="ISerializationWriterFactory"/> implementation for the json content type

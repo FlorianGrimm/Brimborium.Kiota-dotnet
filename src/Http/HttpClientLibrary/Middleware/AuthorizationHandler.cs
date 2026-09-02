@@ -10,10 +10,10 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
-using Brimborium.Kiota.Abstractions.Authentication;
-using Brimborium.Kiota.Http.HttpClientLibrary.Extensions;
+using Microsoft.Kiota.Abstractions.Authentication;
+using Microsoft.Kiota.Http.HttpClientLibrary.Extensions;
 
-namespace Brimborium.Kiota.Http.HttpClientLibrary.Middleware
+namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware
 {
     /// <summary>
     /// Adds an Authorization header to the request if the header is not already present.
@@ -54,13 +54,13 @@ namespace Brimborium.Kiota.Http.HttpClientLibrary.Middleware
             {
                 var activitySource = ActivitySourceRegistry.DefaultInstance.GetOrCreateActivitySource(obsOptions.TracerInstrumentationName);
                 activity = activitySource?.StartActivity($"{nameof(AuthorizationHandler)}_{nameof(SendAsync)}");
-                _ = (activity?.SetTag("com.Brimborium.Kiota.handler.authorization.enable", true));
+                _ = (activity?.SetTag("com.Microsoft.Kiota.handler.authorization.enable", true));
             }
             try
             {
                 if(request.Headers.Contains(AuthorizationHeader))
                 {
-                    _ = (activity?.SetTag("com.Brimborium.Kiota.handler.authorization.token_present", true));
+                    _ = (activity?.SetTag("com.Microsoft.Kiota.handler.authorization.token_present", true));
                     return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
                 }
                 Dictionary<string, object> additionalAuthenticationContext = new Dictionary<string, object>();
@@ -75,7 +75,7 @@ namespace Brimborium.Kiota.Http.HttpClientLibrary.Middleware
                     return response;
                 }
 
-                _ = (activity?.AddEvent(new ActivityEvent("com.Brimborium.Kiota.handler.authorization.challenge_received")));
+                _ = (activity?.AddEvent(new ActivityEvent("com.Microsoft.Kiota.handler.authorization.challenge_received")));
                 additionalAuthenticationContext[ContinuousAccessEvaluation.ClaimsKey] = claims;
                 var retryRequest = await response.RequestMessage.CloneAsync(cancellationToken);
                 await AuthenticateRequestAsync(retryRequest, additionalAuthenticationContext, activity, cancellationToken).ConfigureAwait(false);
@@ -102,7 +102,7 @@ namespace Brimborium.Kiota.Http.HttpClientLibrary.Middleware
             var accessToken = await accessTokenProvider.GetAuthorizationTokenAsync(
                     request.RequestUri,
                     additionalAuthenticationContext, cancellationToken).ConfigureAwait(false);
-            _ = (activityForAttributes?.SetTag("com.Brimborium.Kiota.handler.authorization.token_obtained", true));
+            _ = (activityForAttributes?.SetTag("com.Microsoft.Kiota.handler.authorization.token_obtained", true));
             if(string.IsNullOrEmpty(accessToken)) {
                 return;
             }

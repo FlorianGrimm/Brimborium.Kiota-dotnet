@@ -13,11 +13,11 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
 
-using Brimborium.Kiota.Abstractions.Extensions;
-using Brimborium.Kiota.Abstractions.Serialization;
+using Microsoft.Kiota.Abstractions.Extensions;
+using Microsoft.Kiota.Abstractions.Serialization;
 
 
-namespace Brimborium.Kiota.Abstractions {
+namespace Microsoft.Kiota.Abstractions {
     /// <summary>
     ///     This class represents an abstract HTTP request.
     /// </summary>
@@ -372,7 +372,7 @@ namespace Brimborium.Kiota.Abstractions {
                 return;
             }
 
-            _ = activity.SetTag("com.Brimborium.Kiota.request.type", result.GetType().FullName);
+            _ = activity.SetTag("com.Microsoft.Kiota.request.type", result.GetType().FullName);
         }
 
         private static ISerializationWriter GetSerializationWriter<T>(IRequestAdapter requestAdapter, string contentType, T item) {

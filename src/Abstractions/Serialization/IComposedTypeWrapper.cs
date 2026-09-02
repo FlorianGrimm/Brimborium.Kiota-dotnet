@@ -1,4 +1,4 @@
-namespace Brimborium.Kiota.Abstractions.Serialization;
+namespace Microsoft.Kiota.Abstractions.Serialization;
 
 /// <summary>
 /// Tags the current type as a composed type wrapper.

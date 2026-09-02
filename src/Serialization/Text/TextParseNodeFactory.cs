@@ -2,9 +2,9 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using Brimborium.Kiota.Abstractions.Serialization;
+using Microsoft.Kiota.Abstractions.Serialization;
 
-namespace Brimborium.Kiota.Serialization.Text;
+namespace Microsoft.Kiota.Serialization.Text;
 
 /// <summary>
 /// The <see cref="IParseNodeFactory"/> implementation for text/plain content types

@@ -8,10 +8,10 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Brimborium.Kiota.Http.HttpClientLibrary.Extensions;
-using Brimborium.Kiota.Http.HttpClientLibrary.Middleware.Options;
+using Microsoft.Kiota.Http.HttpClientLibrary.Extensions;
+using Microsoft.Kiota.Http.HttpClientLibrary.Middleware.Options;
 
-namespace Brimborium.Kiota.Http.HttpClientLibrary.Middleware
+namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware
 {
     /// <summary>
     /// A <see cref="DelegatingHandler"/> implementation for handling redirection of requests.
@@ -55,7 +55,7 @@ namespace Brimborium.Kiota.Http.HttpClientLibrary.Middleware
             {
                 activitySource = ActivitySourceRegistry.DefaultInstance.GetOrCreateActivitySource(obsOptions.TracerInstrumentationName);
                 activity = activitySource?.StartActivity($"{nameof(RedirectHandler)}_{nameof(SendAsync)}");
-                activity?.SetTag("com.Brimborium.Kiota.handler.redirect.enable", true);
+                activity?.SetTag("com.Microsoft.Kiota.handler.redirect.enable", true);
             }
             else
             {
@@ -83,7 +83,7 @@ namespace Brimborium.Kiota.Http.HttpClientLibrary.Middleware
                     while(redirectCount < redirectOption.MaxRedirect)
                     {
                         using var redirectActivity = activitySource?.StartActivity($"{nameof(RedirectHandler)}_{nameof(SendAsync)} - redirect {redirectCount}");
-                        redirectActivity?.SetTag("com.Brimborium.Kiota.handler.redirect.count", redirectCount);
+                        redirectActivity?.SetTag("com.Microsoft.Kiota.handler.redirect.count", redirectCount);
                         redirectActivity?.SetTag("http.response.status_code", response.StatusCode);
                         // Drain response content to free responses.
                         if(response.Content != null)

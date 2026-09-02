@@ -4,7 +4,7 @@
 
 using System.ComponentModel;
 
-namespace Brimborium.Kiota.Abstractions.Serialization;
+namespace Microsoft.Kiota.Abstractions.Serialization;
 
 public static partial class KiotaJsonSerializer {
     /// <summary>

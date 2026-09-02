@@ -9,10 +9,10 @@ using System.IO;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Brimborium.Kiota.Http.HttpClientLibrary.Extensions;
-using Brimborium.Kiota.Http.HttpClientLibrary.Middleware.Options;
+using Microsoft.Kiota.Http.HttpClientLibrary.Extensions;
+using Microsoft.Kiota.Http.HttpClientLibrary.Middleware.Options;
 
-namespace Brimborium.Kiota.Http.HttpClientLibrary.Middleware;
+namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware;
 
 /// <summary>
 /// The Body Inspection Handler allows the developer to inspect the body of the request and response.
@@ -51,7 +51,7 @@ public class BodyInspectionHandler : DelegatingHandler
             activity = activitySource?.StartActivity(
                 $"{nameof(BodyInspectionHandler)}_{nameof(SendAsync)}"
             );
-            activity?.SetTag("com.Brimborium.Kiota.handler.bodyInspection.enable", true);
+            activity?.SetTag("com.Microsoft.Kiota.handler.bodyInspection.enable", true);
         }
         else
         {

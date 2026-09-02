@@ -1,4 +1,4 @@
-# Brimborium.Kiota-dotnet
+# Microsoft.Kiota-dotnet
 
 A experiment based on
 

@@ -9,12 +9,12 @@ using System.Diagnostics.CodeAnalysis;
 #endif
 using System.Net;
 using System.Net.Http;
-using Brimborium.Kiota.Abstractions;
-using Brimborium.Kiota.Abstractions.Authentication;
-using Brimborium.Kiota.Http.HttpClientLibrary.Middleware;
-using Brimborium.Kiota.Http.HttpClientLibrary.Middleware.Options;
+using Microsoft.Kiota.Abstractions;
+using Microsoft.Kiota.Abstractions.Authentication;
+using Microsoft.Kiota.Http.HttpClientLibrary.Middleware;
+using Microsoft.Kiota.Http.HttpClientLibrary.Middleware.Options;
 
-namespace Brimborium.Kiota.Http.HttpClientLibrary
+namespace Microsoft.Kiota.Http.HttpClientLibrary
 {
     /// <summary>
     /// This class is used to build the HttpClient instance used by the core service.
