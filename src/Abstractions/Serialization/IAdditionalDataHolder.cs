@@ -17,4 +17,15 @@ namespace Microsoft.Kiota.Abstractions.Serialization
         /// </summary>
         IDictionary<string, object> AdditionalData { get; set; }
     }
+
+    /// <summary>
+    /// Avoid creating a new empty instance AdditionalData
+    /// </summary>
+    public interface IAdditionalDataHolderSlim : IAdditionalDataHolder {
+        /// <summary>
+        /// Get <see cref="IAdditionalDataHolder.AdditionalData"/> may be null.
+        /// </summary>
+        /// <returns></returns>
+        IDictionary<string, object>? GetAdditionalData();
+    }
 }
