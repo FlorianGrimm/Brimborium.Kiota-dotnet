@@ -1,27 +1,58 @@
-﻿#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-
-using System.Collections;
+﻿using System.Collections;
 using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace Brimborium.UriTemplate;
 
+/// <summary>
+/// Wrap the Output - the url to be generated
+/// </summary>
+/// <param name="output">the builder for the url</param>
 public readonly struct UriTemplateTarget(
     StringBuilder output
     ) {
     private readonly StringBuilder _ReservedBuffer = new(3);
+
+    /// <summary>
+    /// The Url to be build
+    /// </summary>
     public readonly StringBuilder Output = output;
 
+    /// <summary>
+    /// Appends a character to the URI output.
+    /// </summary>
+    /// <param name="value">The character to append.</param>
+    /// <returns>The output builder, allowing further append operations.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public StringBuilder Append(char value) => this.Output.Append(value);
 
+    /// <summary>
+    /// Appends a string to the URI output.
+    /// </summary>
+    /// <param name="value">The string to append.</param>
+    /// <returns>The output builder, allowing further append operations.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public StringBuilder Append(string value) => this.Output.Append(value);
 
+    /// <summary>
+    /// Determines whether a value uses one of the built-in scalar types
+    /// supported by URI-template expansion.
+    /// </summary>
+    /// <param name="value">The value to check.</param>
+    /// <returns>
+    /// <see langword="true"/> if the value is a supported native type;
+    /// otherwise, <see langword="false"/>.
+    /// </returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsNativeType(object value) => value is string or bool or int or long or float or double or decimal;
-    //TODO: or TimeOnly or DateOnly or DateTime or DateTimeOffset
+    public static bool IsNativeType(object value) =>
+        value is string or bool or int or long or float or double or decimal
+            or TimeOnly or DateOnly or DateTime or DateTimeOffset;
 
+    /// <summary>
+    /// Convert value of wellknown types.
+    /// </summary>
+    /// <param name="value">the value to convert</param>
+    /// <returns>the value formated</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string? ConvertNativeTypes(object? value) {
         return value switch {
@@ -33,12 +64,25 @@ public readonly struct UriTemplateTarget(
             float number => number.ToString(System.Globalization.CultureInfo.InvariantCulture),
             double number => number.ToString(System.Globalization.CultureInfo.InvariantCulture),
             decimal number => number.ToString(System.Globalization.CultureInfo.InvariantCulture),
-            //TODO: or TimeOnly or DateOnly or DateTime or DateTimeOffset
+            TimeOnly timeOnly => timeOnly.ToString("hh:mm:ss"),
+            DateOnly dateOnly => dateOnly.ToString("yyyy-MM-dd"),
+            DateTime dateTime => dateTime.ToString("O"),
+            DateTimeOffset dateTimeOffset => dateTimeOffset.ToString("O"),
             _ => null
             //_ => throw new ArgumentException($"Illegal class passed as substitution, found {value.GetType()}"),
         };
     }
 
+    /// <summary>
+    /// Appends an <see cref="IList"/> substitution according to the expression's
+    /// operator and composite modifier.
+    /// </summary>
+    /// <param name="astOperator">The expression operator controlling separators and escaping.</param>
+    /// <param name="token">The variable name associated with the list.</param>
+    /// <param name="value">The list substitution to append.</param>
+    /// <param name="maxChar">Maximum code points for each scalar value, or <c>-1</c> for no limit.</param>
+    /// <param name="composite">Whether each list item is expanded as a separate composite value.</param>
+    /// <returns><see langword="true"/> if the list contains at least one item.</returns>
     public bool AddListValue(UriTemplateASTOperation astOperator, string token, IList value, int maxChar, bool composite) {
         bool first = true;
         foreach (object innerValue in value) {
@@ -58,6 +102,17 @@ public readonly struct UriTemplateTarget(
         return !first;
     }
 
+    /// <summary>
+    /// Appends an <see cref="IDictionary"/> substitution according to the
+    /// expression's operator and composite modifier.
+    /// </summary>
+    /// <param name="astOperator">The expression operator controlling separators and escaping.</param>
+    /// <param name="token">The variable name associated with the dictionary.</param>
+    /// <param name="value">The dictionary substitution to append.</param>
+    /// <param name="maxChar">Must be <c>-1</c>; dictionary values cannot be truncated.</param>
+    /// <param name="composite">Whether dictionary entries use composite key/value formatting.</param>
+    /// <returns><see langword="true"/> if the dictionary contains at least one entry.</returns>
+    /// <exception cref="ArgumentException"><paramref name="maxChar"/> is not <c>-1</c>.</exception>
     public bool AddDictionaryValue(UriTemplateASTOperation astOperator, string token, IDictionary value, int maxChar, bool composite) {
         bool first = true;
         if (maxChar != -1) {
@@ -85,6 +140,14 @@ public readonly struct UriTemplateTarget(
         return !first;
     }
 
+    /// <summary>
+    /// Appends a scalar substitution using the formatting rules for the
+    /// expression's operator.
+    /// </summary>
+    /// <param name="astOperator">The expression operator controlling formatting and escaping.</param>
+    /// <param name="token">The variable name associated with the value.</param>
+    /// <param name="value">The scalar substitution to append.</param>
+    /// <param name="maxChar">Maximum Unicode code points to emit, or <c>-1</c> for no limit.</param>
     public void AddScalarValue(UriTemplateASTOperation astOperator, string token, object value, int maxChar) {
         if (astOperator.Operator is { } op) {
             switch (op) {
@@ -110,6 +173,14 @@ public readonly struct UriTemplateTarget(
         }
     }
 
+    /// <summary>
+    /// Appends one element of a list or dictionary substitution using the
+    /// expression's escaping rules.
+    /// </summary>
+    /// <param name="astOperator">The expression operator controlling escaping.</param>
+    /// <param name="token">The variable name associated with the element.</param>
+    /// <param name="value">The element to append.</param>
+    /// <param name="maxChar">Maximum Unicode code points to emit, or <c>-1</c> for no limit.</param>
     public void AddValueElement(UriTemplateASTOperation astOperator, string token, object? value, int maxChar) {
         if (astOperator.Operator is { } op) {
             switch (op) {
@@ -129,6 +200,18 @@ public readonly struct UriTemplateTarget(
         }
     }
 
+    /// <summary>
+    /// Appends a supported substitution value, formatting it as text and
+    /// applying URI escaping as requested.
+    /// </summary>
+    /// <param name="prefix">An optional prefix to append before non-empty text.</param>
+    /// <param name="value">The substitution value to format.</param>
+    /// <param name="maxChar">Maximum Unicode code points to emit, or <c>-1</c> for no limit.</param>
+    /// <param name="replaceReserved">
+    /// <see langword="true"/> to percent-encode reserved characters;
+    /// otherwise, preserve reserved characters.
+    /// </param>
+    /// <exception cref="ArgumentException">The value is not a supported substitution type.</exception>
     public void AddValueInner(string? prefix, object? value, int maxChar, bool replaceReserved) {
         if (value is null) {
             this.AddValueText(prefix, string.Empty, maxChar, replaceReserved);
@@ -136,18 +219,29 @@ public readonly struct UriTemplateTarget(
         }
 
         {
-            var stringValue = ConvertNativeTypes(value);
-            if (stringValue is { }) {
-                this.AddValueText(prefix, stringValue, maxChar, replaceReserved);
-            } else if (value is IUriTemplateValue uriTemplateValue) {
+            if (value is IUriTemplateValue uriTemplateValue) {
                 uriTemplateValue.AppendValue(prefix, maxChar, replaceReserved, this);
+            } else if (value is IODataValue oDataValue) {
+                _ = oDataValue.AppendValue(this);
+            } else if (ConvertNativeTypes(value) is { } stringValue) {
+                this.AddValueText(prefix, stringValue, maxChar, replaceReserved);
             } else {
                 throw new ArgumentException($"Illegal class passed as substitution, found {value.GetType()}");
             }
         }
-
     }
 
+    /// <summary>
+    /// Appends text after applying the requested URI escaping and code-point
+    /// limit.
+    /// </summary>
+    /// <param name="prefix">An optional prefix to append before non-empty text.</param>
+    /// <param name="stringValue">The text to append.</param>
+    /// <param name="maxChar">Maximum Unicode code points to emit, or <c>-1</c> for no limit.</param>
+    /// <param name="replaceReserved">
+    /// <see langword="true"/> to percent-encode reserved characters;
+    /// otherwise, preserve reserved characters.
+    /// </param>
     public void AddValueText(string? prefix, string stringValue, int maxChar, bool replaceReserved) {
         int codePointCount = 0;
         bool foundSurrogate = false;
@@ -240,6 +334,11 @@ public readonly struct UriTemplateTarget(
         }
     }
 
+    /// <summary>
+    /// Appends a string as an OData string literal value, escaping URI-sensitive
+    /// characters and doubling apostrophes.
+    /// </summary>
+    /// <param name="stringValue">The string contents to append.</param>
     public void AddODataValue(string stringValue) {
         int codePointCount = 0;
         bool foundSurrogate = false;
@@ -332,6 +431,10 @@ public readonly struct UriTemplateTarget(
         }
     }
 
+    /// <summary>
+    /// Returns the current URI output as a string.
+    /// </summary>
+    /// <returns>The contents of the output builder.</returns>
     public override string ToString()
         => this.Output.ToString();
 

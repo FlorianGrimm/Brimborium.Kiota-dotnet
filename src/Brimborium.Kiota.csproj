@@ -6,7 +6,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <!--
     <EnablePackageValidation>true</EnablePackageValidation>
+    -->
     <GenerateCompatibilitySuppressionFile>false</GenerateCompatibilitySuppressionFile>
     <DefineConstants>$(DefineConstants);CS1591</DefineConstants>
   </PropertyGroup>
