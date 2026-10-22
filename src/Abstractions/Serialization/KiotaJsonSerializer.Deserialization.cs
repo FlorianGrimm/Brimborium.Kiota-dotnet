@@ -2,14 +2,7 @@
 //  Copyright (c) Microsoft Corporation.  All Rights Reserved.  Licensed under the MIT License.  See License in the project root for license information.
 // ------------------------------------------------------------------------------
 
-using System.Collections.Generic;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
-
-#if NET5_0_OR_GREATER
 using System.Diagnostics.CodeAnalysis;
-#endif
 
 namespace Microsoft.Kiota.Abstractions.Serialization;
 
@@ -17,7 +10,7 @@ namespace Microsoft.Kiota.Abstractions.Serialization;
 /// Set of helper methods for JSON serialization
 /// </summary>
 public static partial class KiotaJsonSerializer {
-    private const string _jsonContentType = "application/json";
+    private const string _JsonContentType = "application/json";
 
     /// <summary>
     /// Deserializes the given stream into an object.
@@ -26,7 +19,8 @@ public static partial class KiotaJsonSerializer {
     /// <param name="serializedRepresentation">The serialized representation of the object.</param>
     /// <param name="cancellationToken">The cancellation token for the task</param>
     public static Task<T?> DeserializeAsync<T>(string serializedRepresentation, ParsableFactory<T> parsableFactory, CancellationToken cancellationToken = default) where T : IParsable
-    => KiotaSerializer.DeserializeAsync(_jsonContentType, serializedRepresentation, parsableFactory, cancellationToken);
+    => KiotaSerializer.DeserializeAsync(_JsonContentType, serializedRepresentation, parsableFactory, cancellationToken);
+
     /// <summary>
     /// Deserializes the given stream into an object.
     /// </summary>
@@ -34,7 +28,7 @@ public static partial class KiotaJsonSerializer {
     /// <param name="parsableFactory">The factory to create the object.</param>
     /// <param name="cancellationToken">The cancellation token for the task</param>
     public static Task<T?> DeserializeAsync<T>(Stream stream, ParsableFactory<T> parsableFactory, CancellationToken cancellationToken = default) where T : IParsable
-        => KiotaSerializer.DeserializeAsync(_jsonContentType, stream, parsableFactory, cancellationToken);
+        => KiotaSerializer.DeserializeAsync(_JsonContentType, stream, parsableFactory, cancellationToken);
 
     /// <summary>
     /// Deserializes the given stream into an object.
@@ -42,7 +36,7 @@ public static partial class KiotaJsonSerializer {
     /// <param name="stream">The stream to deserialize.</param>
     /// <param name="cancellationToken">The cancellation token for the task</param>
     public static Task<T?> DeserializeAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods)] T>(Stream stream, CancellationToken cancellationToken = default) where T : IParsable
-        => KiotaSerializer.DeserializeAsync<T>(_jsonContentType, stream, cancellationToken);
+        => KiotaSerializer.DeserializeAsync<T>(_JsonContentType, stream, cancellationToken);
 
     /// <summary>
     /// Deserializes the given stream into an object.
@@ -50,7 +44,7 @@ public static partial class KiotaJsonSerializer {
     /// <param name="serializedRepresentation">The serialized representation of the object.</param>
     /// <param name="cancellationToken">The cancellation token for the task</param>
     public static Task<T?> DeserializeAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods)] T>(string serializedRepresentation, CancellationToken cancellationToken = default) where T : IParsable
-        => KiotaSerializer.DeserializeAsync<T>(_jsonContentType, serializedRepresentation, cancellationToken);
+        => KiotaSerializer.DeserializeAsync<T>(_JsonContentType, serializedRepresentation, cancellationToken);
 
     /// <summary>
     /// Deserializes the given stream into a collection of objects based on the content type.
@@ -59,7 +53,7 @@ public static partial class KiotaJsonSerializer {
     /// <param name="parsableFactory">The factory to create the object.</param>
     /// <param name="cancellationToken">The cancellation token for the task</param>
     public static Task<IEnumerable<T>> DeserializeCollectionAsync<T>(Stream stream, ParsableFactory<T> parsableFactory, CancellationToken cancellationToken = default) where T : IParsable
-    => KiotaSerializer.DeserializeCollectionAsync(_jsonContentType, stream, parsableFactory, cancellationToken);
+    => KiotaSerializer.DeserializeCollectionAsync(_JsonContentType, stream, parsableFactory, cancellationToken);
 
     /// <summary>
     /// Deserializes the given stream into a collection of objects based on the content type.
@@ -68,14 +62,15 @@ public static partial class KiotaJsonSerializer {
     /// <param name="parsableFactory">The factory to create the object.</param>
     /// <param name="cancellationToken">The cancellation token for the task</param>
     public static Task<IEnumerable<T>> DeserializeCollectionAsync<T>(string serializedRepresentation, ParsableFactory<T> parsableFactory, CancellationToken cancellationToken = default) where T : IParsable
-        => KiotaSerializer.DeserializeCollectionAsync(_jsonContentType, serializedRepresentation, parsableFactory, cancellationToken);
+        => KiotaSerializer.DeserializeCollectionAsync(_JsonContentType, serializedRepresentation, parsableFactory, cancellationToken);
+
     /// <summary>
     /// Deserializes the given stream into a collection of objects based on the content type.
     /// </summary>
     /// <param name="stream">The stream to deserialize.</param>
     /// <param name="cancellationToken">The cancellation token for the task</param>
     public static Task<IEnumerable<T>> DeserializeCollectionAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods)] T>(Stream stream, CancellationToken cancellationToken = default) where T : IParsable
-        => KiotaSerializer.DeserializeCollectionAsync<T>(_jsonContentType, stream, cancellationToken);
+        => KiotaSerializer.DeserializeCollectionAsync<T>(_JsonContentType, stream, cancellationToken);
 
     /// <summary>
     /// Deserializes the given stream into a collection of objects based on the content type.
@@ -83,5 +78,5 @@ public static partial class KiotaJsonSerializer {
     /// <param name="serializedRepresentation">The serialized representation of the object.</param>
     /// <param name="cancellationToken">The cancellation token for the task</param>
     public static Task<IEnumerable<T>> DeserializeCollectionAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods)] T>(string serializedRepresentation, CancellationToken cancellationToken = default) where T : IParsable
-        => KiotaSerializer.DeserializeCollectionAsync<T>(_jsonContentType, serializedRepresentation, cancellationToken);
+        => KiotaSerializer.DeserializeCollectionAsync<T>(_JsonContentType, serializedRepresentation, cancellationToken);
 }

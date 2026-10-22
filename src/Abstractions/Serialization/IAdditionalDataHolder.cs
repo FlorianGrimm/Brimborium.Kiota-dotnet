@@ -7,11 +7,13 @@ using System.Collections.Generic;
 
 namespace Microsoft.Kiota.Abstractions.Serialization
 {
+
     /// <summary>
     /// Defines a contract for models that can hold additional data besides the described properties.
     /// </summary>
     public interface IAdditionalDataHolder
     {
+
         /// <summary>
         ///  Stores the additional data for this object that did not belong to the properties.
         /// </summary>
@@ -22,6 +24,7 @@ namespace Microsoft.Kiota.Abstractions.Serialization
     /// Avoid creating a new empty instance AdditionalData
     /// </summary>
     public interface IAdditionalDataHolderSlim : IAdditionalDataHolder {
+
         /// <summary>
         /// Get <see cref="IAdditionalDataHolder.AdditionalData"/> may be null.
         /// </summary>

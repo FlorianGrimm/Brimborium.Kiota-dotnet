@@ -4,6 +4,7 @@
 
 namespace Microsoft.Kiota.Abstractions.Serialization
 {
+
     /// <summary>
     /// Represents an untyped node with boolean value.
     /// </summary>
@@ -11,6 +12,7 @@ namespace Microsoft.Kiota.Abstractions.Serialization
     public class UntypedBoolean(bool value) : UntypedNode
     {
         private readonly bool _value = value;
+
         /// <summary>
         /// Gets the value associated with untyped boolean node.
         /// </summary>

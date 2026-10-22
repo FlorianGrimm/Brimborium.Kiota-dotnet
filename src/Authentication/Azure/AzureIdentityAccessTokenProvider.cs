@@ -52,6 +52,7 @@ public class AzureIdentityAccessTokenProvider : IAccessTokenProvider, IDisposabl
         this._activitySource = new((observabilityOptions ?? new()).TracerInstrumentationName);
         this._isCaeEnabled = isCaeEnabled;
     }
+
     /// <summary>
     /// The <see cref="AzureIdentityAccessTokenProvider"/> constructor
     /// </summary>

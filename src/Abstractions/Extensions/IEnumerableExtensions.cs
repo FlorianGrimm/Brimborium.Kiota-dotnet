@@ -8,10 +8,12 @@ using System.Collections;
 using System.Collections.Generic;
 
 namespace Microsoft.Kiota.Abstractions.Extensions {
+
     /// <summary>
     /// Extension methods for <see cref="IEnumerable{T}"/>
     /// </summary>
     public static class IEnumerableExtensions {
+
         /// <summary>
         /// Converts an <see cref="IEnumerable{T}"/> to a <see cref="List{T}"/>.
         /// </summary>

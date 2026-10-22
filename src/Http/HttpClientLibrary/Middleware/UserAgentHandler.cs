@@ -9,6 +9,7 @@ using Microsoft.Kiota.Http.HttpClientLibrary.Extensions;
 using Microsoft.Kiota.Http.HttpClientLibrary.Middleware.Options;
 
 namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware {
+
     /// <summary>
     /// <see cref="UserAgentHandler"/> appends the current library version to the user agent header.
     /// </summary>

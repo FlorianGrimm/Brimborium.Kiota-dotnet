@@ -9,7 +9,8 @@ public class FormParseNodeFactory : IParseNodeFactory {
     /// <inheritdoc/>
     public string ValidContentType => "application/x-www-form-urlencoded";
     /// <inheritdoc/>
-    public async Task<IParseNode> GetRootParseNodeAsync(string contentType, Stream content,
+    public async Task<GetRootParseNodeResult> GetRootParseNodeAsync(
+        string contentType, Stream content,
         CancellationToken cancellationToken = default) {
         if (string.IsNullOrEmpty(contentType)) {
             throw new ArgumentNullException(nameof(contentType));
@@ -24,11 +25,8 @@ public class FormParseNodeFactory : IParseNodeFactory {
         }
 
         using var reader = new StreamReader(content);
-#if NET7_0_OR_GREATER
         var rawValue = await reader.ReadToEndAsync(cancellationToken).ConfigureAwait(false);
-#else
-        var rawValue = await reader.ReadToEndAsync().ConfigureAwait(false);
-#endif
-        return new FormParseNode(rawValue);
+        var parseNode = new FormParseNode(rawValue);
+        return new(parseNode, default, default);
     }
 }

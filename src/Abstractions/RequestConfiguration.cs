@@ -11,10 +11,13 @@ namespace Microsoft.Kiota.Abstractions;
 /// <typeparam name="T">The type of the query parameters class.</typeparam>
 public class RequestConfiguration<T> where T : class, new()
 {
+
     /// <summary>Request headers</summary>
     public RequestHeaders Headers { get; set; } = new();
+
     /// <summary>Request options</summary>
     public IList<IRequestOption> Options { get; set; } = new List<IRequestOption>();
+
     /// <summary>Query parameters</summary>
     public T QueryParameters { get; set; } = new();
 }

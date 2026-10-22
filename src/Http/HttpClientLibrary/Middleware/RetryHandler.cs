@@ -11,6 +11,7 @@ using System.Diagnostics;
 using System.Globalization;
 
 namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware {
+
     /// <summary>
     /// A <see cref="DelegatingHandler"/> implementation using standard .NET libraries.
     /// </summary>

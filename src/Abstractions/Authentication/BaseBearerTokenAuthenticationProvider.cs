@@ -13,6 +13,7 @@ namespace Microsoft.Kiota.Abstractions.Authentication;
 /// </summary>
 public class BaseBearerTokenAuthenticationProvider : IAuthenticationProvider
 {
+
     /// <summary>
     /// Creates a new instance of <see cref="BaseBearerTokenAuthenticationProvider"/>.
     /// </summary>
@@ -21,6 +22,7 @@ public class BaseBearerTokenAuthenticationProvider : IAuthenticationProvider
     {
         this.AccessTokenProvider = accessTokenProvider ?? throw new ArgumentNullException(nameof(accessTokenProvider));
     }
+
     /// <summary>
     ///     Gets the <see cref="IAccessTokenProvider" /> to use for getting the access token.
     /// </summary>

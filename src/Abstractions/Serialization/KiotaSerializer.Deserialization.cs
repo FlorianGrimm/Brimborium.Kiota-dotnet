@@ -64,8 +64,13 @@ public static partial class KiotaSerializer {
             throw new ArgumentNullException(nameof(parsableFactory));
         }
 
-        var parseNode = await ParseNodeFactoryRegistry.DefaultInstance.GetRootParseNodeAsync(contentType, stream, cancellationToken).ConfigureAwait(false);
-        return parseNode.GetObjectValue(parsableFactory);
+        var (parseNode, bufferStream, jsonDocument) = await ParseNodeFactoryRegistry.DefaultInstance.GetRootParseNodeAsync(contentType, stream, cancellationToken).ConfigureAwait(false);
+        using (bufferStream) {
+            using (jsonDocument) {
+                var result = parseNode.GetObjectValue(parsableFactory);
+                return result;
+            }
+        }
     }
 
     /// <summary>
@@ -106,8 +111,13 @@ public static partial class KiotaSerializer {
             throw new ArgumentNullException(nameof(parsableFactory));
         }
 
-        var parseNode = await ParseNodeFactoryRegistry.DefaultInstance.GetRootParseNodeAsync(contentType, stream, cancellationToken);
-        return parseNode.GetCollectionOfObjectValues(parsableFactory);
+        var (parseNode, bufferStream, jsonDocument) = await ParseNodeFactoryRegistry.DefaultInstance.GetRootParseNodeAsync(contentType, stream, cancellationToken);
+        using (stream) {
+            using (jsonDocument) {
+                var result = parseNode.GetCollectionOfObjectValues(parsableFactory);
+                return result;
+            }
+        }
     }
 
     /// <summary>

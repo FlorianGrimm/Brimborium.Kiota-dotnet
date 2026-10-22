@@ -6,6 +6,7 @@ using Microsoft.Kiota.Abstractions.Serialization;
 
 namespace Microsoft.Kiota.Serialization.Json
 {
+
     /// <summary>
     /// The <see cref="ISerializationWriterFactory"/> implementation for the json content type
     /// </summary>

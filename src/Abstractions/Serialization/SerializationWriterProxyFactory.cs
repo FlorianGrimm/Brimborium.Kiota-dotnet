@@ -6,11 +6,13 @@ using System;
 
 namespace Microsoft.Kiota.Abstractions.Serialization
 {
+
     /// <summary>
     /// Proxy factory that allows the composition of before and after callbacks on existing factories.
     /// </summary>
     public class SerializationWriterProxyFactory : ISerializationWriterFactory
     {
+
         /// <summary>
         /// The valid content type for the <see cref="SerializationWriterProxyFactory"/>
         /// </summary>
@@ -23,6 +25,7 @@ namespace Microsoft.Kiota.Abstractions.Serialization
         private readonly Action<IParsable> _onBefore;
         private readonly Action<IParsable> _onAfter;
         private readonly Action<IParsable, ISerializationWriter> _onStartSerialization;
+
         /// <summary>
         /// Creates a new proxy factory that wraps the specified concrete factory while composing the before and after callbacks.
         /// </summary>
@@ -40,6 +43,7 @@ namespace Microsoft.Kiota.Abstractions.Serialization
             this._onAfter = onAfterSerialization;
             this._onStartSerialization = onStartSerialization;
         }
+
         /// <summary>
         /// Creates a new <see cref="ISerializationWriter" /> instance for the given content type.
         /// </summary>

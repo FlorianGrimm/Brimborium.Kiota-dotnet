@@ -10,6 +10,7 @@ namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware.Options;
 /// The Body Inspection Option allows the developer to inspect the body of the request and response.
 /// </summary>
 public class BodyInspectionHandlerOption : IRequestOption {
+
     /// <summary>
     /// Gets or sets a value indicating whether the request body should be inspected.
     /// Note tht this setting increases memory usae as the request body is copied to a new stream.

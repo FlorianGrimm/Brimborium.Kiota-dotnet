@@ -7,11 +7,13 @@ using System.Collections.Concurrent;
 
 namespace Microsoft.Kiota.Abstractions.Serialization
 {
+
     /// <summary>
     ///  This factory holds a list of all the registered factories for the various types of nodes.
     /// </summary>
     public class SerializationWriterFactoryRegistry : ISerializationWriterFactory
     {
+
         /// <summary>
         /// The valid content type for the <see cref="SerializationWriterFactoryRegistry"/>
         /// </summary>
@@ -22,6 +24,7 @@ namespace Microsoft.Kiota.Abstractions.Serialization
                 throw new InvalidOperationException("The registry supports multiple content types. Get the registered factory instead.");
             }
         }
+
         /// <summary>
         /// Default singleton instance of the registry to be used when registering new factories that should be available by default.
         /// </summary>

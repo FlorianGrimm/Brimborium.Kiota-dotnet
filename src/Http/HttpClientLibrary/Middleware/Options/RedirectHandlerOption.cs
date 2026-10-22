@@ -5,6 +5,7 @@
 using Microsoft.Kiota.Abstractions;
 
 namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware.Options {
+
     /// <summary>
     /// The redirect request option class
     /// </summary>

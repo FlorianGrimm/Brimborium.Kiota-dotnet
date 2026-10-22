@@ -5,11 +5,10 @@ using Microsoft.Kiota.Abstractions.Extensions;
 using Microsoft.Kiota.Abstractions.Helpers;
 using Microsoft.Kiota.Abstractions.Serialization;
 
-#if NET5_0_OR_GREATER
 using System.Diagnostics.CodeAnalysis;
-#endif
 
 namespace Microsoft.Kiota.Serialization.Form;
+
 /// <summary>Represents a parse node that can be used to parse a form url encoded string.</summary>
 public class FormParseNode : IParseNode {
     private readonly string _RawValue;
@@ -17,6 +16,7 @@ public class FormParseNode : IParseNode {
     private readonly Dictionary<string, string> _Fields;
     private static readonly char[] _PairDelimiter = ['='];
     private static readonly char[] _EntriesDelimiter = ['&'];
+
     /// <summary>Initializes a new instance of the <see cref="FormParseNode"/> class.</summary>
     /// <param name="rawValue">The raw value to parse.</param>
     /// <exception cref="ArgumentNullException">Thrown when the <paramref name="rawValue"/> is null.</exception>
@@ -82,6 +82,7 @@ public class FormParseNode : IParseNode {
     private static readonly Type _FloatType = typeof(float?);
     private static readonly Type _DoubleType = typeof(double?);
     private static readonly Type _GuidType = typeof(Guid?);
+    private static readonly Type _DateTimeType = typeof(DateTime?);
     private static readonly Type _DateTimeOffsetType = typeof(DateTimeOffset?);
     private static readonly Type _TimeSpanType = typeof(TimeSpan?);
     private static readonly Type _DateType = typeof(DateOnly?);
@@ -92,12 +93,7 @@ public class FormParseNode : IParseNode {
     /// Get the collection of primitives of type <typeparam name="T"/>from the form node
     /// </summary>
     /// <returns>A collection of objects</returns>
-#if NET5_0_OR_GREATER
-    public IEnumerable<T> GetCollectionOfPrimitiveValues<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>()
-#else
-    public IEnumerable<T> GetCollectionOfPrimitiveValues<T>()
-#endif
-    {
+    public IEnumerable<T> GetCollectionOfPrimitiveValues<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>() {
         var genericType = typeof(T);
         var primitiveValueCollection = this.DecodedValue.Split(_ComaSeparator, StringSplitOptions.RemoveEmptyEntries);
         foreach (var collectionValue in primitiveValueCollection) {
@@ -122,6 +118,8 @@ public class FormParseNode : IParseNode {
                 yield return (T)(object)GetDecimalValue(decodedCollectionValue)!;
             } else if (genericType == _GuidType) {
                 yield return (T)(object)GetGuidValue(decodedCollectionValue)!;
+            } else if (genericType == _DateTimeType) {
+                yield return (T)(object)GetDateTimeValue(decodedCollectionValue)!;
             } else if (genericType == _DateTimeOffsetType) {
                 yield return (T)(object)GetDateTimeOffsetValue(decodedCollectionValue)!;
             } else if (genericType == _TimeSpanType) {
@@ -136,21 +134,32 @@ public class FormParseNode : IParseNode {
         }
     }
     /// <inheritdoc/>
+    public DateTime? GetDateTimeValue() => DateTime.TryParse(this.DecodedValue, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out var result) ? result : null;
+
+    /// <inheritdoc/>
     public DateTimeOffset? GetDateTimeOffsetValue() => DateTimeOffset.TryParse(this.DecodedValue, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out var result) ? result : null;
+
     /// <inheritdoc/>
     public DateOnly? GetDateValue() => DateTime.TryParse(this.DecodedValue, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out var result) ? DateOnly.FromDateTime(result) : null;
+
     /// <inheritdoc/>
     public decimal? GetDecimalValue() => decimal.TryParse(this.DecodedValue, NumberStyles.Number, CultureInfo.InvariantCulture, out var result) ? result : null;
+
     /// <inheritdoc/>
     public double? GetDoubleValue() => double.TryParse(this.DecodedValue, NumberStyles.Number, CultureInfo.InvariantCulture, out var result) ? result : null;
+
     /// <inheritdoc/>
     public float? GetFloatValue() => float.TryParse(this.DecodedValue, NumberStyles.Number, CultureInfo.InvariantCulture, out var result) ? result : null;
+
     /// <inheritdoc/>
     public Guid? GetGuidValue() => Guid.TryParse(this.DecodedValue, out var result) ? result : null;
+
     /// <inheritdoc/>
     public int? GetIntValue() => int.TryParse(this.DecodedValue, NumberStyles.Number, CultureInfo.InvariantCulture, out var result) ? result : null;
+
     /// <inheritdoc/>
     public long? GetLongValue() => long.TryParse(this.DecodedValue, NumberStyles.Number, CultureInfo.InvariantCulture, out var result) ? result : null;
+
     /// <inheritdoc/>
     public T GetObjectValue<T>(ParsableFactory<T> factory) where T : IParsable {
         var item = factory(this);
@@ -159,6 +168,7 @@ public class FormParseNode : IParseNode {
         this.OnAfterAssignFieldValues?.Invoke(item);
         return item;
     }
+
     private void AssignFieldValues<T>(T item) where T : IParsable {
         if (this._Fields.Count == 0) {
             return;
@@ -220,6 +230,7 @@ public class FormParseNode : IParseNode {
     private static double? GetDoubleValue(string value) => double.TryParse(value, NumberStyles.Number, CultureInfo.InvariantCulture, out var result) ? result : null;
     private static decimal? GetDecimalValue(string value) => decimal.TryParse(value, NumberStyles.Number, CultureInfo.InvariantCulture, out var result) ? result : null;
     private static Guid? GetGuidValue(string value) => Guid.TryParse(value, out var result) ? result : null;
+    private static DateTime? GetDateTimeValue(string value) => DateTime.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out var result) ? result : null;
     private static DateTimeOffset? GetDateTimeOffsetValue(string value) => DateTimeOffset.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out var result) ? result : null;
     private static DateOnly? GetDateValue(string value) => DateTime.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out var result) ? DateOnly.FromDateTime(result) : null;
     private static TimeOnly? GetTimeValue(string value) => DateTime.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out var result) ? TimeOnly.FromDateTime(result) : null;
@@ -233,24 +244,14 @@ public class FormParseNode : IParseNode {
     }
 
     /// <inheritdoc/>
-#if NET5_0_OR_GREATER
-    public IEnumerable<T?> GetCollectionOfEnumValues<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>() where T : struct, Enum
-#else
-    public IEnumerable<T?> GetCollectionOfEnumValues<T>() where T : struct, Enum
-#endif
-    {
+    public IEnumerable<T?> GetCollectionOfEnumValues<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>() where T : struct, Enum {
         foreach (var v in this.DecodedValue.Split(_ComaSeparator, StringSplitOptions.RemoveEmptyEntries)) {
             yield return EnumHelpers.GetEnumValue<T>(v);
         }
     }
 
     /// <inheritdoc/>
-#if NET5_0_OR_GREATER
-    public T? GetEnumValue<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>() where T : struct, Enum
-#else
-    public T? GetEnumValue<T>() where T : struct, Enum
-#endif
-    {
+    public T? GetEnumValue<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>() where T : struct, Enum {
         return EnumHelpers.GetEnumValue<T>(this.DecodedValue);
     }
 }

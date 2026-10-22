@@ -14,6 +14,7 @@ using System.Text.Json.Serialization.Metadata;
 using System.Xml;
 
 namespace Microsoft.Kiota.Serialization.Json {
+
     /// <summary>
     /// The <see cref="IParseNode"/> implementation for the json content type
     /// </summary>
@@ -108,6 +109,14 @@ namespace Microsoft.Kiota.Serialization.Json {
         }
 
         /// <summary>
+        /// Get the <see cref="DateTime"/> value from the json node
+        /// </summary>
+        /// <returns>A <see cref="DateTime"/> value</returns>
+        public DateTime? GetDateTimeValue() {
+            return this.GetDateTimeValue(this._JsonNode);
+        }
+
+        /// <summary>
         /// Get the <see cref="DateTimeOffset"/> value from the json node
         /// </summary>
         /// <returns>A <see cref="DateTimeOffset"/> value</returns>
@@ -171,16 +180,12 @@ namespace Microsoft.Kiota.Serialization.Json {
                 }
             }
         }
+
         /// <summary>
         /// Gets the collection of enum values of the node.
         /// </summary>
         /// <returns>The collection of enum values.</returns>
-#if NET5_0_OR_GREATER
-        public IEnumerable<T?> GetCollectionOfEnumValues<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>() where T : struct, Enum
-#else
-        public IEnumerable<T?> GetCollectionOfEnumValues<T>() where T : struct, Enum
-#endif
-        {
+        public IEnumerable<T?> GetCollectionOfEnumValues<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>() where T : struct, Enum {
             if (this._JsonNode.ValueKind == JsonValueKind.Array) {
                 var enumerator = this._JsonNode.EnumerateArray();
                 while (enumerator.MoveNext()) {
@@ -188,6 +193,7 @@ namespace Microsoft.Kiota.Serialization.Json {
                 }
             }
         }
+
         /// <summary>
         /// Gets the byte array value of the node.
         /// </summary>
@@ -199,6 +205,7 @@ namespace Microsoft.Kiota.Serialization.Json {
 
             return null;
         }
+
         /// <summary>
         /// Gets the untyped value of the node
         /// </summary>
@@ -300,6 +307,26 @@ namespace Microsoft.Kiota.Serialization.Json {
             }
 
             return jsonElement.Deserialize(this._JsonSerializerContext.Guid);
+        }
+
+        private DateTime? GetDateTimeValue(JsonElement jsonElement) {
+            if (jsonElement.ValueKind != JsonValueKind.String) {
+                return null;
+            }
+
+            if (jsonElement.TryGetDateTime(out var dateTime)) {
+                return dateTime;
+            }
+
+            if (TryGetUsingTypeInfo(jsonElement, this._JsonSerializerContext.DateTime, out var convertedDateTime)) {
+                return convertedDateTime;
+            }
+
+            if (DateTime.TryParse(jsonElement.GetString(), CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out var dto)) {
+                return dto;
+            }
+
+            return null;
         }
 
         private DateTimeOffset? GetDateTimeOffsetValue(JsonElement jsonElement) {

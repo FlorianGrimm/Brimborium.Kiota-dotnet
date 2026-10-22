@@ -13,6 +13,7 @@ public class RequestHeaders : IDictionary<string, IEnumerable<string>>
         "Content-Encoding",
         "Content-Length"
     };
+
     /// <summary>
     /// Adds values to the header with the specified name.
     /// </summary>

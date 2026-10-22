@@ -6,6 +6,7 @@ using System.Collections.Generic;
 
 namespace Microsoft.Kiota.Abstractions.Serialization
 {
+
     /// <summary>
     /// Represents an untyped node with the collection of untyped values.
     /// </summary>
@@ -13,6 +14,7 @@ namespace Microsoft.Kiota.Abstractions.Serialization
     public class UntypedArray(IEnumerable<UntypedNode> value) : UntypedNode
     {
         private readonly IEnumerable<UntypedNode> _value = value;
+
         /// <summary>
         /// Gets the collection of untyped child nodes.
         /// </summary>

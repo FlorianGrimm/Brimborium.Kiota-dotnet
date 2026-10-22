@@ -4,6 +4,7 @@
 
 namespace Microsoft.Kiota.Abstractions.Serialization
 {
+
     /// <summary>
     /// Represents an untyped node with integer value.
     /// </summary>
@@ -11,6 +12,7 @@ namespace Microsoft.Kiota.Abstractions.Serialization
     public class UntypedInteger(int value) : UntypedNode
     {
         private readonly int _value = value;
+
         /// <summary>
         /// Gets the value associated with untyped integer node.
         /// </summary>

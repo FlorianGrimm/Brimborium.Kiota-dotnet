@@ -9,6 +9,7 @@ using System.Collections.Generic;
 
 namespace Microsoft.Kiota.Abstractions.Store
 {
+
     /// <summary>
     ///     In-memory implementation of the backing store. Allows for dirty tracking of changes.
     /// </summary>
@@ -205,6 +206,7 @@ namespace Microsoft.Kiota.Abstractions.Store
         {
             _ = this.subscriptions.TryRemove(subscriptionId, out _);
         }
+
         /// <summary>
         /// Clears the store
         /// </summary>
@@ -212,6 +214,7 @@ namespace Microsoft.Kiota.Abstractions.Store
         {
             this.store.Clear();
         }
+
         /// <summary>
         /// Flag to show the initialization status of the store.
         /// </summary>

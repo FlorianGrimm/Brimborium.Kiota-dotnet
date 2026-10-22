@@ -83,15 +83,18 @@ public class ApiKeyAuthenticationProvider : IAuthenticationProvider
         _ = (span?.SetTag("com.microsoft.kiota.authentication.is_url_valid", true));
         return Task.CompletedTask;
     }
+
     /// <summary>
     /// The location of the API key parameter.
     /// </summary>
     public enum KeyLocation
     {
+
         /// <summary>
         /// The API key is passed as a query parameter.
         /// </summary>
         QueryParameter,
+
         /// <summary>
         /// The API key is passed as a header.
         /// </summary>

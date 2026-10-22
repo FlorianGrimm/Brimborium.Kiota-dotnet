@@ -9,11 +9,13 @@ using Microsoft.Kiota.Abstractions.Store;
 
 namespace Microsoft.Kiota.Abstractions
 {
+
     /// <summary>
     ///     Provides a builder for creating an ApiClient and register the default serializers/deserializers.
     /// </summary>
     public static class ApiClientBuilder
     {
+
         /// <summary>
         /// Registers the default serializer to the registry.
         /// </summary>
@@ -25,6 +27,7 @@ namespace Microsoft.Kiota.Abstractions
                                             .ContentTypeAssociatedFactories
                                             .TryAdd(serializationWriterFactory.ValidContentType, serializationWriterFactory);
         }
+
         /// <summary>
         /// Registers the default deserializer to the registry.
         /// </summary>
@@ -36,6 +39,7 @@ namespace Microsoft.Kiota.Abstractions
                                     .ContentTypeAssociatedFactories
                                     .TryAdd(deserializerFactory.ValidContentType, deserializerFactory);
         }
+
         /// <summary>
         /// Enables the backing store on default serialization writers and the given serialization writer.
         /// </summary>
@@ -49,6 +53,7 @@ namespace Microsoft.Kiota.Abstractions
             BackingStoreSerializationWriterProxyFactory => original,
             _ => new BackingStoreSerializationWriterProxyFactory(original)
         };
+
         /// <summary>
         /// Enables the backing store on default parse nodes factories and the given parse node factory.
         /// </summary>

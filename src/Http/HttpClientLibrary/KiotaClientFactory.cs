@@ -2,9 +2,7 @@
 //  Copyright (c) Microsoft Corporation.  All Rights Reserved.  Licensed under the MIT License.  See License in the project root for license information.
 // ------------------------------------------------------------------------------
 
-#if NET5_0_OR_GREATER
 using System.Diagnostics.CodeAnalysis;
-#endif
 using System.Net;
 
 using Microsoft.Kiota.Abstractions;
@@ -13,10 +11,12 @@ using Microsoft.Kiota.Http.HttpClientLibrary.Middleware;
 using Microsoft.Kiota.Http.HttpClientLibrary.Middleware.Options;
 
 namespace Microsoft.Kiota.Http.HttpClientLibrary {
+
     /// <summary>
     /// This class is used to build the HttpClient instance used by the core service.
     /// </summary>
     public static class KiotaClientFactory {
+
         /// <summary>
         /// Initializes the <see cref="HttpClient"/> with the default configuration and middlewares including a authentication middleware using the <see cref="IAuthenticationProvider"/> if provided.
         /// </summary>
@@ -137,7 +137,7 @@ namespace Microsoft.Kiota.Http.HttpClientLibrary {
         /// Required due to https://github.com/dotnet/runtime/issues/110239
         /// </summary>
         public readonly struct ActivatableType {
-#if NET5_0_OR_GREATER
+
             /// <summary>
             /// Provides DI-safe trim annotations for an underlying type.
             /// </summary>
@@ -151,22 +151,6 @@ namespace Microsoft.Kiota.Http.HttpClientLibrary {
             /// </summary>
             [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)]
             public readonly Type Type;
-
-#else
-            /// <summary>
-            /// Provides DI-safe trim annotations for an underlying type.
-            /// </summary>
-            /// <param name="type">The type to be wrapped.</param>
-            public ActivatableType(Type type)
-            {
-                Type = type;
-            }
-
-            /// <summary>
-            /// The underlying type.
-            /// </summary>
-            public readonly Type Type;
-#endif
 
             /// <summary>
             /// Implicitly converts from the wrapper to the underlying type.
@@ -202,6 +186,7 @@ namespace Microsoft.Kiota.Http.HttpClientLibrary {
 
             return handlers[0];//first
         }
+
         /// <summary>
         /// Creates a <see cref="DelegatingHandler"/> to use for the <see cref="HttpClient" /> from the provided <see cref="DelegatingHandler"/> instances. Order matters.
         /// </summary>
@@ -210,32 +195,20 @@ namespace Microsoft.Kiota.Http.HttpClientLibrary {
         public static DelegatingHandler? ChainHandlersCollectionAndGetFirstLink(params DelegatingHandler[] handlers) {
             return ChainHandlersCollectionAndGetFirstLink(null, handlers);
         }
+
         /// <summary>
         /// Gets a default Http Client handler with the appropriate proxy configurations
         /// </summary>
         /// <param name="proxy">The proxy to be used with created client.</param>
         /// <returns/>
         public static HttpMessageHandler GetDefaultHttpMessageHandler(IWebProxy? proxy = null) {
-#if NETFRAMEWORK
-            // If custom proxy is passed, the WindowsProxyUsePolicy will need updating
-            // https://github.com/dotnet/runtime/blob/main/src/libraries/System.Net.Http.WinHttpHandler/src/System/Net/Http/WinHttpHandler.cs#L575
-            var proxyPolicy = proxy != null ? WindowsProxyUsePolicy.UseCustomProxy : WindowsProxyUsePolicy.UseWinHttpProxy;
-            return new WinHttpHandler { Proxy = proxy, AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate, WindowsProxyUsePolicy = proxyPolicy, SendTimeout = System.Threading.Timeout.InfiniteTimeSpan, ReceiveDataTimeout = System.Threading.Timeout.InfiniteTimeSpan, ReceiveHeadersTimeout = System.Threading.Timeout.InfiniteTimeSpan, EnableMultipleHttp2Connections = true };
-#elif NET5_0_OR_GREATER && !BROWSER
             return new SocketsHttpHandler { Proxy = proxy, AllowAutoRedirect = false, EnableMultipleHttp2Connections = true, AutomaticDecompression = DecompressionMethods.All };
-#elif BROWSER
-            return new HttpClientHandler { AllowAutoRedirect = false };
-#else
-            return new HttpClientHandler { Proxy = proxy, AllowAutoRedirect = false, AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate };
-#endif
         }
 
         private static HttpClient Create(HttpMessageHandler? finalHandler, IList<DelegatingHandler> handlersArray) {
             var handler = ChainHandlersCollectionAndGetFirstLink(finalHandler ?? GetDefaultHttpMessageHandler(), [.. handlersArray]);
             var client = handler != null ? new HttpClient(handler) : new HttpClient();
-#if NET5_0_OR_GREATER
             client.DefaultRequestVersion = HttpVersion.Version20;
-#endif
             return client;
         }
     }

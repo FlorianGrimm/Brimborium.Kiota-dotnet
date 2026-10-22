@@ -15,6 +15,7 @@ namespace Microsoft.Kiota.Serialization;
 /// </summary>
 public static class ParsableExtensions
 {
+
     /// <summary>
     /// Serializes the given object into a stream based on the content type.
     /// </summary>

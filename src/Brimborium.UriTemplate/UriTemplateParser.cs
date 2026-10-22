@@ -8,6 +8,7 @@ namespace Brimborium.UriTemplate;
 /// Parses URI-template strings into abstract syntax trees.
 /// </summary>
 public static class UriTemplateParser {
+
     /// <summary>
     /// Parses a URI template into a sequence of literal text and expressions.
     /// </summary>
@@ -197,12 +198,7 @@ public static class UriTemplateParser {
     /// contains an invalid percent-encoding sequence.
     /// </exception>
     public static string CheckVarname(string token, int col) {
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER
-        if (token.StartsWith('.') || token.EndsWith('.'))
-#else
-        if (token.StartsWith(".") || token.EndsWith("."))
-#endif
-        {
+        if (token.StartsWith('.') || token.EndsWith('.')) {
             throw new ArgumentException($"Variable name cannot start or end with '.' at col:{col}");
         }
         if (token.Contains("..")) {

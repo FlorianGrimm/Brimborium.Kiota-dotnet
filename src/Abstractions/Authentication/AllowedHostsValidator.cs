@@ -7,6 +7,7 @@ using System.Collections.Generic;
 
 namespace Microsoft.Kiota.Abstractions.Authentication
 {
+
     /// <summary>
     /// Validator for handling allowed hosts for authentication
     /// </summary>

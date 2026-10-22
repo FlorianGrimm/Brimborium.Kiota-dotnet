@@ -11,6 +11,7 @@ namespace Microsoft.Kiota.Authentication.Azure;
 public class ObservabilityOptions
 {
     private static readonly Lazy<string> _name = new Lazy<string>(() => typeof(ObservabilityOptions).Namespace!);
+
     /// <summary>
     /// Gets the observability name to use for the tracer
     /// </summary>

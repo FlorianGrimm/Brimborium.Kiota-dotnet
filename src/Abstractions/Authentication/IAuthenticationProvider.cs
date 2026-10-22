@@ -8,11 +8,13 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Kiota.Abstractions.Authentication
 {
+
     /// <summary>
     /// Authenticates the application request.
     /// </summary>
     public interface IAuthenticationProvider
     {
+
         /// <summary>
         /// Authenticates the application request.
         /// </summary>

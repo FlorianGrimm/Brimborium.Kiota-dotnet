@@ -6,6 +6,7 @@ using System.Collections.Generic;
 
 namespace Microsoft.Kiota.Abstractions.Serialization
 {
+
     /// <summary>
     /// Represents an untyped node with object value.
     /// </summary>
@@ -13,6 +14,7 @@ namespace Microsoft.Kiota.Abstractions.Serialization
     public class UntypedObject(IDictionary<string, UntypedNode> properties) : UntypedNode
     {
         private readonly IDictionary<string, UntypedNode> _properties = properties;
+
         /// <summary>
         /// Gets properties associated with untyped object node.
         /// </summary>

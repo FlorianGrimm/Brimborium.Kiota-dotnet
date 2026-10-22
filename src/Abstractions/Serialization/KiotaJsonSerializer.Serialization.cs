@@ -7,6 +7,7 @@ using System.ComponentModel;
 namespace Microsoft.Kiota.Abstractions.Serialization;
 
 public static partial class KiotaJsonSerializer {
+
     /// <summary>
     /// Serializes the given object into a string based on the content type.
     /// </summary>
@@ -15,7 +16,7 @@ public static partial class KiotaJsonSerializer {
     /// <param name="serializeOnlyChangedValues">By default, you'll only get the changed properties.</param>
     /// <returns>The serialized representation as a stream.</returns>
     public static Stream SerializeAsStream<T>(T value, bool serializeOnlyChangedValues = true) where T : IParsable
-        => KiotaSerializer.SerializeAsStream(_jsonContentType, value, serializeOnlyChangedValues);
+        => KiotaSerializer.SerializeAsStream(_JsonContentType, value, serializeOnlyChangedValues);
 
     /// <summary>
     /// Serializes the given object into a string based on the content type.
@@ -26,7 +27,7 @@ public static partial class KiotaJsonSerializer {
     /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
     /// <returns>The serialized representation as a string.</returns>
     public static Task<string> SerializeAsStringAsync<T>(T value, bool serializeOnlyChangedValues = true, CancellationToken cancellationToken = default) where T : IParsable
-        => KiotaSerializer.SerializeAsStringAsync(_jsonContentType, value, serializeOnlyChangedValues, cancellationToken);
+        => KiotaSerializer.SerializeAsStringAsync(_JsonContentType, value, serializeOnlyChangedValues, cancellationToken);
 
     /// <summary>
     /// Serializes the given object into a string based on the content type.
@@ -36,7 +37,7 @@ public static partial class KiotaJsonSerializer {
     /// <param name="serializeOnlyChangedValues">By default, you'll only get the changed properties.</param>
     /// <returns>The serialized representation as a stream.</returns>
     public static Stream SerializeAsStream<T>(IEnumerable<T> value, bool serializeOnlyChangedValues = true) where T : IParsable
-        => KiotaSerializer.SerializeAsStream(_jsonContentType, value, serializeOnlyChangedValues);
+        => KiotaSerializer.SerializeAsStream(_JsonContentType, value, serializeOnlyChangedValues);
 
     /// <summary>
     /// Serializes the given object into a string based on the content type.
@@ -47,5 +48,5 @@ public static partial class KiotaJsonSerializer {
     /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
     /// <returns>The serialized representation as a string.</returns>
     public static Task<string> SerializeAsStringAsync<T>(IEnumerable<T> value, bool serializeOnlyChangedValues = true, CancellationToken cancellationToken = default) where T : IParsable =>
-        KiotaSerializer.SerializeAsStringAsync(_jsonContentType, value, serializeOnlyChangedValues, cancellationToken);
+        KiotaSerializer.SerializeAsStringAsync(_JsonContentType, value, serializeOnlyChangedValues, cancellationToken);
 }

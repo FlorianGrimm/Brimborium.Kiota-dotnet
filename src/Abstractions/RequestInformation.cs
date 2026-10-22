@@ -18,10 +18,12 @@ using Microsoft.Kiota.Abstractions.Serialization;
 
 
 namespace Microsoft.Kiota.Abstractions {
+
     /// <summary>
     ///     This class represents an abstract HTTP request.
     /// </summary>
     public class RequestInformation {
+
         /// <summary>
         /// UriTemplateCache
         /// </summary>
@@ -40,6 +42,7 @@ namespace Microsoft.Kiota.Abstractions {
         public RequestInformation() {
 
         }
+
         /// <summary>
         /// Creates a new instance of <see cref="RequestInformation"/> with the given method and url template.
         /// </summary>
@@ -51,6 +54,7 @@ namespace Microsoft.Kiota.Abstractions {
             this.UrlTemplate = urlTemplate;
             this.PathParameters = pathParameters;
         }
+
         /// <summary>
         /// Configures the current request configuration headers, query parameters, and options base on the callback provided.
         /// </summary>
@@ -141,10 +145,12 @@ namespace Microsoft.Kiota.Abstractions {
         /// The Url template for the current request.
         /// </summary>
         public string? UrlTemplate { get; set; }
+
         /// <summary>
         /// The path parameters to use for the URL template when generating the URI.
         /// </summary>
         public IDictionary<string, object> PathParameters { get; set; } = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+
         /// <summary>
         ///  The <see cref="Method">HTTP method</see> of the request.
         /// </summary>
@@ -216,10 +222,12 @@ namespace Microsoft.Kiota.Abstractions {
 
             return GetEnumMemberValue(type, name) ?? name.ToFirstCharacterLowerCase();
         }
+
         /// <summary>
         /// The Request Headers.
         /// </summary>
         public RequestHeaders Headers { get; private set; } = new();
+
         /// <summary>
         /// Vanity method to add the headers to the request headers dictionary.
         /// </summary>

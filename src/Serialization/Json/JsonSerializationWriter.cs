@@ -2,25 +2,20 @@
 //  Copyright (c) Microsoft Corporation.  All Rights Reserved.  Licensed under the MIT License.  See License in the project root for license information.
 // ------------------------------------------------------------------------------
 
+using Microsoft.IO;
+using Microsoft.Kiota.Abstractions.Helpers;
+using Microsoft.Kiota.Abstractions.Serialization;
+
+using System.Buffers;
 using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using System.Xml;
 
-using Microsoft.IO;
-using Microsoft.Kiota.Abstractions.Helpers;
-using Microsoft.Kiota.Abstractions.Serialization;
-
-#if NET5_0_OR_GREATER
-using System.Diagnostics.CodeAnalysis;
-#endif
-
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_0_OR_GREATER
-using System.Buffers;
-#endif
-
 namespace Microsoft.Kiota.Serialization.Json {
+
     /// <summary>
     /// The <see cref="ISerializationWriter"/> implementation for json content types.
     /// </summary>
@@ -47,11 +42,7 @@ namespace Microsoft.Kiota.Serialization.Json {
         /// <param name="kiotaJsonSerializationContext">The KiotaJsonSerializationContext to use.</param>
         public JsonSerializationWriter(KiotaJsonSerializationContext kiotaJsonSerializationContext) {
             this._KiotaJsonSerializationContext = kiotaJsonSerializationContext;
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER
             this.writer = new Utf8JsonWriter((IBufferWriter<byte>)this._Stream, new JsonWriterOptions
-#else
-            writer = new Utf8JsonWriter((Stream)_stream, new JsonWriterOptions
-#endif
             {
                 Encoder = kiotaJsonSerializationContext.Options.Encoder,
                 Indented = kiotaJsonSerializationContext.Options.WriteIndented
@@ -293,24 +284,14 @@ namespace Microsoft.Kiota.Serialization.Json {
         /// </summary>
         /// <param name="key">The key of the json node</param>
         /// <param name="value">The enumeration value</param>
-#if NET5_0_OR_GREATER
-        public void WriteEnumValue<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>(string? key, T? value) where T : struct, Enum
-#else
-        public void WriteEnumValue<T>(string? key, T? value) where T : struct, Enum
-#endif
-        {
+        public void WriteEnumValue<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>(string? key, T? value) where T : struct, Enum {
             if (!string.IsNullOrEmpty(key) && value.HasValue) {
                 this.writer.WritePropertyName(key!);
             }
 
             if (value.HasValue) {
                 if (typeof(T).IsDefined(typeof(FlagsAttribute))) {
-                    var values =
-#if NET5_0_OR_GREATER
-                        Enum.GetValues<T>();
-#else
-                        (T[])Enum.GetValues(typeof(T));
-#endif
+                    var values = Enum.GetValues<T>();
                     StringBuilder valueNames = new StringBuilder();
                     foreach (var x in values) {
                         if (value.Value.HasFlag(x) && EnumHelpers.GetEnumStringValue(x) is string valueName) {
@@ -370,17 +351,13 @@ namespace Microsoft.Kiota.Serialization.Json {
                 this.writer.WriteEndArray();
             }
         }
+
         /// <summary>
         /// Writes the specified collection of enum values to the stream with an optional given key.
         /// </summary>
         /// <param name="key">The key to be used for the written value. May be null.</param>
         /// <param name="values">The enum values to be written.</param>
-#if NET5_0_OR_GREATER
-        public void WriteCollectionOfEnumValues<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>(string? key, IEnumerable<T?>? values) where T : struct, Enum
-#else
-        public void WriteCollectionOfEnumValues<T>(string? key, IEnumerable<T?>? values) where T : struct, Enum
-#endif
-        {
+        public void WriteCollectionOfEnumValues<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>(string? key, IEnumerable<T?>? values) where T : struct, Enum {
             if (values != null) { //empty array is meaningful
                 if (!string.IsNullOrEmpty(key)) {
                     this.writer.WritePropertyName(key!);
@@ -394,17 +371,13 @@ namespace Microsoft.Kiota.Serialization.Json {
                 this.writer.WriteEndArray();
             }
         }
+
         /// <summary>
         /// Writes the specified dictionary to the stream with an optional given key.
         /// </summary>
         /// <param name="key">The key to be used for the written value. May be null.</param>
         /// <param name="values">The dictionary of values to be written.</param>
-#if NET5_0_OR_GREATER
-        private void WriteDictionaryValue<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>(string? key, T values) where T : IDictionary
-#else
-        private void WriteDictionaryValue<T>(string? key, T values) where T : IDictionary
-#endif
-        {
+        private void WriteDictionaryValue<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>(string? key, T values) where T : IDictionary {
             if (values != null) {
                 if (!string.IsNullOrEmpty(key)) {
                     this.writer.WritePropertyName(key!);
@@ -421,6 +394,7 @@ namespace Microsoft.Kiota.Serialization.Json {
                 this.writer.WriteEndObject();
             }
         }
+
         /// <summary>
         /// Writes the specified byte array as a base64 string to the stream with an optional given key.
         /// </summary>
@@ -501,13 +475,8 @@ namespace Microsoft.Kiota.Serialization.Json {
             }
         }
 
-#if NET5_0_OR_GREATER
         [UnconditionalSuppressMessage("Trimming", "IL2075", Justification = "This method reflects over arbitrary object types at runtime. Callers that require trim/AOT compatibility should use the KiotaJsonSerializationContext source-generated path instead.")]
-        private void WriteNonParsableObjectValue<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] T>(string? key, T value)
-#else
-        private void WriteNonParsableObjectValue<T>(string? key, T value)
-#endif
-        {
+        private void WriteNonParsableObjectValue<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] T>(string? key, T value) {
             if (!string.IsNullOrEmpty(key)) {
                 this.writer.WritePropertyName(key!);
             }

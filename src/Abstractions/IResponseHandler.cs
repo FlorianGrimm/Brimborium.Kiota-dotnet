@@ -9,11 +9,13 @@ using Microsoft.Kiota.Abstractions.Serialization;
 
 namespace Microsoft.Kiota.Abstractions
 {
+
     /// <summary>
     ///     Defines the contract for a response handler.
     /// </summary>
     public interface IResponseHandler
     {
+
         /// <summary>
         ///     Callback method that is invoked when a response is received.
         /// </summary>

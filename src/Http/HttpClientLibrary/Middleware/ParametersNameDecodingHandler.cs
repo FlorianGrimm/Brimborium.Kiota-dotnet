@@ -13,12 +13,14 @@ namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware;
 /// This handlers decodes special characters in the request query parameters that had to be encoded due to RFC 6570 restrictions names before executing the request.
 /// </summary>
 public class ParametersNameDecodingHandler : DelegatingHandler {
+
     /// <summary>
     /// The options to use when decoding parameters names in URLs
     /// </summary>
     internal ParametersNameDecodingOption EncodingOptions {
         get; set;
     }
+
     /// <summary>
     /// Constructs a new <see cref="ParametersNameDecodingHandler"/>
     /// </summary>

@@ -12,6 +12,7 @@ namespace Microsoft.Kiota.Abstractions.Serialization;
 /// </summary>
 public static class ParseNodeHelper
 {
+
     /// <summary>
     /// Merges the given fields deserializers for an intersection type into a single collection.
     /// </summary>

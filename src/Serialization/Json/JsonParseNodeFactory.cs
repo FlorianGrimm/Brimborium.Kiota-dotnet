@@ -7,6 +7,7 @@ using Microsoft.Kiota.Abstractions.Serialization;
 using System.Text.Json;
 
 namespace Microsoft.Kiota.Serialization.Json {
+
     /// <summary>
     /// The <see cref="IParseNodeFactory"/> implementation for json content types
     /// </summary>
@@ -40,7 +41,8 @@ namespace Microsoft.Kiota.Serialization.Json {
         /// <param name="content">The <see cref="Stream"/> containing json to parse.</param>
         /// <param name="cancellationToken">The cancellation token for the task</param>
         /// <returns>An instance of <see cref="IParseNode"/> for json manipulation</returns>
-        public async Task<IParseNode> GetRootParseNodeAsync(string contentType, Stream content,
+        public async Task<GetRootParseNodeResult> GetRootParseNodeAsync(
+            string contentType, Stream content,
             CancellationToken cancellationToken = default) {
             if (string.IsNullOrEmpty(contentType)) {
                 throw new ArgumentNullException(nameof(contentType));
@@ -50,8 +52,22 @@ namespace Microsoft.Kiota.Serialization.Json {
 
             _ = content ?? throw new ArgumentNullException(nameof(content));
 
-            using var jsonDocument = await JsonDocument.ParseAsync(content, cancellationToken: cancellationToken).ConfigureAwait(false);
-            return new JsonParseNode(jsonDocument.RootElement.Clone(), this._jsonJsonSerializationContext);
+            if (content is MemoryStream memoryStream) {
+                // We can use the memory stream directly without copying it to a new memory stream
+                // We can use the synchronous Parse method here because we already have the entire content in memory
+                // We don't need to Clone the root element because we are not going to dispose the JsonDocument until the caller disposes the GetRootParseNodeResult
+                // This is the default case - I believe
+#pragma warning disable VSTHRD103 // Call async methods when in an async method
+                var jsonDocument = JsonDocument.Parse(memoryStream);
+#pragma warning restore VSTHRD103 // Call async methods when in an async method
+                var parseNode = new JsonParseNode(jsonDocument.RootElement, this._jsonJsonSerializationContext);
+                return new(parseNode, memoryStream, jsonDocument);
+            } else {
+                // the old way - we have to read the stream into memory first, then parse it
+                using var jsonDocument = await JsonDocument.ParseAsync(content, cancellationToken: cancellationToken).ConfigureAwait(false);
+                var parseNode = new JsonParseNode(jsonDocument.RootElement.Clone(), this._jsonJsonSerializationContext);
+                return new(parseNode, default, default);
+            }
         }
     }
 }

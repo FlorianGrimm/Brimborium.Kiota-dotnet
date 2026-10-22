@@ -2,21 +2,20 @@
 //  Copyright (c) Microsoft Corporation.  All Rights Reserved.  Licensed under the MIT License.  See License in the project root for license information.
 // ------------------------------------------------------------------------------
 
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
+using System.Text.Json;
 
-namespace Microsoft.Kiota.Abstractions.Serialization
-{
+namespace Microsoft.Kiota.Abstractions.Serialization {
+
     /// <summary>
     /// Defines the contract for a factory that creates parse nodes.
     /// </summary>
-    public interface IParseNodeFactory
-    {
+    public interface IParseNodeFactory {
+
         /// <summary>
         /// Returns the content type this factory's parse nodes can deserialize.
         /// </summary>
         string ValidContentType { get; }
+
         /// <summary>
         /// Create a parse node from the given stream and content type.
         /// </summary>
@@ -24,6 +23,22 @@ namespace Microsoft.Kiota.Abstractions.Serialization
         /// <param name="contentType">The content type of the parse node.</param>
         /// <param name="cancellationToken">The cancellation token for the task.</param>
         /// <returns>A parse node.</returns>
-        Task<IParseNode> GetRootParseNodeAsync(string contentType, Stream content, CancellationToken cancellationToken = default);
+        Task<GetRootParseNodeResult> GetRootParseNodeAsync(string contentType, Stream content, CancellationToken cancellationToken = default);
     }
+
+    /// <summary>
+    /// Result and Late Dispose
+    /// </summary>
+    /// <param name="RootNode">Result</param>
+    /// <param name="BufferStream">Dispose after Parse</param>
+    /// <param name="JsonDocument">Dispose after Parse</param>
+    public record struct GetRootParseNodeResult(IParseNode RootNode, IDisposable? BufferStream, JsonDocument? JsonDocument);
+
+    /// <summary>
+    /// Result and Late Dispose
+    /// </summary>
+    /// <param name="RootNode">Result</param>
+    /// <param name="BufferStream">Dispose after Parse</param>
+    /// <param name="JsonDocument">Dispose after Parse</param>
+    public record struct GetRootParseNodeResultQ(IParseNode? RootNode, IDisposable? BufferStream, JsonDocument? JsonDocument);
 }

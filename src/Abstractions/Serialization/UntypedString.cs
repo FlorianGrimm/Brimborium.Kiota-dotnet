@@ -4,6 +4,7 @@
 
 namespace Microsoft.Kiota.Abstractions.Serialization
 {
+
     /// <summary>
     /// Represents an untyped node with string value.
     /// </summary>
@@ -11,6 +12,7 @@ namespace Microsoft.Kiota.Abstractions.Serialization
     public class UntypedString(string? value) : UntypedNode
     {
         private readonly string? _value = value;
+
         /// <summary>
         /// Gets the string associated with untyped string node.
         /// </summary>

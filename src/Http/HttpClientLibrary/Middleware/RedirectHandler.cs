@@ -9,10 +9,12 @@ using System.Diagnostics;
 using System.Net;
 
 namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware {
+
     /// <summary>
     /// A <see cref="DelegatingHandler"/> implementation for handling redirection of requests.
     /// </summary>
     public class RedirectHandler : DelegatingHandler {
+
         /// <summary>
         /// Constructs a new <see cref="RedirectHandler"/>
         /// </summary>
@@ -72,11 +74,7 @@ namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware {
                         redirectActivity?.SetTag("http.response.status_code", response.StatusCode);
                         // Drain response content to free responses.
                         if (response.Content != null) {
-#if NET5_0_OR_GREATER
                             await response.Content.ReadAsByteArrayAsync(cancellationToken).ConfigureAwait(false);
-#else
-                            await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
-#endif
                         }
 
                         // general clone request with internal CloneAsync (see CloneAsync for details) extension method
@@ -170,21 +168,13 @@ namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware {
         /// </summary>
         /// <returns>The IWebProxy from the final handler, or null if not found.</returns>
         private IWebProxy? GetProxyFromFinalHandler() {
-#if BROWSER
-            // Browser platform does not support proxy configuration
-            return null;
-#else
+
             var handler = this.InnerHandler;
             while (handler != null) {
-#if NETFRAMEWORK
-                if(handler is WinHttpHandler winHttpHandler)
-                    return winHttpHandler.Proxy;
-#endif
-#if NET5_0_OR_GREATER
+
                 if (handler is SocketsHttpHandler socketsHandler) {
                     return socketsHandler.Proxy;
                 }
-#endif
                 if (handler is HttpClientHandler httpClientHandler) {
                     return httpClientHandler.Proxy;
                 }
@@ -196,7 +186,6 @@ namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware {
                 }
             }
             return null;
-#endif
         }
     }
 }

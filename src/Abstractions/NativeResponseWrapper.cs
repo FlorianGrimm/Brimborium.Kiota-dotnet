@@ -10,11 +10,13 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Kiota.Abstractions
 {
+
     /// <summary>
     /// This class can be used to wrap a request using the fluent API and get the native response object in return.
     /// </summary>
     public class NativeResponseWrapper
     {
+
         /// <summary>
         /// Makes a request with the <typeparam name="QueryParametersType"/> instance to get a response with
         /// a <typeparam name="NativeResponseType"/> instance and expect an instance of <typeparam name="ModelType"/>
@@ -51,6 +53,7 @@ namespace Microsoft.Kiota.Abstractions
                 Action<IDictionary<string, string>>? h = default,
                 IEnumerable<IRequestOption>? o = default) where NativeResponseType : class => CallAndGetNativeTypeAsync<ModelType, NativeResponseType, QueryParametersType, RequestBodyType>((_b, _q, _h, _o, _r, _c) => originalCall(_b, _q, _h, _o, _r), requestBody, q, h, o);
 #pragma warning restore VSTHRD200 // Use "Async" suffix for async methods
+
         /// <summary>
         /// Makes a request with the <typeparam name="QueryParametersType"/> instance to get a response with
         /// a <typeparam name="NativeResponseType"/> instance and expect an instance of <typeparam name="ModelType"/>

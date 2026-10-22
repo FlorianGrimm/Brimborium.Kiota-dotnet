@@ -9,7 +9,7 @@ public class TextParseNodeFactory : IParseNodeFactory {
     /// <inheritdoc />
     public string ValidContentType => "text/plain";
     /// <inheritdoc />
-    public async Task<IParseNode> GetRootParseNodeAsync(string contentType, Stream content, CancellationToken cancellationToken = default) {
+    public async Task<GetRootParseNodeResult> GetRootParseNodeAsync(string contentType, Stream content, CancellationToken cancellationToken = default) {
         if (string.IsNullOrEmpty(contentType)) {
             throw new ArgumentNullException(nameof(contentType));
         } else if (!this.ValidContentType.Equals(contentType, StringComparison.OrdinalIgnoreCase)) {
@@ -20,6 +20,7 @@ public class TextParseNodeFactory : IParseNodeFactory {
 
         using var reader = new StreamReader(content);
         var stringContent = await reader.ReadToEndAsync().ConfigureAwait(false);
-        return new TextParseNode(stringContent);
+        var parseNode = new TextParseNode(stringContent);
+        return new(parseNode, default, default);
     }
 }

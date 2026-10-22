@@ -9,11 +9,13 @@ using Microsoft.Kiota.Abstractions.Serialization;
 
 namespace Microsoft.Kiota.Abstractions
 {
+
     /// <summary>
     /// Default response handler to access the native response object.
     /// </summary>
     public class NativeResponseHandler : IResponseHandler
     {
+
         /// <summary>
         /// The value of the response
         /// </summary>

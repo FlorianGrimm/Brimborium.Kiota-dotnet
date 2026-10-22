@@ -5,9 +5,7 @@ using Microsoft.IO;
 using Microsoft.Kiota.Abstractions.Helpers;
 using Microsoft.Kiota.Abstractions.Serialization;
 
-#if NET5_0_OR_GREATER
 using System.Diagnostics.CodeAnalysis;
-#endif
 
 namespace Microsoft.Kiota.Serialization.Text;
 
@@ -99,22 +97,17 @@ public class TextSerializationWriter : ISerializationWriter, IDisposable {
             }
         }
     }
+
     /// <inheritdoc />
     public void WriteTimeSpanValue(string? key, TimeSpan? value) => this.WriteStringValue(key, value.HasValue ? XmlConvert.ToString(value.Value) : null);
     /// <inheritdoc />
     public void WriteTimeValue(string? key, TimeOnly? value) => this.WriteStringValue(key, value?.ToString());
+
     /// <inheritdoc />
-#if NET5_0_OR_GREATER
     public void WriteCollectionOfEnumValues<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>(string? key, IEnumerable<T?>? values) where T : struct, Enum
-#else
-    public void WriteCollectionOfEnumValues<T>(string? key, IEnumerable<T?>? values) where T : struct, Enum
-#endif
     => throw new InvalidOperationException(TextParseNode.NoStructuredDataMessage);
+
     /// <inheritdoc />
-#if NET5_0_OR_GREATER
     public void WriteEnumValue<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>(string? key, T? value) where T : struct, Enum
-#else
-    public void WriteEnumValue<T>(string? key, T? value) where T : struct, Enum
-#endif
     => this.WriteStringValue(key, value.HasValue ? EnumHelpers.GetEnumStringValue(value.Value) : null);
 }

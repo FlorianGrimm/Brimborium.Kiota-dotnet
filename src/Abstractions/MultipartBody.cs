@@ -17,14 +17,17 @@ namespace Microsoft.Kiota.Abstractions;
 public class MultipartBody : IParsable
 {
     private readonly Lazy<string> _boundary = new Lazy<string>(() => Guid.NewGuid().ToString("N"));
+
     /// <summary>
     /// The boundary to use for the multipart body.
     /// </summary>
     public string Boundary => this._boundary.Value;
+
     /// <summary>
     /// The request adapter to use for serialization.
     /// </summary>
     public IRequestAdapter? RequestAdapter { get; set; }
+
     /// <summary>
     /// Adds or replaces a part to the multipart body.
     /// </summary>
@@ -54,6 +57,7 @@ public class MultipartBody : IParsable
             this._parts[key] = value;
         }
     }
+
     /// <summary>
     /// Gets the value of a part from the multipart body.
     /// </summary>
@@ -77,6 +81,7 @@ public class MultipartBody : IParsable
         }
         return default;
     }
+
     /// <summary>
     /// Removes a part from the multipart body.
     /// </summary>

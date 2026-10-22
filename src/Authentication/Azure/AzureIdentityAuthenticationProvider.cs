@@ -13,6 +13,7 @@ namespace Microsoft.Kiota.Authentication.Azure;
 /// </summary>
 public class AzureIdentityAuthenticationProvider : BaseBearerTokenAuthenticationProvider
 {
+
     /// <summary>
     /// The <see cref="AzureIdentityAuthenticationProvider"/> constructor
     /// </summary>
@@ -25,6 +26,7 @@ public class AzureIdentityAuthenticationProvider : BaseBearerTokenAuthentication
         : base(new AzureIdentityAccessTokenProvider(credential, allowedHosts, observabilityOptions, isCaeEnabled, scopes))
     {
     }
+
     /// <summary>
     /// The <see cref="AzureIdentityAuthenticationProvider"/> constructor
     /// </summary>

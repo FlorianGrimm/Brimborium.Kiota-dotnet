@@ -7,6 +7,7 @@ namespace Brimborium.UriTemplate;
 /// representation to a URI-template target.
 /// </summary>
 public interface IUriTemplateValue {
+
     /// <summary>
     /// Attempts to resolve this value using the supplied substitutions.
     /// </summary>

@@ -13,6 +13,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware {
+
     /// <summary>
     /// A <see cref="DelegatingHandler"/> implementation that is used for simulating server failures.
     /// </summary>
@@ -31,10 +32,12 @@ namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware {
             this._Random = new Random(DateTime.Now.Millisecond);
             this.LoadKnownFailures(this._ChaosHandlerOptions.KnownChaos);
         }
+
         /// <summary>
         /// The key used for the open telemetry event.
         /// </summary>
         public const string ChaosHandlerTriggeredEventKey = "com.Microsoft.Kiota.chaos_handler_triggered";
+
         /// <summary>
         /// Sends the request
         /// </summary>
@@ -107,11 +110,7 @@ namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware {
                     Code = "activityLimitReached",
                     Message = "Client application has been throttled and should not attempt to repeat the request until an amount of time has elapsed."
                 }
-#if NET5_0_OR_GREATER
             }, SourceGenerationContext.Default.MainError);
-#else
-            });
-#endif
             var throttleResponse = new HttpResponseMessage {
                 StatusCode = (HttpStatusCode)429,
                 Content = new StringContent(contentString, Encoding.UTF8, Json)
@@ -131,11 +130,7 @@ namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware {
                     Code = "serviceNotAvailable",
                     Message = "The service is temporarily unavailable for maintenance or is overloaded. You may repeat the request after a delay, the length of which may be specified in a Retry-After header."
                 }
-#if NET5_0_OR_GREATER
             }, SourceGenerationContext.Default.MainError);
-#else
-            });
-#endif
             var serverUnavailableResponse = new HttpResponseMessage {
                 StatusCode = HttpStatusCode.ServiceUnavailable,
                 Content = new StringContent(contentString, Encoding.UTF8, Json)
@@ -153,11 +148,7 @@ namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware {
                 error = new Error {
                     Code = "502"
                 }
-#if NET5_0_OR_GREATER
             }, SourceGenerationContext.Default.MainError);
-#else
-            });
-#endif
             var badGatewayResponse = new HttpResponseMessage {
                 StatusCode = HttpStatusCode.BadGateway,
                 Content = new StringContent(contentString, Encoding.UTF8, Json)
@@ -175,11 +166,7 @@ namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware {
                     Code = "generalException",
                     Message = "There was an internal server error while processing the request."
                 }
-#if NET5_0_OR_GREATER
             }, SourceGenerationContext.Default.MainError);
-#else
-            });
-#endif
             var internalServerError = new HttpResponseMessage {
                 StatusCode = HttpStatusCode.InternalServerError,
                 Content = new StringContent(contentString, Encoding.UTF8, Json)
@@ -198,11 +185,7 @@ namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware {
                     Code = "504",
                     Message = "The server, while acting as a proxy, did not receive a timely response from the upstream server it needed to access in attempting to complete the request. May occur together with 503."
                 }
-#if NET5_0_OR_GREATER
             }, SourceGenerationContext.Default.MainError);
-#else
-            });
-#endif
             var gatewayTimeoutResponse = new HttpResponseMessage {
                 StatusCode = HttpStatusCode.GatewayTimeout,
                 Content = new StringContent(contentString, Encoding.UTF8, Json)
@@ -229,10 +212,12 @@ namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware {
             get; set;
         } = new();
     }
+
     /// <summary>
     /// Private class to model sample responses
     /// </summary>
     internal partial class Error {
+
         /// <summary>
         /// The error code
         /// </summary>
@@ -247,9 +232,7 @@ namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware {
             get; set;
         }
     }
-#if NET5_0_OR_GREATER
     [JsonSerializable(typeof(MainError))]
     internal partial class SourceGenerationContext : JsonSerializerContext {
     }
-#endif
 }

@@ -4,11 +4,13 @@
 
 namespace Microsoft.Kiota.Abstractions.Extensions
 {
+
     /// <summary>
     /// The class for extension methods for <see cref="string"/> type
     /// </summary>
     public static class StringExtensions
     {
+
         /// <summary>
         ///     Returns a string with the first letter lowered.
         /// </summary>

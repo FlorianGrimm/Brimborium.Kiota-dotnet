@@ -4,6 +4,7 @@
 
 namespace Microsoft.Kiota.Abstractions.Serialization
 {
+
     /// <summary>
     /// Represents an untyped node with float value.
     /// </summary>
@@ -11,6 +12,7 @@ namespace Microsoft.Kiota.Abstractions.Serialization
     public class UntypedFloat(float value) : UntypedNode
     {
         private readonly float _value = value;
+
         /// <summary>
         /// Gets the value associated with untyped float node.
         /// </summary>

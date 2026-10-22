@@ -11,6 +11,7 @@ using Microsoft.Kiota.Http.HttpClientLibrary.Extensions;
 using Microsoft.Kiota.Http.HttpClientLibrary.Middleware.Options;
 
 namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware {
+
     /// <summary>
     /// A <see cref="TelemetryHandler"/> implementation using standard .NET libraries.
     /// </summary>

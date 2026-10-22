@@ -8,6 +8,7 @@ namespace Brimborium.UriTemplate;
 /// </summary>
 public static class UriTemplateExtension {
     extension(StringBuilder that) {
+
         /// <summary>
         /// Returns the current contents of the string builder and clears it.
         /// </summary>
@@ -23,6 +24,7 @@ public static class UriTemplateExtension {
         }
     }
     extension<T>(List<T> that) {
+
         /// <summary>
         /// Copies the list items to an array and clears the list.
         /// </summary>

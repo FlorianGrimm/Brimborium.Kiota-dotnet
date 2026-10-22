@@ -63,9 +63,7 @@ public class BodyInspectionHandler : DelegatingHandler {
             activity?.Dispose();
         }
 
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_0_OR_GREATER
         [return: NotNullIfNotNull(nameof(httpContent))]
-#endif
         static async Task<Stream> CopyToStreamAsync(
             HttpContent? httpContent,
             CancellationToken cancellationToken
@@ -77,11 +75,7 @@ public class BodyInspectionHandler : DelegatingHandler {
             var stream = new MemoryStream();
             await httpContent.LoadIntoBufferAsync().ConfigureAwait(false);
 
-#if NET5_0_OR_GREATER
             await httpContent.CopyToAsync(stream, cancellationToken).ConfigureAwait(false);
-#else
-            await httpContent.CopyToAsync(stream).ConfigureAwait(false);
-#endif
 
             if (stream.CanSeek) {
                 stream.Position = 0;

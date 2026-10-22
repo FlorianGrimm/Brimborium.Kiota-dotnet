@@ -12,12 +12,16 @@ namespace Microsoft.Kiota.Abstractions;
 /// </summary>
 public abstract class BaseRequestBuilder
 {
+
     /// <summary>Path parameters for the request</summary>
     protected Dictionary<string, object> PathParameters { get; set; }
+
     /// <summary>The request adapter to use to execute the requests.</summary>
     protected IRequestAdapter RequestAdapter { get; set; }
+
     /// <summary>Url template to use to build the URL for the current request builder</summary>
     protected string UrlTemplate { get; set; }
+
     /// <summary>
     /// Instantiates a new <see cref="BaseRequestBuilder"/> class
     /// </summary>
@@ -33,6 +37,7 @@ public abstract class BaseRequestBuilder
         this.RequestAdapter = requestAdapter;
         this.UrlTemplate = urlTemplate;
     }
+
     /// <summary>
     /// Instantiates a new <see cref="BaseRequestBuilder"/> class
     /// </summary>

@@ -8,10 +8,12 @@ using System.Diagnostics.CodeAnalysis;
 using Microsoft.Kiota.Abstractions.Extensions;
 
 namespace Microsoft.Kiota.Abstractions.Helpers {
+
     /// <summary>
     /// Helper methods for enums
     /// </summary>
     public static class EnumHelpers {
+
         /// <summary>
         /// Gets the enum value from the raw value
         /// </summary>

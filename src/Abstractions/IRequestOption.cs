@@ -4,6 +4,7 @@
 
 namespace Microsoft.Kiota.Abstractions
 {
+
     /// <summary>
     /// Represents a request option.
     /// </summary>

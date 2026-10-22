@@ -26,6 +26,8 @@ namespace Microsoft.Kiota.Serialization.Json;
 [JsonSerializable(typeof(decimal?))]
 [JsonSerializable(typeof(Guid))]
 [JsonSerializable(typeof(Guid?))]
+[JsonSerializable(typeof(DateTime))]
+[JsonSerializable(typeof(DateTime?))]
 [JsonSerializable(typeof(DateTimeOffset))]
 [JsonSerializable(typeof(DateTimeOffset?))]
 [JsonSerializable(typeof(TimeSpan))]

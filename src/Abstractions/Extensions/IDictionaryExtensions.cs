@@ -8,11 +8,13 @@ using System.Collections.Generic;
 
 namespace Microsoft.Kiota.Abstractions.Extensions
 {
+
     /// <summary>
     /// Extension methods for the <see cref="IDictionary"/>
     /// </summary>
     public static class IDictionaryExtensions
     {
+
         /// <summary>
         /// Try to add the element to the <see cref="IDictionary"/> instance.
         /// </summary>
@@ -42,6 +44,7 @@ namespace Microsoft.Kiota.Abstractions.Extensions
 
             return false;
         }
+
         /// <summary>
         /// Adds or replaces the element to the <see cref="IDictionary"/> instance.
         /// </summary>

@@ -13,14 +13,14 @@ namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware;
 /// The Headers Inspection Handler allows the developer to inspect the headers of the request and response.
 /// </summary>
 public class HeadersInspectionHandler : DelegatingHandler {
-    private readonly HeadersInspectionHandlerOption _defaultOptions;
+    private readonly HeadersInspectionHandlerOption _DefaultOptions;
 
     /// <summary>
     /// Create a new instance of <see cref="HeadersInspectionHandler"/>
     /// </summary>
     /// <param name="defaultOptions">Default options to apply to the handler</param>
     public HeadersInspectionHandler(HeadersInspectionHandlerOption? defaultOptions = null) {
-        this._defaultOptions = defaultOptions ?? new HeadersInspectionHandlerOption();
+        this._DefaultOptions = defaultOptions ?? new HeadersInspectionHandlerOption();
     }
 
     /// <inheritdoc/>
@@ -29,7 +29,7 @@ public class HeadersInspectionHandler : DelegatingHandler {
             throw new ArgumentNullException(nameof(request));
         }
 
-        var options = request.GetRequestOption<HeadersInspectionHandlerOption>() ?? this._defaultOptions;
+        var options = request.GetRequestOption<HeadersInspectionHandlerOption>() ?? this._DefaultOptions;
 
         Activity? activity;
         if (request.GetRequestOption<ObservabilityOptions>() is { } obsOptions) {

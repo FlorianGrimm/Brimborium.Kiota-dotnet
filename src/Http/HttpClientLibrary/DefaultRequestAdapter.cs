@@ -14,10 +14,12 @@ using Microsoft.Kiota.Serialization.Multipart;
 using Microsoft.Kiota.Serialization.Text;
 
 namespace Microsoft.Kiota.Bundle {
+
     /// <summary>
     /// The <see cref="IRequestAdapter"/> implementation that derived from <see cref="HttpClientRequestAdapter"/> with registrations configured.
     /// </summary>
     public class DefaultRequestAdapter : HttpClientRequestAdapter {
+
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultRequestAdapter"/> class.
         /// </summary>

@@ -4,6 +4,7 @@
 
 namespace Microsoft.Kiota.Abstractions.Serialization
 {
+
     /// <summary>
     /// Represents an untyped node with double value.
     /// </summary>
@@ -11,6 +12,7 @@ namespace Microsoft.Kiota.Abstractions.Serialization
     public class UntypedDouble(double value) : UntypedNode
     {
         private readonly double _value = value;
+
         /// <summary>
         /// Gets the value associated with untyped double node.
         /// </summary>

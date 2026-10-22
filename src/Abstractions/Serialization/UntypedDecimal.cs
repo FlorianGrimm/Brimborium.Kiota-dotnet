@@ -4,6 +4,7 @@
 
 namespace Microsoft.Kiota.Abstractions.Serialization
 {
+
     /// <summary>
     /// Represents an untyped node with decimal value.
     /// </summary>
@@ -11,6 +12,7 @@ namespace Microsoft.Kiota.Abstractions.Serialization
     public class UntypedDecimal(decimal value) : UntypedNode
     {
         private readonly decimal _value = value;
+
         /// <summary>
         /// Gets the value associated with untyped decimal node.
         /// </summary>

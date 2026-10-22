@@ -10,6 +10,7 @@ using System.Net;
 using System.Net.Http.Headers;
 
 namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware {
+
     /// <summary>
     /// Adds an Authorization header to the request if the header is not already present.
     /// Also handles Continuous Access Evaluation (CAE) claims challenges if the initial
@@ -17,7 +18,7 @@ namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware {
     /// </summary>
     public class AuthorizationHandler : DelegatingHandler {
 
-        private const string AuthorizationHeader = "Authorization";
+        private const string _AuthorizationHeader = "Authorization";
         private readonly BaseBearerTokenAuthenticationProvider _AuthenticationProvider;
 
         /// <summary>
@@ -48,7 +49,7 @@ namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware {
                 _ = (activity?.SetTag("com.microsoft.kiota.handler.authorization.enable", true));
             }
             try {
-                if (request.Headers.Contains(AuthorizationHeader)) {
+                if (request.Headers.Contains(_AuthorizationHeader)) {
                     _ = (activity?.SetTag("com.microsoft.kiota.handler.authorization.token_present", true));
                     return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
                 }

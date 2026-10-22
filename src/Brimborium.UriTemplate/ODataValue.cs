@@ -6,6 +6,7 @@ namespace Brimborium.UriTemplate;
 /// allows a value to formatted and append to the target.
 /// </summary>
 public interface IODataValue {
+
     /// <summary>
     /// add the value to the target.Output
     /// </summary>

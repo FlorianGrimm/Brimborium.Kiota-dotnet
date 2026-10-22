@@ -5,6 +5,7 @@ using System.Net.Http.Headers;
 using System.Text.RegularExpressions;
 
 namespace Microsoft.Kiota.Http.HttpClientLibrary {
+
     /// <summary>
     /// Process continuous access evaluation
     /// </summary>

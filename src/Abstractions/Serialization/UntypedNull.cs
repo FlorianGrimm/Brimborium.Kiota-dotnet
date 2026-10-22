@@ -4,11 +4,13 @@
 
 namespace Microsoft.Kiota.Abstractions.Serialization
 {
+
     /// <summary>
     /// Represents an untyped node without the value.
     /// </summary>
     public class UntypedNull : UntypedNode
     {
+
         /// <summary>
         /// Gets the value associated with untyped null node.
         /// </summary>

@@ -6,6 +6,7 @@ namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware.Options;
 /// Interface for making URI replacements.
 /// </summary>
 public interface IUriReplacementHandlerOption : IRequestOption {
+
     /// <summary>
     /// Check if URI replacement is enabled for the option.
     /// </summary>

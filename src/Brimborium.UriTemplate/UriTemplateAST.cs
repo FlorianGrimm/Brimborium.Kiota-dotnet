@@ -38,6 +38,7 @@ public sealed record class UriTemplateASTSequence(
 /// Defines a node in a parsed URI template sequence.
 /// </summary>
 public abstract record class UriTemplateASTSequenceChild() {
+
     /// <summary>
     /// Expands this node using the supplied variable substitutions.
     /// </summary>
@@ -75,20 +76,28 @@ public sealed record class UriTemplateASTConstant(
 /// escaping used for a URI-template expression.
 /// </summary>
 public enum UriTemplateASTOperator {
+
     /// <summary>Uses the default expansion behavior.</summary>
     Noop,
+
     /// <summary>Uses reserved-character expansion without an operator prefix.</summary>
     Plus,
+
     /// <summary>Uses reserved-character expansion with a fragment prefix.</summary>
     Hash,
+
     /// <summary>Prefixes values with dots and separates them with dots.</summary>
     Dot,
+
     /// <summary>Prefixes values with slashes and separates them with slashes.</summary>
     Slash,
+
     /// <summary>Prefixes values with semicolons and separates them with semicolons.</summary>
     Semicolon,
+
     /// <summary>Prefixes the expression with a question mark and emits query parameters.</summary>
     Questionmark,
+
     /// <summary>Emits additional query parameters separated by ampersands.</summary>
     Ampersand
 }
@@ -102,6 +111,7 @@ public sealed record class UriTemplateASTOperation(
         UriTemplateASTOperator? Operator,
         params UriTemplateASTPlaceholder[] ListPlaceholder
         ) : UriTemplateASTSequenceChild() {
+
     /// <summary>
     /// Appends the operator's initial prefix, if it defines one.
     /// </summary>

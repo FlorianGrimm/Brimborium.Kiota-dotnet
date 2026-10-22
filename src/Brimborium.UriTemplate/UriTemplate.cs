@@ -5,6 +5,7 @@
 /// </summary>
 [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage()]
 public static class UriTemplate {
+
     /// <summary>
     /// Expands a URI template by replacing its variables with values from the
     /// supplied substitutions.
