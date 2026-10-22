@@ -8,6 +8,7 @@ using Microsoft.Kiota.Abstractions.Serialization;
 
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
@@ -164,6 +165,7 @@ namespace Microsoft.Kiota.Serialization.Json {
         /// <returns>A collection of objects</returns>
         public IEnumerable<T> GetCollectionOfObjectValues<T>(ParsableFactory<T> factory) where T : IParsable {
             if (this._JsonNode.ValueKind == JsonValueKind.Array) {
+                List<T> result = new();
                 var enumerator = this._JsonNode.EnumerateArray();
                 if (enumerator.MoveNext()) {
                     var currentParseNode = new JsonParseNode(
@@ -171,13 +173,23 @@ namespace Microsoft.Kiota.Serialization.Json {
                         OnAfterAssignFieldValues = this.OnAfterAssignFieldValues,
                         OnBeforeAssignFieldValues = this.OnBeforeAssignFieldValues
                     };
-                    yield return currentParseNode.GetObjectValue<T>(factory);
+
+                    {
+                        var value = currentParseNode.GetObjectValue<T>(factory);
+                        result.Add(value);
+                    }
 
                     while (enumerator.MoveNext()) {
                         currentParseNode._JsonNode = enumerator.Current;
-                        yield return currentParseNode.GetObjectValue<T>(factory);
+                        {
+                            var value = currentParseNode.GetObjectValue<T>(factory);
+                            result.Add(value);
+                        }
                     }
                 }
+                return result;
+            } else {
+                return Array.Empty<T>();
             }
         }
 
@@ -220,40 +232,57 @@ namespace Microsoft.Kiota.Serialization.Json {
         public IEnumerable<T> GetCollectionOfPrimitiveValues<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>() {
             if (this._JsonNode.ValueKind == JsonValueKind.Array) {
                 var genericType = typeof(T);
+                List<T> result = new();
                 foreach (var collectionValue in this._JsonNode.EnumerateArray()) {
                     if (genericType == TypeConstants.BooleanType) {
-                        yield return (T)(object)this.GetBoolValue(collectionValue)!;
+                        var value = (T)(object)this.GetBoolValue(collectionValue)!;
+                        result.Add(value);
                     } else if (genericType == TypeConstants.ByteType) {
-                        yield return (T)(object)this.GetByteValue(collectionValue)!;
+                        var value = (T)(object)this.GetByteValue(collectionValue)!;
+                        result.Add(value);
                     } else if (genericType == TypeConstants.SbyteType) {
-                        yield return (T)(object)this.GetSbyteValue(collectionValue)!;
+                        var value = (T)(object)this.GetSbyteValue(collectionValue)!;
+                        result.Add(value);
                     } else if (genericType == TypeConstants.StringType) {
-                        yield return (T)(object)this.GetStringValue(collectionValue)!;
+                        var value = (T)(object)this.GetStringValue(collectionValue)!;
+                        result.Add(value);
                     } else if (genericType == TypeConstants.IntType) {
-                        yield return (T)(object)this.GetIntValue(collectionValue)!;
+                        var value = (T)(object)this.GetIntValue(collectionValue)!;
+                        result.Add(value);
                     } else if (genericType == TypeConstants.FloatType) {
-                        yield return (T)(object)this.GetFloatValue(collectionValue)!;
+                        var value = (T)(object)this.GetFloatValue(collectionValue)!;
+                        result.Add(value);
                     } else if (genericType == TypeConstants.LongType) {
-                        yield return (T)(object)this.GetLongValue(collectionValue)!;
+                        var value = (T)(object)this.GetLongValue(collectionValue)!;
+                        result.Add(value);
                     } else if (genericType == TypeConstants.DoubleType) {
-                        yield return (T)(object)this.GetDoubleValue(collectionValue)!;
+                        var value = (T)(object)this.GetDoubleValue(collectionValue)!;
+                        result.Add(value);
                     } else if (genericType == TypeConstants.GuidType) {
-                        yield return (T)(object)this.GetGuidValue(collectionValue)!;
+                        var value = (T)(object)this.GetGuidValue(collectionValue)!;
+                        result.Add(value);
                     } else if (genericType == TypeConstants.DateTimeOffsetType) {
-                        yield return (T)(object)this.GetDateTimeOffsetValue(collectionValue)!;
+                        var value = (T)(object)this.GetDateTimeOffsetValue(collectionValue)!;
+                        result.Add(value);
                     } else if (genericType == TypeConstants.TimeSpanType) {
-                        yield return (T)(object)GetTimeSpanValue(collectionValue)!;
+                        var value = (T)(object)GetTimeSpanValue(collectionValue)!;
+                        result.Add(value);
                     } else if (genericType == TypeConstants.DateType) {
-                        yield return (T)(object)this.GetDateValue(collectionValue)!;
+                        var value = (T)(object)this.GetDateValue(collectionValue)!;
+                        result.Add(value);
                     } else if (genericType == TypeConstants.TimeType) {
-                        yield return (T)(object)this.GetTimeValue(collectionValue)!;
+                        var value = (T)(object)this.GetTimeValue(collectionValue)!;
+                        result.Add(value);
                     } else if (this.GetStringValue(collectionValue) is { Length: > 0 } rawValue) {
-                        yield return (T)EnumHelpers.GetEnumValue(genericType, rawValue)!;
+                        var value = (T)EnumHelpers.GetEnumValue(genericType, rawValue)!;
+                        result.Add(value);
                     } else {
                         throw new InvalidOperationException($"unknown type for deserialization {genericType.FullName}");
                     }
                 }
+                return result;
             }
+            return Array.Empty<T>();
         }
 
         private string? GetStringValue(JsonElement jsonElement) => jsonElement.ValueKind == JsonValueKind.String

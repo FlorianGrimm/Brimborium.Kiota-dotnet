@@ -179,7 +179,8 @@ namespace Microsoft.Kiota.Http.HttpClientLibrary {
                     using (bufferstream) {
                         using (jsonDocument) {
                             using var spanForDeserialization = this._ActivitySource?.StartActivity(nameof(IParseNode.GetCollectionOfObjectValues));
-                            var result = rootNode?.GetCollectionOfObjectValues<ModelType>(factory);
+                            // TODO
+                            var result = rootNode?.GetCollectionOfObjectValues<ModelType>(factory).ToList();
                             SetResponseType(result, span);
                             return result;
                         }
