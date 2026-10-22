@@ -22,12 +22,12 @@ namespace Microsoft.Kiota.Abstractions.Store
         /// </summary>
         public bool ReturnOnlyChangedValues
         {
-            get => _returnOnlyChangedValues;
+            get => this._returnOnlyChangedValues;
 
             set
             {
-                _returnOnlyChangedValues = value;
-                ForwardReturnOnlyChangedValuesToNestedInstances();
+                this._returnOnlyChangedValues = value;
+                this.ForwardReturnOnlyChangedValuesToNestedInstances();
             }
         }
         private readonly ConcurrentDictionary<string, Tuple<bool, object?>> store = new();
@@ -44,11 +44,11 @@ namespace Microsoft.Kiota.Abstractions.Store
                 throw new ArgumentNullException(nameof(key));
             }
 
-            if(store.TryGetValue(key, out var result))
+            if(this.store.TryGetValue(key, out var result))
             {
-                if(ReturnOnlyChangedValues)
+                if(this.ReturnOnlyChangedValues)
                 {
-                    EnsureCollectionPropertyIsConsistent(key, result.Item2);
+                    this.EnsureCollectionPropertyIsConsistent(key, result.Item2);
                 }
                 var resultObject = result.Item2;
                 if(resultObject is Tuple<ICollection, int> collectionTuple)
@@ -56,7 +56,7 @@ namespace Microsoft.Kiota.Abstractions.Store
                     resultObject = collectionTuple.Item1;// return the actual collection
                 }
 
-                return ReturnOnlyChangedValues && store[key].Item1 || !ReturnOnlyChangedValues ? (T)resultObject! : default;
+                return this.ReturnOnlyChangedValues && this.store[key].Item1 || !this.ReturnOnlyChangedValues ? (T)resultObject! : default;
             }
             return default;
         }
@@ -72,16 +72,16 @@ namespace Microsoft.Kiota.Abstractions.Store
                 throw new ArgumentNullException(nameof(key));
             }
 
-            var valueToAdd = new Tuple<bool, object?>(InitializationCompleted, value);
+            var valueToAdd = new Tuple<bool, object?>(this.InitializationCompleted, value);
             if(value is ICollection collection) {
-                valueToAdd = new Tuple<bool, object?>(InitializationCompleted, new Tuple<ICollection, int>(collection, collection.Count));
+                valueToAdd = new Tuple<bool, object?>(this.InitializationCompleted, new Tuple<ICollection, int>(collection, collection.Count));
             }
 
             Tuple<bool, object?>? oldValue = null;
-            if(!store.TryAdd(key, valueToAdd))
+            if(!this.store.TryAdd(key, valueToAdd))
             {
-                oldValue = store[key];
-                store[key] = valueToAdd;
+                oldValue = this.store[key];
+                this.store[key] = valueToAdd;
             }
             else if(value is IBackedModel backedModel)
             {
@@ -89,7 +89,7 @@ namespace Microsoft.Kiota.Abstractions.Store
                 backedModel.BackingStore?.Subscribe((keyString, oldObject, newObject) =>
                 {
                     backedModel.BackingStore.InitializationCompleted = false;
-                    Set(key, value);
+                    this.Set(key, value);
                 }, key);
             }
 
@@ -106,12 +106,12 @@ namespace Microsoft.Kiota.Abstractions.Store
                     model.BackingStore.InitializationCompleted = false;
                     model.BackingStore.Subscribe((keyString, oldObject, newObject) =>
                     {
-                        Set(key, value);
+                        this.Set(key, value);
                     }, key); // use property name(key) as subscriptionId to prevent excess subscription creation in the event this is called again
                 }
             }
 
-            foreach(var sub in subscriptions.Values) {
+            foreach(var sub in this.subscriptions.Values) {
                 sub.Invoke(key, oldValue?.Item2, value);
             }
         }
@@ -124,17 +124,17 @@ namespace Microsoft.Kiota.Abstractions.Store
         {
             var result = new List<KeyValuePair<string, object?>>();
 
-            if(ReturnOnlyChangedValues) // refresh the state of collection properties if they've changed in size.
+            if(this.ReturnOnlyChangedValues) // refresh the state of collection properties if they've changed in size.
             {
-                foreach(var item in store)
+                foreach(var item in this.store)
                 {
-                    EnsureCollectionPropertyIsConsistent(item.Key, item.Value.Item2);
+                    this.EnsureCollectionPropertyIsConsistent(item.Key, item.Value.Item2);
                 }
             }
 
-            foreach(var item in store)
+            foreach(var item in this.store)
             {
-                if(!ReturnOnlyChangedValues || item.Value.Item1)
+                if(!this.ReturnOnlyChangedValues || item.Value.Item1)
                 {
                     result.Add(new KeyValuePair<string, object?>(item.Key, item.Value.Item2));
                 }
@@ -149,15 +149,15 @@ namespace Microsoft.Kiota.Abstractions.Store
         /// <returns>A collection of strings containing keys changed to null </returns>
         public IEnumerable<string> EnumerateKeysForValuesChangedToNull()
         {
-            if(ReturnOnlyChangedValues) // refresh the state of collection properties if they've changed in size.
+            if(this.ReturnOnlyChangedValues) // refresh the state of collection properties if they've changed in size.
             {
-                foreach(var item in store)
+                foreach(var item in this.store)
                 {
-                    EnsureCollectionPropertyIsConsistent(item.Key, item.Value.Item2);
+                    this.EnsureCollectionPropertyIsConsistent(item.Key, item.Value.Item2);
                 }
             }
 
-            foreach(var item in store)
+            foreach(var item in this.store)
             {
                 if(item.Value.Item1 && item.Value.Item2 == null)
                 {
@@ -174,7 +174,7 @@ namespace Microsoft.Kiota.Abstractions.Store
         public string Subscribe(Action<string, object?, object?> callback)
         {
             var id = Guid.NewGuid().ToString();
-            Subscribe(callback, id);
+            this.Subscribe(callback, id);
             return id;
         }
 
@@ -194,7 +194,7 @@ namespace Microsoft.Kiota.Abstractions.Store
                 throw new ArgumentNullException(nameof(callback));
             }
 
-            _ = subscriptions.AddOrUpdate(subscriptionId, callback, (_, _) => callback);
+            _ = this.subscriptions.AddOrUpdate(subscriptionId, callback, (_, _) => callback);
         }
 
         /// <summary>
@@ -203,32 +203,32 @@ namespace Microsoft.Kiota.Abstractions.Store
         /// <param name="subscriptionId">The id of the subscription to de-register </param>
         public void Unsubscribe(string subscriptionId)
         {
-            _ = subscriptions.TryRemove(subscriptionId, out _);
+            _ = this.subscriptions.TryRemove(subscriptionId, out _);
         }
         /// <summary>
         /// Clears the store
         /// </summary>
         public void Clear()
         {
-            store.Clear();
+            this.store.Clear();
         }
         /// <summary>
         /// Flag to show the initialization status of the store.
         /// </summary>
         public bool InitializationCompleted
         {
-            get { return isInitializationComplete; }
+            get { return this.isInitializationComplete; }
             set
             {
-                isInitializationComplete = value;
-                foreach(var key in store.Keys)
+                this.isInitializationComplete = value;
+                foreach(var key in this.store.Keys)
                 {
-                    if(store[key].Item2 is IBackedModel model) {
+                    if(this.store[key].Item2 is IBackedModel model) {
                         model.BackingStore.InitializationCompleted = value;//forward the initialization status to nested IBackedModel instances
                     }
 
-                    EnsureCollectionPropertyIsConsistent(key, store[key].Item2);
-                    store[key] = new(!value, store[key].Item2);
+                    this.EnsureCollectionPropertyIsConsistent(key, this.store[key].Item2);
+                    this.store[key] = new(!value, this.store[key].Item2);
                 }
             }
         }
@@ -253,7 +253,7 @@ namespace Microsoft.Kiota.Abstractions.Store
 
                 if(collectionTuple.Item2 != collectionTuple.Item1.Count) // and the size has changed since we last updated)
                 {
-                    Set(key, collectionTuple.Item1); //ensure the store is notified the collection property is "dirty"
+                    this.Set(key, collectionTuple.Item1); //ensure the store is notified the collection property is "dirty"
                 }
             }
             else if(storeItem is IBackedModel backedModel)
@@ -268,7 +268,7 @@ namespace Microsoft.Kiota.Abstractions.Store
 
         private void ForwardReturnOnlyChangedValuesToNestedInstances()
         {
-            foreach(var item in store.Values)
+            foreach(var item in this.store.Values)
             {
                 if(item.Item2 is Tuple<ICollection, int> collectionTuple)
                 {
@@ -278,12 +278,12 @@ namespace Microsoft.Kiota.Abstractions.Store
                             break;
                         }
 
-                        backedModel.BackingStore.ReturnOnlyChangedValues = _returnOnlyChangedValues;
+                        backedModel.BackingStore.ReturnOnlyChangedValues = this._returnOnlyChangedValues;
                     }
                 }
                 else if(item.Item2 is IBackedModel backedModel)
                 {
-                    backedModel.BackingStore.ReturnOnlyChangedValues = _returnOnlyChangedValues;
+                    backedModel.BackingStore.ReturnOnlyChangedValues = this._returnOnlyChangedValues;
                 }
             }
         }

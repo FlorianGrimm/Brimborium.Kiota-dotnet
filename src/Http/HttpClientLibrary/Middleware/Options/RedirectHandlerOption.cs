@@ -2,17 +2,13 @@
 //  Copyright (c) Microsoft Corporation.  All Rights Reserved.  Licensed under the MIT License.  See License in the project root for license information.
 // ------------------------------------------------------------------------------
 
-using System;
-using System.Net.Http;
 using Microsoft.Kiota.Abstractions;
 
-namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware.Options
-{
+namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware.Options {
     /// <summary>
     /// The redirect request option class
     /// </summary>
-    public class RedirectHandlerOption : IRequestOption
-    {
+    public class RedirectHandlerOption : IRequestOption {
         private const int DefaultMaxRedirect = 5;
         private const int MaxMaxRedirect = 20;
         private int _maxRedirect = DefaultMaxRedirect;
@@ -20,19 +16,16 @@ namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware.Options
         /// <summary>
         /// The maximum number of redirects with a maximum value of 20. This defaults to 5 redirects.
         /// </summary>
-        public int MaxRedirect
-        {
-            get
-            {
-                return _maxRedirect;
+        public int MaxRedirect {
+            get {
+                return this._maxRedirect;
             }
-            set
-            {
-                if(value > MaxMaxRedirect) {
-                    throw new InvalidOperationException($"Maximum value for {nameof(MaxRedirect)} property exceeded ");
+            set {
+                if (value > MaxMaxRedirect) {
+                    throw new InvalidOperationException($"Maximum value for {nameof(this.MaxRedirect)} property exceeded ");
                 }
 
-                _maxRedirect = value;
+                this._maxRedirect = value;
             }
         }
 
@@ -62,13 +55,12 @@ namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware.Options
         /// <param name="newRequest">The HTTP request message to modify.</param>
         /// <param name="originalUri">The original request URI.</param>
         /// <param name="proxyResolver">A function that returns the proxy URI for a destination, or null if no proxy applies. Can be null if no proxy is configured.</param>
-        public static void DefaultScrubSensitiveHeaders(HttpRequestMessage newRequest, Uri originalUri, Func<Uri, Uri?>? proxyResolver)
-        {
-            if(newRequest == null) {
+        public static void DefaultScrubSensitiveHeaders(HttpRequestMessage newRequest, Uri originalUri, Func<Uri, Uri?>? proxyResolver) {
+            if (newRequest == null) {
                 throw new ArgumentNullException(nameof(newRequest));
             }
 
-            if(originalUri == null) {
+            if (originalUri == null) {
                 throw new ArgumentNullException(nameof(originalUri));
             }
 
@@ -78,16 +70,14 @@ namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware.Options
             var isDifferentOrigin = !newUri.Host.Equals(originalUri.Host, StringComparison.OrdinalIgnoreCase) ||
                 !newUri.Scheme.Equals(originalUri.Scheme, StringComparison.OrdinalIgnoreCase) ||
                 newUri.Port != originalUri.Port;
-            if(isDifferentOrigin)
-            {
+            if (isDifferentOrigin) {
                 newRequest.Headers.Authorization = null;
                 _ = newRequest.Headers.Remove("Cookie");
             }
 
             // Remove ProxyAuthorization if no proxy is configured or the URL is bypassed
             var isProxyInactive = proxyResolver == null || proxyResolver(newUri) == null;
-            if(isProxyInactive)
-            {
+            if (isProxyInactive) {
                 newRequest.Headers.ProxyAuthorization = null;
             }
         }

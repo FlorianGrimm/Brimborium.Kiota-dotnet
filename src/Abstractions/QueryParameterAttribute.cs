@@ -31,6 +31,6 @@ public sealed class QueryParameterAttribute : Attribute
     ///</summary>
     public string TemplateName
     {
-        get { return templateName; }
+        get { return this.templateName; }
     }
 }

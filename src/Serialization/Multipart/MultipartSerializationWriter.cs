@@ -2,12 +2,10 @@
 //  Copyright (c) Microsoft Corporation.  All Rights Reserved.  Licensed under the MIT License.  See License in the project root for license information.
 // ------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.IO;
 using Microsoft.IO;
 using Microsoft.Kiota.Abstractions;
 using Microsoft.Kiota.Abstractions.Serialization;
+
 #if NET5_0_OR_GREATER
 using System.Diagnostics.CodeAnalysis;
 #endif
@@ -16,8 +14,7 @@ namespace Microsoft.Kiota.Serialization.Multipart;
 /// <summary>
 /// Serialization writer for multipart payloads.
 /// </summary>
-public class MultipartSerializationWriter : ISerializationWriter
-{
+public class MultipartSerializationWriter : ISerializationWriter {
     private static readonly RecyclableMemoryStreamManager _MemoryStreamManager = new RecyclableMemoryStreamManager();
     private readonly RecyclableMemoryStream _Stream = _MemoryStreamManager.GetStream();
     /// <inheritdoc/>
@@ -31,42 +28,36 @@ public class MultipartSerializationWriter : ISerializationWriter
     /// <summary>
     /// Instantiates a new multipart serialization writer.
     /// </summary>
-    public MultipartSerializationWriter()
-    {
-        _Writer = new StreamWriter(_Stream,
+    public MultipartSerializationWriter() {
+        this._Writer = new StreamWriter(this._Stream,
             // Default encoding
             encoding: new System.Text.UTF8Encoding(false, true),
             // Default buffer size
             bufferSize: 1024,
-            leaveOpen: true)
-        {
+            leaveOpen: true) {
             AutoFlush = true, // important as we also write to the stream directly
             NewLine = "\r\n", // http spec
         };
     }
     /// <inheritdoc/>
-    public void Dispose()
-    {
-        _Writer.Dispose();
+    public void Dispose() {
+        this._Writer.Dispose();
         GC.SuppressFinalize(this);
     }
     /// <inheritdoc/>
-    public Stream GetSerializedContent()
-    {
-        _Writer.Flush();
-        _Stream.Position = 0;
-        return _Stream;
+    public Stream GetSerializedContent() {
+        this._Writer.Flush();
+        this._Stream.Position = 0;
+        return this._Stream;
     }
     /// <inheritdoc/>
     public void WriteAdditionalData(IDictionary<string, object> value) => throw new NotImplementedException();
     /// <inheritdoc/>
     public void WriteBoolValue(string? key, bool? value) => throw new NotImplementedException();
     /// <inheritdoc/>
-    public void WriteByteArrayValue(string? key, byte[]? value)
-    {
-        if(value != null && value.Length > 0)
-        {
-            _Stream.Write(value, 0, value.Length);
+    public void WriteByteArrayValue(string? key, byte[]? value) {
+        if (value != null && value.Length > 0) {
+            this._Stream.Write(value, 0, value.Length);
         }
     }
     /// <inheritdoc/>
@@ -106,37 +97,32 @@ public class MultipartSerializationWriter : ISerializationWriter
     /// <inheritdoc/>
     public void WriteNullValue(string? key) => throw new NotImplementedException();
     /// <inheritdoc/>
-    public void WriteObjectValue<T>(string? key, T? value, params IParsable?[] additionalValuesToMerge) where T : IParsable
-    {
-        if(value is MultipartBody)
-        {
-            OnBeforeObjectSerialization?.Invoke(value);
-            OnStartObjectSerialization?.Invoke(value, this);
+    public void WriteObjectValue<T>(string? key, T? value, params IParsable?[] additionalValuesToMerge) where T : IParsable {
+        if (value is MultipartBody) {
+            this.OnBeforeObjectSerialization?.Invoke(value);
+            this.OnStartObjectSerialization?.Invoke(value, this);
             value.Serialize(this);
-            OnAfterObjectSerialization?.Invoke(value);
-        }
-        else {
+            this.OnAfterObjectSerialization?.Invoke(value);
+        } else {
             throw new InvalidOperationException($"Expected a MultiPartBody instance, but got {value?.GetType().Name ?? "null"}");
         }
     }
     /// <inheritdoc/>
     public void WriteSbyteValue(string? key, sbyte? value) => throw new NotImplementedException();
     /// <inheritdoc/>
-    public void WriteStringValue(string? key, string? value)
-    {
-        if(!string.IsNullOrEmpty(key)) {
-            _Writer.Write(key);
+    public void WriteStringValue(string? key, string? value) {
+        if (!string.IsNullOrEmpty(key)) {
+            this._Writer.Write(key);
         }
 
-        if(!string.IsNullOrEmpty(value))
-        {
-            if(!string.IsNullOrEmpty(key)) {
-                _Writer.Write(": ");
+        if (!string.IsNullOrEmpty(value)) {
+            if (!string.IsNullOrEmpty(key)) {
+                this._Writer.Write(": ");
             }
 
-            _Writer.Write(value);
+            this._Writer.Write(value);
         }
-        _Writer.WriteLine();
+        this._Writer.WriteLine();
     }
     /// <inheritdoc/>
     public void WriteTimeSpanValue(string? key, TimeSpan? value) => throw new NotImplementedException();

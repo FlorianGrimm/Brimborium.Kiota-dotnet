@@ -20,7 +20,7 @@ public class MultipartBody : IParsable
     /// <summary>
     /// The boundary to use for the multipart body.
     /// </summary>
-    public string Boundary => _boundary.Value;
+    public string Boundary => this._boundary.Value;
     /// <summary>
     /// The request adapter to use for serialization.
     /// </summary>
@@ -49,9 +49,9 @@ public class MultipartBody : IParsable
         }
         var key = (partName, fileName ?? "");
         var value = new Part(partName, partValue, contentType, fileName);
-        if(!_parts.TryAdd(key, value))
+        if(!this._parts.TryAdd(key, value))
         {
-            _parts[key] = value;
+            this._parts[key] = value;
         }
     }
     /// <summary>
@@ -67,7 +67,7 @@ public class MultipartBody : IParsable
         {
             throw new ArgumentNullException(nameof(partName));
         }
-        if(_parts.TryGetValue((partName, fileName ?? ""), out var value))
+        if(this._parts.TryGetValue((partName, fileName ?? ""), out var value))
         {
             if(value == null) {
                 return default;
@@ -89,7 +89,7 @@ public class MultipartBody : IParsable
         {
             throw new ArgumentNullException(nameof(partName));
         }
-        return _parts.Remove((partName, fileName ?? ""));
+        return this._parts.Remove((partName, fileName ?? ""));
     }
 
     private readonly Dictionary<ValueTuple<string, string>, Part> _parts = new Dictionary<ValueTuple<string, string>, Part>(new ValueTupleComparer());
@@ -103,17 +103,17 @@ public class MultipartBody : IParsable
         {
             throw new ArgumentNullException(nameof(writer));
         }
-        if(RequestAdapter?.SerializationWriterFactory == null)
+        if(this.RequestAdapter?.SerializationWriterFactory == null)
         {
-            throw new InvalidOperationException(nameof(RequestAdapter.SerializationWriterFactory));
+            throw new InvalidOperationException(nameof(this.RequestAdapter.SerializationWriterFactory));
         }
-        if(_parts.Count == 0)
+        if(this._parts.Count == 0)
         {
             throw new InvalidOperationException("No parts to serialize");
         }
         var first = true;
         var contentDispositionBuilder = new StringBuilder();
-        foreach(var part in _parts.Values)
+        foreach(var part in this._parts.Values)
         {
             try
             {
@@ -124,7 +124,7 @@ public class MultipartBody : IParsable
                     AddNewLine(writer);
                 }
 
-                writer.WriteStringValue(string.Empty, $"--{Boundary}");
+                writer.WriteStringValue(string.Empty, $"--{this.Boundary}");
                 writer.WriteStringValue("Content-Type", part.ContentType);
 
                 _ = contentDispositionBuilder.Clear();
@@ -144,13 +144,13 @@ public class MultipartBody : IParsable
                 AddNewLine(writer);
                 if(part.Content is IParsable parsable)
                 {
-                    using var partWriter = RequestAdapter.SerializationWriterFactory.GetSerializationWriter(part.ContentType);
+                    using var partWriter = this.RequestAdapter.SerializationWriterFactory.GetSerializationWriter(part.ContentType);
                     partWriter.WriteObjectValue(string.Empty, parsable);
                     WriteSerializedContent(writer, partWriter);
                 }
                 else if(part.Content is string currentString)
                 {
-                    using var partWriter = RequestAdapter.SerializationWriterFactory.GetSerializationWriter(part.ContentType);
+                    using var partWriter = this.RequestAdapter.SerializationWriterFactory.GetSerializationWriter(part.ContentType);
                     partWriter.WriteStringValue(string.Empty, currentString);
                     WriteSerializedContent(writer, partWriter);
                 }
@@ -183,7 +183,7 @@ public class MultipartBody : IParsable
             }
         }
         AddNewLine(writer);
-        writer.WriteStringValue(string.Empty, $"--{Boundary}--");
+        writer.WriteStringValue(string.Empty, $"--{this.Boundary}--");
     }
     private static void AddNewLine(ISerializationWriter writer) => writer.WriteStringValue(string.Empty, string.Empty);
 

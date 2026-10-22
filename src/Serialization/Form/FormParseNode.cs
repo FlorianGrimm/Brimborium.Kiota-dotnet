@@ -1,12 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.Xml;
-using Microsoft.Kiota.Abstractions;
+
 using Microsoft.Kiota.Abstractions.Extensions;
 using Microsoft.Kiota.Abstractions.Helpers;
 using Microsoft.Kiota.Abstractions.Serialization;
+
 #if NET5_0_OR_GREATER
 using System.Diagnostics.CodeAnalysis;
 #endif
@@ -15,7 +13,7 @@ namespace Microsoft.Kiota.Serialization.Form;
 /// <summary>Represents a parse node that can be used to parse a form url encoded string.</summary>
 public class FormParseNode : IParseNode {
     private readonly string _RawValue;
-    private string DecodedValue => Uri.UnescapeDataString(_RawValue);
+    private string DecodedValue => Uri.UnescapeDataString(this._RawValue);
     private readonly Dictionary<string, string> _Fields;
     private static readonly char[] _PairDelimiter = ['='];
     private static readonly char[] _EntriesDelimiter = ['&'];
@@ -23,27 +21,26 @@ public class FormParseNode : IParseNode {
     /// <param name="rawValue">The raw value to parse.</param>
     /// <exception cref="ArgumentNullException">Thrown when the <paramref name="rawValue"/> is null.</exception>
     public FormParseNode(string rawValue) {
-        _RawValue = rawValue ?? throw new ArgumentNullException(nameof(rawValue));
-        _Fields = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        this._RawValue = rawValue ?? throw new ArgumentNullException(nameof(rawValue));
+        this._Fields = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         string[] pairs = rawValue.Split(_EntriesDelimiter, StringSplitOptions.RemoveEmptyEntries);
-        foreach(string pair in pairs) {
+        foreach (string pair in pairs) {
             string[] keyValue = pair.Split(_PairDelimiter, StringSplitOptions.RemoveEmptyEntries);
-            if(keyValue.Length == 2) {
+            if (keyValue.Length == 2) {
                 string key = SanitizeKey(keyValue[0]);
                 string value = keyValue[1].Trim();
 
-                if(_Fields.ContainsKey(key)) {
-                    _Fields[key] += $",{value}";
-                }
-                else {
-                    _Fields.Add(key, value);
+                if (this._Fields.ContainsKey(key)) {
+                    this._Fields[key] += $",{value}";
+                } else {
+                    this._Fields.Add(key, value);
                 }
             }
         }
     }
 
     private static string SanitizeKey(string key) {
-        if(string.IsNullOrEmpty(key)) {
+        if (string.IsNullOrEmpty(key)) {
             return key;
         }
 
@@ -54,23 +51,23 @@ public class FormParseNode : IParseNode {
     /// <inheritdoc/>
     public Action<IParsable>? OnAfterAssignFieldValues { get; set; }
     /// <inheritdoc/>
-    public bool? GetBoolValue() => bool.TryParse(DecodedValue, out var result) && result;
+    public bool? GetBoolValue() => bool.TryParse(this.DecodedValue, out var result) && result;
     /// <inheritdoc/>
     public byte[]? GetByteArrayValue() {
-        var rawValue = DecodedValue;
-        if(string.IsNullOrEmpty(rawValue)) {
+        var rawValue = this.DecodedValue;
+        if (string.IsNullOrEmpty(rawValue)) {
             return null;
         }
 
         return Convert.FromBase64String(rawValue);
     }
     /// <inheritdoc/>
-    public byte? GetByteValue() => byte.TryParse(DecodedValue, out var result) ? result : null;
+    public byte? GetByteValue() => byte.TryParse(this.DecodedValue, out var result) ? result : null;
     /// <inheritdoc/>
-    public IParseNode? GetChildNode(string identifier) => _Fields.TryGetValue(SanitizeKey(identifier), out var value) ?
+    public IParseNode? GetChildNode(string identifier) => this._Fields.TryGetValue(SanitizeKey(identifier), out var value) ?
         new FormParseNode(value) {
-            OnBeforeAssignFieldValues = OnBeforeAssignFieldValues,
-            OnAfterAssignFieldValues = OnAfterAssignFieldValues
+            OnBeforeAssignFieldValues = this.OnBeforeAssignFieldValues,
+            OnAfterAssignFieldValues = this.OnAfterAssignFieldValues
         } : null;
     /// <inheritdoc/>
     public IEnumerable<T> GetCollectionOfObjectValues<T>(ParsableFactory<T> factory) where T : IParsable => throw new InvalidOperationException("collections are not supported with uri form encoding");
@@ -102,124 +99,108 @@ public class FormParseNode : IParseNode {
 #endif
     {
         var genericType = typeof(T);
-        var primitiveValueCollection = DecodedValue.Split(_ComaSeparator, StringSplitOptions.RemoveEmptyEntries);
-        foreach(var collectionValue in primitiveValueCollection) {
+        var primitiveValueCollection = this.DecodedValue.Split(_ComaSeparator, StringSplitOptions.RemoveEmptyEntries);
+        foreach (var collectionValue in primitiveValueCollection) {
             var decodedCollectionValue = Uri.UnescapeDataString(collectionValue);
-            if(genericType == _BooleanType) {
+            if (genericType == _BooleanType) {
                 yield return (T)(object)GetBoolValue(decodedCollectionValue)!;
-            }
-            else if(genericType == _ByteType) {
+            } else if (genericType == _ByteType) {
                 yield return (T)(object)GetByteValue(decodedCollectionValue)!;
-            }
-            else if(genericType == _SbyteType) {
+            } else if (genericType == _SbyteType) {
                 yield return (T)(object)GetSbyteValue(decodedCollectionValue)!;
-            }
-            else if(genericType == _StringType) {
+            } else if (genericType == _StringType) {
                 yield return (T)(object)decodedCollectionValue;
-            }
-            else if(genericType == _IntType) {
+            } else if (genericType == _IntType) {
                 yield return (T)(object)GetIntValue(decodedCollectionValue)!;
-            }
-            else if(genericType == _LongType) {
+            } else if (genericType == _LongType) {
                 yield return (T)(object)GetLongValue(decodedCollectionValue)!;
-            }
-            else if(genericType == _FloatType) {
+            } else if (genericType == _FloatType) {
                 yield return (T)(object)GetFloatValue(decodedCollectionValue)!;
-            }
-            else if(genericType == _DoubleType) {
+            } else if (genericType == _DoubleType) {
                 yield return (T)(object)GetDoubleValue(decodedCollectionValue)!;
-            }
-            else if(genericType == _DecimalType) {
+            } else if (genericType == _DecimalType) {
                 yield return (T)(object)GetDecimalValue(decodedCollectionValue)!;
-            }
-            else if(genericType == _GuidType) {
+            } else if (genericType == _GuidType) {
                 yield return (T)(object)GetGuidValue(decodedCollectionValue)!;
-            }
-            else if(genericType == _DateTimeOffsetType) {
+            } else if (genericType == _DateTimeOffsetType) {
                 yield return (T)(object)GetDateTimeOffsetValue(decodedCollectionValue)!;
-            }
-            else if(genericType == _TimeSpanType) {
+            } else if (genericType == _TimeSpanType) {
                 yield return (T)(object)GetTimeSpanValue(decodedCollectionValue)!;
-            }
-            else if(genericType == _DateType) {
+            } else if (genericType == _DateType) {
                 yield return (T)(object)GetDateValue(decodedCollectionValue)!;
-            }
-            else if(genericType == _TimeType) {
+            } else if (genericType == _TimeType) {
                 yield return (T)(object)GetTimeValue(decodedCollectionValue)!;
-            }
-            else {
+            } else {
                 throw new InvalidOperationException($"unknown type for deserialization {genericType.FullName}");
             }
         }
     }
     /// <inheritdoc/>
-    public DateTimeOffset? GetDateTimeOffsetValue() => DateTimeOffset.TryParse(DecodedValue, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out var result) ? result : null;
+    public DateTimeOffset? GetDateTimeOffsetValue() => DateTimeOffset.TryParse(this.DecodedValue, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out var result) ? result : null;
     /// <inheritdoc/>
-    public DateOnly? GetDateValue() => DateTime.TryParse(DecodedValue, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out var result) ? DateOnly.FromDateTime(result) : null;
+    public DateOnly? GetDateValue() => DateTime.TryParse(this.DecodedValue, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out var result) ? DateOnly.FromDateTime(result) : null;
     /// <inheritdoc/>
-    public decimal? GetDecimalValue() => decimal.TryParse(DecodedValue, NumberStyles.Number, CultureInfo.InvariantCulture, out var result) ? result : null;
+    public decimal? GetDecimalValue() => decimal.TryParse(this.DecodedValue, NumberStyles.Number, CultureInfo.InvariantCulture, out var result) ? result : null;
     /// <inheritdoc/>
-    public double? GetDoubleValue() => double.TryParse(DecodedValue, NumberStyles.Number, CultureInfo.InvariantCulture, out var result) ? result : null;
+    public double? GetDoubleValue() => double.TryParse(this.DecodedValue, NumberStyles.Number, CultureInfo.InvariantCulture, out var result) ? result : null;
     /// <inheritdoc/>
-    public float? GetFloatValue() => float.TryParse(DecodedValue, NumberStyles.Number, CultureInfo.InvariantCulture, out var result) ? result : null;
+    public float? GetFloatValue() => float.TryParse(this.DecodedValue, NumberStyles.Number, CultureInfo.InvariantCulture, out var result) ? result : null;
     /// <inheritdoc/>
-    public Guid? GetGuidValue() => Guid.TryParse(DecodedValue, out var result) ? result : null;
+    public Guid? GetGuidValue() => Guid.TryParse(this.DecodedValue, out var result) ? result : null;
     /// <inheritdoc/>
-    public int? GetIntValue() => int.TryParse(DecodedValue, NumberStyles.Number, CultureInfo.InvariantCulture, out var result) ? result : null;
+    public int? GetIntValue() => int.TryParse(this.DecodedValue, NumberStyles.Number, CultureInfo.InvariantCulture, out var result) ? result : null;
     /// <inheritdoc/>
-    public long? GetLongValue() => long.TryParse(DecodedValue, NumberStyles.Number, CultureInfo.InvariantCulture, out var result) ? result : null;
+    public long? GetLongValue() => long.TryParse(this.DecodedValue, NumberStyles.Number, CultureInfo.InvariantCulture, out var result) ? result : null;
     /// <inheritdoc/>
     public T GetObjectValue<T>(ParsableFactory<T> factory) where T : IParsable {
         var item = factory(this);
-        OnBeforeAssignFieldValues?.Invoke(item);
-        AssignFieldValues(item);
-        OnAfterAssignFieldValues?.Invoke(item);
+        this.OnBeforeAssignFieldValues?.Invoke(item);
+        this.AssignFieldValues(item);
+        this.OnAfterAssignFieldValues?.Invoke(item);
         return item;
     }
     private void AssignFieldValues<T>(T item) where T : IParsable {
-        if(_Fields.Count == 0) {
+        if (this._Fields.Count == 0) {
             return;
         }
 
         IDictionary<string, object>? itemAdditionalData = null;
-        if(item is IAdditionalDataHolder holder) {
+        if (item is IAdditionalDataHolder holder) {
             holder.AdditionalData ??= new Dictionary<string, object>();
             itemAdditionalData = holder.AdditionalData;
         }
         var fieldDeserializers = item.GetFieldDeserializers();
 
-        foreach(var fieldValue in _Fields) {
-            if(fieldDeserializers.TryGetValue(fieldValue.Key, out var fieldDeserializer)) {
-                if("null".Equals(fieldValue.Value, StringComparison.OrdinalIgnoreCase)) {
+        foreach (var fieldValue in this._Fields) {
+            if (fieldDeserializers.TryGetValue(fieldValue.Key, out var fieldDeserializer)) {
+                if ("null".Equals(fieldValue.Value, StringComparison.OrdinalIgnoreCase)) {
                     continue;// If the property is already null just continue. As calling functions like GetDouble,GetBoolValue do not process null.
                 }
 
                 // Debug.WriteLine($"found property {fieldValue.Key} to deserialize");
                 fieldDeserializer.Invoke(new FormParseNode(fieldValue.Value) {
-                    OnBeforeAssignFieldValues = OnBeforeAssignFieldValues,
-                    OnAfterAssignFieldValues = OnAfterAssignFieldValues
+                    OnBeforeAssignFieldValues = this.OnBeforeAssignFieldValues,
+                    OnAfterAssignFieldValues = this.OnAfterAssignFieldValues
                 });
-            }
-            else if(itemAdditionalData != null) {
+            } else if (itemAdditionalData != null) {
                 // Debug.WriteLine($"found additional property {fieldValue.Key} to deserialize");
                 _ = IDictionaryExtensions.TryAdd(itemAdditionalData, fieldValue.Key, fieldValue.Value);
-            }
-            else {
+            } else {
                 // Debug.WriteLine($"found additional property {fieldValue.Key} to deserialize but the model doesn't support additional data");
             }
         }
     }
 
     /// <inheritdoc/>
-    public sbyte? GetSbyteValue() => sbyte.TryParse(DecodedValue, NumberStyles.Number, CultureInfo.InvariantCulture, out var result) ? result : null;
+    public sbyte? GetSbyteValue() => sbyte.TryParse(this.DecodedValue, NumberStyles.Number, CultureInfo.InvariantCulture, out var result) ? result : null;
 
     /// <inheritdoc/>
-    public string GetStringValue() => DecodedValue;
+    public string GetStringValue() => this.DecodedValue;
 
     /// <inheritdoc/>
     public TimeSpan? GetTimeSpanValue() {
-        var rawString = DecodedValue;
-        if(string.IsNullOrEmpty(rawString)) {
+        var rawString = this.DecodedValue;
+        if (string.IsNullOrEmpty(rawString)) {
             return null;
         }
 
@@ -228,7 +209,7 @@ public class FormParseNode : IParseNode {
     }
 
     /// <inheritdoc/>
-    public TimeOnly? GetTimeValue() => DateTime.TryParse(DecodedValue, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out var result) ? TimeOnly.FromDateTime(result) : null;
+    public TimeOnly? GetTimeValue() => DateTime.TryParse(this.DecodedValue, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out var result) ? TimeOnly.FromDateTime(result) : null;
 
     private static bool? GetBoolValue(string value) => bool.TryParse(value, out var result) && result;
     private static byte? GetByteValue(string value) => byte.TryParse(value, out var result) ? result : null;
@@ -243,7 +224,7 @@ public class FormParseNode : IParseNode {
     private static DateOnly? GetDateValue(string value) => DateTime.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out var result) ? DateOnly.FromDateTime(result) : null;
     private static TimeOnly? GetTimeValue(string value) => DateTime.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out var result) ? TimeOnly.FromDateTime(result) : null;
     private static TimeSpan? GetTimeSpanValue(string value) {
-        if(string.IsNullOrEmpty(value)) {
+        if (string.IsNullOrEmpty(value)) {
             return null;
         }
 
@@ -258,7 +239,7 @@ public class FormParseNode : IParseNode {
     public IEnumerable<T?> GetCollectionOfEnumValues<T>() where T : struct, Enum
 #endif
     {
-        foreach(var v in DecodedValue.Split(_ComaSeparator, StringSplitOptions.RemoveEmptyEntries)) {
+        foreach (var v in this.DecodedValue.Split(_ComaSeparator, StringSplitOptions.RemoveEmptyEntries)) {
             yield return EnumHelpers.GetEnumValue<T>(v);
         }
     }
@@ -270,6 +251,6 @@ public class FormParseNode : IParseNode {
     public T? GetEnumValue<T>() where T : struct, Enum
 #endif
     {
-        return EnumHelpers.GetEnumValue<T>(DecodedValue);
+        return EnumHelpers.GetEnumValue<T>(this.DecodedValue);
     }
 }

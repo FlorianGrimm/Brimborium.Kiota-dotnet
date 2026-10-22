@@ -38,7 +38,7 @@ namespace Microsoft.Kiota.Abstractions.Serialization
         /// <param name="contentType">The content type in use</param>
         /// <returns>A <see cref="ISerializationWriter"/> instance to parse the content</returns>
         public ISerializationWriter GetSerializationWriter(string contentType)
-        => GetSerializationWriter(contentType, true);
+        => this.GetSerializationWriter(contentType, true);
 
         /// <summary>
         /// Get the relevant <see cref="ISerializationWriter"/> instance for the given content type
@@ -48,7 +48,7 @@ namespace Microsoft.Kiota.Abstractions.Serialization
         /// <returns>A <see cref="ISerializationWriter"/> instance to parse the content</returns>
         public ISerializationWriter GetSerializationWriter(string contentType, bool serializeOnlyChangedValues)
         {
-            var factory = GetSerializationWriterFactory(contentType, out string actualContentType);
+            var factory = this.GetSerializationWriterFactory(contentType, out string actualContentType);
             if(!serializeOnlyChangedValues && factory is Store.BackingStoreSerializationWriterProxyFactory backingStoreFactory) {
                 return backingStoreFactory.GetSerializationWriter(actualContentType, false);
             }
@@ -71,14 +71,14 @@ namespace Microsoft.Kiota.Abstractions.Serialization
             }
 
             var vendorSpecificContentType = contentType.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries)[0];
-            if(ContentTypeAssociatedFactories.TryGetValue(vendorSpecificContentType, out var vendorFactory))
+            if(this.ContentTypeAssociatedFactories.TryGetValue(vendorSpecificContentType, out var vendorFactory))
             {
                 actualContentType = vendorSpecificContentType;
                 return vendorFactory;
             }
 
             var cleanedContentType = ParseNodeFactoryRegistry.contentTypeVendorCleanupRegex.Replace(vendorSpecificContentType, string.Empty);
-            if(ContentTypeAssociatedFactories.TryGetValue(cleanedContentType, out var factory))
+            if(this.ContentTypeAssociatedFactories.TryGetValue(cleanedContentType, out var factory))
             {
                 actualContentType = cleanedContentType;
                 return factory;

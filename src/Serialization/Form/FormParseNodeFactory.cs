@@ -1,7 +1,3 @@
-using System;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.Kiota.Abstractions.Serialization;
 
 namespace Microsoft.Kiota.Serialization.Form;
@@ -9,23 +5,21 @@ namespace Microsoft.Kiota.Serialization.Form;
 /// <summary>
 /// The <see cref="IParseNodeFactory"/> implementation for form content types
 /// </summary>
-public class FormParseNodeFactory : IParseNodeFactory
-{
+public class FormParseNodeFactory : IParseNodeFactory {
     /// <inheritdoc/>
     public string ValidContentType => "application/x-www-form-urlencoded";
     /// <inheritdoc/>
     public async Task<IParseNode> GetRootParseNodeAsync(string contentType, Stream content,
-        CancellationToken cancellationToken = default)
-    {
-        if(string.IsNullOrEmpty(contentType)) {
+        CancellationToken cancellationToken = default) {
+        if (string.IsNullOrEmpty(contentType)) {
             throw new ArgumentNullException(nameof(contentType));
         }
 
-        if(!ValidContentType.Equals(contentType, StringComparison.OrdinalIgnoreCase)) {
-            throw new ArgumentOutOfRangeException($"expected a {ValidContentType} content type");
+        if (!this.ValidContentType.Equals(contentType, StringComparison.OrdinalIgnoreCase)) {
+            throw new ArgumentOutOfRangeException($"expected a {this.ValidContentType} content type");
         }
 
-        if(content == null) {
+        if (content == null) {
             throw new ArgumentNullException(nameof(content));
         }
 

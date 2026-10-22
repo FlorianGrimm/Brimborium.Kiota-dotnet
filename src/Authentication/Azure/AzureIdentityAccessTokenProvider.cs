@@ -38,19 +38,19 @@ public class AzureIdentityAccessTokenProvider : IAccessTokenProvider, IDisposabl
     /// <param name="isCaeEnabled">Whether to enable Conditional Access Evaluation (CAE) for the token request.</param>
     public AzureIdentityAccessTokenProvider(TokenCredential credential, string[]? allowedHosts = null, ObservabilityOptions? observabilityOptions = null, bool isCaeEnabled = true, params string[] scopes)
     {
-        _credential = credential ?? throw new ArgumentNullException(nameof(credential));
+        this._credential = credential ?? throw new ArgumentNullException(nameof(credential));
 
-        AllowedHostsValidator = new AllowedHostsValidator(allowedHosts);
+        this.AllowedHostsValidator = new AllowedHostsValidator(allowedHosts);
 
         if(scopes == null) {
-            _scopes = new();
+            this._scopes = new();
         }
         else {
-            _scopes = new(scopes, StringComparer.OrdinalIgnoreCase);
+            this._scopes = new(scopes, StringComparer.OrdinalIgnoreCase);
         }
 
-        _activitySource = new((observabilityOptions ?? new()).TracerInstrumentationName);
-        _isCaeEnabled = isCaeEnabled;
+        this._activitySource = new((observabilityOptions ?? new()).TracerInstrumentationName);
+        this._isCaeEnabled = isCaeEnabled;
     }
     /// <summary>
     /// The <see cref="AzureIdentityAccessTokenProvider"/> constructor
@@ -80,53 +80,53 @@ public class AzureIdentityAccessTokenProvider : IAccessTokenProvider, IDisposabl
     /// <inheritdoc/>
     public async Task<string> GetAuthorizationTokenAsync(Uri uri, Dictionary<string, object>? additionalAuthenticationContext = default, CancellationToken cancellationToken = default)
     {
-        using var span = _activitySource?.StartActivity(nameof(GetAuthorizationTokenAsync));
-        if(!AllowedHostsValidator.IsUrlHostValid(uri))
+        using var span = this._activitySource?.StartActivity(nameof(GetAuthorizationTokenAsync));
+        if(!this.AllowedHostsValidator.IsUrlHostValid(uri))
         {
-            _ = (span?.SetTag("com.Microsoft.Kiota.authentication.is_url_valid", BoxedFalse));
+            _ = (span?.SetTag("com.microsoft.kiota.authentication.is_url_valid", BoxedFalse));
             return string.Empty;
         }
 
-        if(!uri.Scheme.Equals("https", StringComparison.OrdinalIgnoreCase) && !_localHostStrings.Contains(uri.Host))
+        if(!uri.Scheme.Equals("https", StringComparison.OrdinalIgnoreCase) && !this._localHostStrings.Contains(uri.Host))
         {
-            _ = (span?.SetTag("com.Microsoft.Kiota.authentication.is_url_valid", BoxedFalse));
+            _ = (span?.SetTag("com.microsoft.kiota.authentication.is_url_valid", BoxedFalse));
             throw new ArgumentException("Only https is supported");
         }
-        _ = (span?.SetTag("com.Microsoft.Kiota.authentication.is_url_valid", BoxedTrue));
+        _ = (span?.SetTag("com.microsoft.kiota.authentication.is_url_valid", BoxedTrue));
 
         string? decodedClaim = null;
         if(additionalAuthenticationContext is not null &&
                     additionalAuthenticationContext.ContainsKey(ClaimsKey) &&
                     additionalAuthenticationContext[ClaimsKey] is string claims)
         {
-            _ = (span?.SetTag("com.Microsoft.Kiota.authentication.additional_claims_provided", BoxedTrue));
+            _ = (span?.SetTag("com.microsoft.kiota.authentication.additional_claims_provided", BoxedTrue));
             var decodedBase64Bytes = Convert.FromBase64String(claims);
             decodedClaim = Encoding.UTF8.GetString(decodedBase64Bytes);
         }
         else {
-            _ = (span?.SetTag("com.Microsoft.Kiota.authentication.additional_claims_provided", BoxedFalse));
+            _ = (span?.SetTag("com.microsoft.kiota.authentication.additional_claims_provided", BoxedFalse));
         }
 
         string[] scopes;
-        if(_scopes.Count > 0)
+        if(this._scopes.Count > 0)
         {
-            scopes = new string[_scopes.Count];
-            _scopes.CopyTo(scopes);
+            scopes = new string[this._scopes.Count];
+            this._scopes.CopyTo(scopes);
         }
         else {
             scopes = [$"{uri.Scheme}://{uri.Host}/.default"];
         }
 
-        _ = (span?.SetTag("com.Microsoft.Kiota.authentication.scopes", string.Join(",", scopes)));
+        _ = (span?.SetTag("com.microsoft.kiota.authentication.scopes", string.Join(",", scopes)));
 
-        var result = await _credential.GetTokenAsync(new TokenRequestContext(scopes, claims: decodedClaim, isCaeEnabled: _isCaeEnabled), cancellationToken).ConfigureAwait(false);
+        var result = await this._credential.GetTokenAsync(new TokenRequestContext(scopes, claims: decodedClaim, isCaeEnabled: this._isCaeEnabled), cancellationToken).ConfigureAwait(false);
         return result.Token;
     }
 
     /// <inheritdoc/>
     public void Dispose()
     {
-        _activitySource?.Dispose();
+        this._activitySource?.Dispose();
         GC.SuppressFinalize(this);
     }
 }

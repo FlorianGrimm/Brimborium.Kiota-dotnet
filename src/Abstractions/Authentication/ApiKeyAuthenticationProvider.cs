@@ -41,10 +41,10 @@ public class ApiKeyAuthenticationProvider : IAuthenticationProvider
             throw new ArgumentNullException(nameof(allowedHosts));
         }
 
-        ApiKey = apiKey;
-        ParameterName = parameterName;
-        KeyLoc = keyLocation;
-        AllowedHostsValidator = new AllowedHostsValidator(allowedHosts);
+        this.ApiKey = apiKey;
+        this.ParameterName = parameterName;
+        this.KeyLoc = keyLocation;
+        this.AllowedHostsValidator = new AllowedHostsValidator(allowedHosts);
     }
     private static ActivitySource _activitySource = new(typeof(RequestInformation).Namespace!);
     /// <inheritdoc />
@@ -55,32 +55,32 @@ public class ApiKeyAuthenticationProvider : IAuthenticationProvider
         }
 
         using var span = _activitySource?.StartActivity(nameof(AuthenticateRequestAsync));
-        if(!AllowedHostsValidator.IsUrlHostValid(request.URI))
+        if(!this.AllowedHostsValidator.IsUrlHostValid(request.URI))
         {
-            _ = (span?.SetTag("com.Microsoft.Kiota.authentication.is_url_valid", false));
+            _ = (span?.SetTag("com.microsoft.kiota.authentication.is_url_valid", false));
             return Task.CompletedTask;
         }
 
         var uri = request.URI;
         if(!uri.Scheme.Equals("https", StringComparison.OrdinalIgnoreCase))
         {
-            _ = (span?.SetTag("com.Microsoft.Kiota.authentication.is_url_valid", false));
+            _ = (span?.SetTag("com.microsoft.kiota.authentication.is_url_valid", false));
             throw new ArgumentException("Only https is supported");
         }
 
-        switch(KeyLoc)
+        switch(this.KeyLoc)
         {
             case KeyLocation.QueryParameter:
-                var uriString = uri.OriginalString + (uri.Query != string.Empty ? "&" : "?") + $"{ParameterName}={ApiKey}";
+                var uriString = uri.OriginalString + (uri.Query != string.Empty ? "&" : "?") + $"{this.ParameterName}={this.ApiKey}";
                 request.URI = new Uri(uriString);
                 break;
             case KeyLocation.Header:
-                request.Headers.Add(ParameterName, ApiKey);
+                request.Headers.Add(this.ParameterName, this.ApiKey);
                 break;
             default:
-                throw new ArgumentOutOfRangeException(nameof(KeyLoc));
+                throw new ArgumentOutOfRangeException(nameof(this.KeyLoc));
         }
-        _ = (span?.SetTag("com.Microsoft.Kiota.authentication.is_url_valid", true));
+        _ = (span?.SetTag("com.microsoft.kiota.authentication.is_url_valid", true));
         return Task.CompletedTask;
     }
     /// <summary>

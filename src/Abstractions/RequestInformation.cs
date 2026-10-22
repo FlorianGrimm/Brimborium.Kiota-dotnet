@@ -47,9 +47,9 @@ namespace Microsoft.Kiota.Abstractions {
         /// <param name="urlTemplate"></param>
         /// <param name="pathParameters"></param>
         public RequestInformation(Method method, string urlTemplate, IDictionary<string, object> pathParameters) {
-            HttpMethod = method;
-            UrlTemplate = urlTemplate;
-            PathParameters = pathParameters;
+            this.HttpMethod = method;
+            this.UrlTemplate = urlTemplate;
+            this.PathParameters = pathParameters;
         }
         /// <summary>
         /// Configures the current request configuration headers, query parameters, and options base on the callback provided.
@@ -63,9 +63,9 @@ namespace Microsoft.Kiota.Abstractions {
 
             var requestConfig = new RequestConfiguration<T>();
             requestConfiguration(requestConfig);
-            AddQueryParameters(requestConfig.QueryParameters);
-            AddRequestOptions(requestConfig.Options);
-            AddHeaders(requestConfig.Headers);
+            this.AddQueryParameters(requestConfig.QueryParameters);
+            this.AddRequestOptions(requestConfig.Options);
+            this.AddHeaders(requestConfig.Headers);
         }
         internal const string RawUrlKey = "request-raw-url";
 
@@ -80,31 +80,31 @@ namespace Microsoft.Kiota.Abstractions {
                     throw new ArgumentNullException(nameof(value));
                 }
 
-                QueryParameters.Clear();
-                PathParameters.Clear();
-                _RawUri = value;
+                this.QueryParameters.Clear();
+                this.PathParameters.Clear();
+                this._RawUri = value;
             }
             get {
-                if(_RawUri != null) {
-                    return _RawUri;
+                if(this._RawUri != null) {
+                    return this._RawUri;
                 }
-                else if(PathParameters.TryGetValue(RawUrlKey, out var rawUrl) &&
+                else if(this.PathParameters.TryGetValue(RawUrlKey, out var rawUrl) &&
                     rawUrl is string rawUrlString) {
-                    URI = new Uri(rawUrlString);
-                    return _RawUri!;
+                    this.URI = new Uri(rawUrlString);
+                    return this._RawUri!;
                 }
                 else {
                     if((this.UrlTemplate is null)
-                        || UrlTemplate.IndexOf("{+baseurl}", StringComparison.OrdinalIgnoreCase) >= 0 && !PathParameters.ContainsKey("baseurl")) {
-                        throw new InvalidOperationException($"{nameof(PathParameters)} must contain a value for \"baseurl\" for the url to be built.");
+                        || this.UrlTemplate.IndexOf("{+baseurl}", StringComparison.OrdinalIgnoreCase) >= 0 && !this.PathParameters.ContainsKey("baseurl")) {
+                        throw new InvalidOperationException($"{nameof(this.PathParameters)} must contain a value for \"baseurl\" for the url to be built.");
                     }
 
                     var substitutions = new Dictionary<string, object?>();
-                    foreach(var urlTemplateParameter in PathParameters) {
+                    foreach(var urlTemplateParameter in this.PathParameters) {
                         substitutions.Add(urlTemplateParameter.Key, GetSanitizedValues(urlTemplateParameter.Value));
                     }
 
-                    foreach(var queryStringParameter in QueryParameters) {
+                    foreach(var queryStringParameter in this.QueryParameters) {
                         if(queryStringParameter.Value != null) {
                             substitutions.Add(queryStringParameter.Key, GetSanitizedValues(queryStringParameter.Value));
                         }
@@ -177,10 +177,10 @@ namespace Microsoft.Kiota.Abstractions {
                 var name = queryParameterAttribute?.TemplateName ?? propertyInfo.Name;
                 var value = propertyInfo.GetValue(source);
 
-                if(value != null && !QueryParameters.ContainsKey(name)) {
+                if(value != null && !this.QueryParameters.ContainsKey(name)) {
                     var collection = value as ICollection;
                     if(collection == null || collection.Count > 0) {
-                        _ = QueryParameters.AddOrReplace(name, value);
+                        _ = this.QueryParameters.AddOrReplace(name, value);
                     }
                 }
             }
@@ -228,7 +228,7 @@ namespace Microsoft.Kiota.Abstractions {
                 return;
             }
 
-            Headers.AddAll(headers);
+            this.Headers.AddAll(headers);
         }
 
         /// <summary>
@@ -241,7 +241,7 @@ namespace Microsoft.Kiota.Abstractions {
         /// <summary>
         /// Gets the options for this request. Options are unique by type. If an option of the same type is added twice, the last one wins.
         /// </summary>
-        public IEnumerable<IRequestOption> RequestOptions => _RequestOptions.Values;
+        public IEnumerable<IRequestOption> RequestOptions => this._RequestOptions.Values;
 
         /// <summary>
         /// Adds an option to the request.
@@ -254,7 +254,7 @@ namespace Microsoft.Kiota.Abstractions {
 
             foreach(var option in options) {
                 if(option != null) {
-                    _ = _RequestOptions.AddOrReplace(option.GetType().FullName!, option);
+                    _ = this._RequestOptions.AddOrReplace(option.GetType().FullName!, option);
                 }
             }
         }
@@ -270,7 +270,7 @@ namespace Microsoft.Kiota.Abstractions {
 
             foreach(var option in options) {
                 if(option != null) {
-                    _ = _RequestOptions.Remove(option.GetType().FullName!);
+                    _ = this._RequestOptions.Remove(option.GetType().FullName!);
                 }
             }
         }
@@ -278,7 +278,7 @@ namespace Microsoft.Kiota.Abstractions {
         /// <summary>
         /// Gets a <see cref="IRequestOption"/> instance of the matching type.
         /// </summary>
-        public T? GetRequestOption<T>() => _RequestOptions.TryGetValue(typeof(T).FullName!, out var requestOption) ? (T)requestOption : default;
+        public T? GetRequestOption<T>() => this._RequestOptions.TryGetValue(typeof(T).FullName!, out var requestOption) ? (T)requestOption : default;
 
         /// <summary>
         /// Adds a <see cref="IResponseHandler"/> as a <see cref="IRequestOption"/> for the request.
@@ -291,7 +291,7 @@ namespace Microsoft.Kiota.Abstractions {
             var responseHandlerOption = new ResponseHandlerOption {
                 ResponseHandler = responseHandler
             };
-            AddRequestOptions(new[] { responseHandlerOption });
+            this.AddRequestOptions(new[] { responseHandlerOption });
         }
 
         private const string _BinaryContentType = "application/octet-stream";
@@ -304,7 +304,7 @@ namespace Microsoft.Kiota.Abstractions {
         /// <param name="content">The binary stream to set as a body.</param>
         [Obsolete("Use SetStreamContent and pass the content type instead")]
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public void SetStreamContent(Stream content) => SetStreamContent(content, _BinaryContentType);
+        public void SetStreamContent(Stream content) => this.SetStreamContent(content, _BinaryContentType);
 
         /// <summary>
         /// Sets the request body to a binary stream.
@@ -314,8 +314,8 @@ namespace Microsoft.Kiota.Abstractions {
         public void SetStreamContent(Stream content, string contentType) {
             using var activity = _ActivitySource?.StartActivity(nameof(SetStreamContent));
             SetRequestType(content, activity);
-            Content = content;
-            _ = Headers.TryAdd(_ContentTypeHeader, contentType);
+            this.Content = content;
+            _ = this.Headers.TryAdd(_ContentTypeHeader, contentType);
         }
         private static readonly ActivitySource _ActivitySource = new(typeof(RequestInformation).Namespace!);
 
@@ -340,8 +340,8 @@ namespace Microsoft.Kiota.Abstractions {
 
             SetRequestType(firstNonNullItem, activity);
             writer.WriteCollectionOfObjectValues(null, items);
-            _ = Headers.TryAdd(_ContentTypeHeader, contentType);
-            Content = writer.GetSerializedContent();
+            _ = this.Headers.TryAdd(_ContentTypeHeader, contentType);
+            this.Content = writer.GetSerializedContent();
         }
 
         /// <summary>
@@ -360,8 +360,8 @@ namespace Microsoft.Kiota.Abstractions {
                 mpBody.RequestAdapter = requestAdapter;
             }
             writer.WriteObjectValue(null, item);
-            _ = Headers.TryAdd(_ContentTypeHeader, contentType);
-            Content = writer.GetSerializedContent();
+            _ = this.Headers.TryAdd(_ContentTypeHeader, contentType);
+            this.Content = writer.GetSerializedContent();
         }
         private static void SetRequestType(object? result, Activity? activity) {
             if(activity == null) {
@@ -372,7 +372,7 @@ namespace Microsoft.Kiota.Abstractions {
                 return;
             }
 
-            _ = activity.SetTag("com.Microsoft.Kiota.request.type", result.GetType().FullName);
+            _ = activity.SetTag("com.microsoft.kiota.request.type", result.GetType().FullName);
         }
 
         private static ISerializationWriter GetSerializationWriter<T>(IRequestAdapter requestAdapter, string contentType, T item) {
@@ -414,8 +414,8 @@ namespace Microsoft.Kiota.Abstractions {
 
             SetRequestType(firstNonNullItem, activity);
             writer.WriteCollectionOfPrimitiveValues(null, items);
-            _ = Headers.TryAdd(_ContentTypeHeader, contentType);
-            Content = writer.GetSerializedContent();
+            _ = this.Headers.TryAdd(_ContentTypeHeader, contentType);
+            this.Content = writer.GetSerializedContent();
         }
 
         /// <summary>
@@ -475,8 +475,8 @@ namespace Microsoft.Kiota.Abstractions {
                 default:
                     throw new InvalidOperationException($"error serialization data value with unknown type {item?.GetType()}");
             }
-            _ = Headers.TryAdd(_ContentTypeHeader, contentType);
-            Content = writer.GetSerializedContent();
+            _ = this.Headers.TryAdd(_ContentTypeHeader, contentType);
+            this.Content = writer.GetSerializedContent();
         }
 
         /// <summary>
@@ -491,8 +491,8 @@ namespace Microsoft.Kiota.Abstractions {
             using var writer = GetSerializationWriter(requestAdapter, contentType, item);
             SetRequestType(item, activity);
             writer.WriteEnumValue<T>(null, item);
-            _ = Headers.TryAdd(_ContentTypeHeader, contentType);
-            Content = writer.GetSerializedContent();
+            _ = this.Headers.TryAdd(_ContentTypeHeader, contentType);
+            this.Content = writer.GetSerializedContent();
         }
 
         /// <summary>
@@ -510,8 +510,8 @@ namespace Microsoft.Kiota.Abstractions {
 
             SetRequestType(firstNonNullItem, activity);
             writer.WriteCollectionOfEnumValues(null, items);
-            _ = Headers.TryAdd(_ContentTypeHeader, contentType);
-            Content = writer.GetSerializedContent();
+            _ = this.Headers.TryAdd(_ContentTypeHeader, contentType);
+            this.Content = writer.GetSerializedContent();
         }
     }
 }

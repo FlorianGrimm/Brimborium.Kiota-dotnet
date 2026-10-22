@@ -29,9 +29,9 @@ public abstract class BaseRequestBuilder
         _ = pathParameters ?? throw new ArgumentNullException(nameof(pathParameters));
         _ = requestAdapter ?? throw new ArgumentNullException(nameof(requestAdapter));
         _ = urlTemplate ?? throw new ArgumentNullException(nameof(urlTemplate)); // empty is fine
-        PathParameters = new Dictionary<string, object>(pathParameters);
-        RequestAdapter = requestAdapter;
-        UrlTemplate = urlTemplate;
+        this.PathParameters = new Dictionary<string, object>(pathParameters);
+        this.RequestAdapter = requestAdapter;
+        this.UrlTemplate = urlTemplate;
     }
     /// <summary>
     /// Instantiates a new <see cref="BaseRequestBuilder"/> class

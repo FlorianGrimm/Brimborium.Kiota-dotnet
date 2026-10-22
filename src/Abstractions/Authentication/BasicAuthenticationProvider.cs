@@ -33,7 +33,7 @@ public class BasicAuthenticationProvider : IAuthenticationProvider
             throw new ArgumentNullException(nameof(password));
         }
 
-        BasicAuthHeaderValue = $"Basic {Convert.ToBase64String(Encoding.ASCII.GetBytes($"{username}:{password}"))}";
+        this.BasicAuthHeaderValue = $"Basic {Convert.ToBase64String(Encoding.ASCII.GetBytes($"{username}:{password}"))}";
     }
 
 
@@ -46,7 +46,7 @@ public class BasicAuthenticationProvider : IAuthenticationProvider
 
         if(!request.Headers.ContainsKey(AuthorizationHeaderKey))
         {
-            request.Headers.Add(AuthorizationHeaderKey, BasicAuthHeaderValue);
+            request.Headers.Add(AuthorizationHeaderKey, this.BasicAuthHeaderValue);
         }
 
         return Task.CompletedTask;

@@ -2,7 +2,6 @@
 //  Copyright (c) Microsoft Corporation.  All Rights Reserved.  Licensed under the MIT License.  See License in the project root for license information.
 // ------------------------------------------------------------------------------
 
-using System;
 using Microsoft.Kiota.Abstractions.Serialization;
 
 namespace Microsoft.Kiota.Serialization.Json
@@ -28,7 +27,7 @@ namespace Microsoft.Kiota.Serialization.Json
         /// <param name="kiotaJsonSerializationContext">The KiotaJsonSerializationContext to use.</param>
         public JsonSerializationWriterFactory(KiotaJsonSerializationContext kiotaJsonSerializationContext)
         {
-            _kiotaJsonSerializationContext = kiotaJsonSerializationContext;
+            this._kiotaJsonSerializationContext = kiotaJsonSerializationContext;
         }
 
         /// <summary>
@@ -46,11 +45,11 @@ namespace Microsoft.Kiota.Serialization.Json
             if(string.IsNullOrEmpty(contentType)) {
                 throw new ArgumentNullException(nameof(contentType));
             }
-            else if(!ValidContentType.Equals(contentType, StringComparison.OrdinalIgnoreCase)) {
-                throw new ArgumentOutOfRangeException($"expected a {ValidContentType} content type");
+            else if(!this.ValidContentType.Equals(contentType, StringComparison.OrdinalIgnoreCase)) {
+                throw new ArgumentOutOfRangeException($"expected a {this.ValidContentType} content type");
             }
 
-            return new JsonSerializationWriter(_kiotaJsonSerializationContext);
+            return new JsonSerializationWriter(this._kiotaJsonSerializationContext);
         }
     }
 }

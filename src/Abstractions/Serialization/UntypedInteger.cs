@@ -15,6 +15,6 @@ namespace Microsoft.Kiota.Abstractions.Serialization
         /// Gets the value associated with untyped integer node.
         /// </summary>
         /// <returns>The value associated with untyped integer node.</returns>
-        public new int GetValue() => _value;
+        public new int GetValue() => this._value;
     }
 }

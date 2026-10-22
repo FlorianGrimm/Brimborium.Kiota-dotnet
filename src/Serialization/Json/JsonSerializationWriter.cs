@@ -2,16 +2,13 @@
 //  Copyright (c) Microsoft Corporation.  All Rights Reserved.  Licensed under the MIT License.  See License in the project root for license information.
 // ------------------------------------------------------------------------------
 
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using System.Xml;
+
 using Microsoft.IO;
-using Microsoft.Kiota.Abstractions;
 using Microsoft.Kiota.Abstractions.Helpers;
 using Microsoft.Kiota.Abstractions.Serialization;
 
@@ -23,13 +20,11 @@ using System.Diagnostics.CodeAnalysis;
 using System.Buffers;
 #endif
 
-namespace Microsoft.Kiota.Serialization.Json
-{
+namespace Microsoft.Kiota.Serialization.Json {
     /// <summary>
     /// The <see cref="ISerializationWriter"/> implementation for json content types.
     /// </summary>
-    public class JsonSerializationWriter : ISerializationWriter, IDisposable
-    {
+    public class JsonSerializationWriter : ISerializationWriter, IDisposable {
         private static readonly RecyclableMemoryStreamManager _MemoryStreamManager = new RecyclableMemoryStreamManager();
         private readonly RecyclableMemoryStream _Stream = _MemoryStreamManager.GetStream();
         private readonly KiotaJsonSerializationContext _KiotaJsonSerializationContext;
@@ -43,19 +38,17 @@ namespace Microsoft.Kiota.Serialization.Json
         /// The <see cref="JsonSerializationWriter"/> constructor
         /// </summary>
         public JsonSerializationWriter()
-            : this(KiotaJsonSerializationContext.Default)
-        {
+            : this(KiotaJsonSerializationContext.Default) {
         }
 
         /// <summary>
         /// The <see cref="JsonSerializationWriter"/> constructor
         /// </summary>
         /// <param name="kiotaJsonSerializationContext">The KiotaJsonSerializationContext to use.</param>
-        public JsonSerializationWriter(KiotaJsonSerializationContext kiotaJsonSerializationContext)
-        {
-            _KiotaJsonSerializationContext = kiotaJsonSerializationContext;
+        public JsonSerializationWriter(KiotaJsonSerializationContext kiotaJsonSerializationContext) {
+            this._KiotaJsonSerializationContext = kiotaJsonSerializationContext;
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER
-            writer = new Utf8JsonWriter((IBufferWriter<byte>)_Stream, new JsonWriterOptions
+            this.writer = new Utf8JsonWriter((IBufferWriter<byte>)this._Stream, new JsonWriterOptions
 #else
             writer = new Utf8JsonWriter((Stream)_stream, new JsonWriterOptions
 #endif
@@ -84,11 +77,10 @@ namespace Microsoft.Kiota.Serialization.Json
         /// Get the stream of the serialized content
         /// </summary>
         /// <returns>The <see cref="Stream"/> of the serialized content</returns>
-        public Stream GetSerializedContent()
-        {
-            writer.Flush();
-            _Stream.Position = 0;
-            return _Stream;
+        public Stream GetSerializedContent() {
+            this.writer.Flush();
+            this._Stream.Position = 0;
+            return this._Stream;
         }
 
         /// <summary>
@@ -96,16 +88,14 @@ namespace Microsoft.Kiota.Serialization.Json
         /// </summary>
         /// <param name="key">The key of the json node</param>
         /// <param name="value">The string value</param>
-        public void WriteStringValue(string? key, string? value)
-        {
-            if(value != null)
-            {
+        public void WriteStringValue(string? key, string? value) {
+            if (value != null) {
                 // we want to keep empty string because they are meaningful
-                if(!string.IsNullOrEmpty(key)) {
-                    writer.WritePropertyName(key!);
+                if (!string.IsNullOrEmpty(key)) {
+                    this.writer.WritePropertyName(key!);
                 }
 
-                JsonSerializer.Serialize(writer, value, TypeConstants.StringType, _KiotaJsonSerializationContext);
+                JsonSerializer.Serialize(this.writer, value, TypeConstants.StringType, this._KiotaJsonSerializationContext);
             }
         }
 
@@ -114,14 +104,13 @@ namespace Microsoft.Kiota.Serialization.Json
         /// </summary>
         /// <param name="key">The key of the json node</param>
         /// <param name="value">The boolean value</param>
-        public void WriteBoolValue(string? key, bool? value)
-        {
-            if(!string.IsNullOrEmpty(key) && value.HasValue) {
-                writer.WritePropertyName(key!);
+        public void WriteBoolValue(string? key, bool? value) {
+            if (!string.IsNullOrEmpty(key) && value.HasValue) {
+                this.writer.WritePropertyName(key!);
             }
 
-            if(value.HasValue) {
-                JsonSerializer.Serialize(writer, value.Value, TypeConstants.BooleanType, _KiotaJsonSerializationContext);
+            if (value.HasValue) {
+                JsonSerializer.Serialize(this.writer, value.Value, TypeConstants.BooleanType, this._KiotaJsonSerializationContext);
             }
         }
 
@@ -130,14 +119,13 @@ namespace Microsoft.Kiota.Serialization.Json
         /// </summary>
         /// <param name="key">The key of the json node</param>
         /// <param name="value">The byte value</param>
-        public void WriteByteValue(string? key, byte? value)
-        {
-            if(!string.IsNullOrEmpty(key) && value.HasValue) {
-                writer.WritePropertyName(key!);
+        public void WriteByteValue(string? key, byte? value) {
+            if (!string.IsNullOrEmpty(key) && value.HasValue) {
+                this.writer.WritePropertyName(key!);
             }
 
-            if(value.HasValue) {
-                JsonSerializer.Serialize(writer, value.Value, TypeConstants.ByteType, _KiotaJsonSerializationContext);
+            if (value.HasValue) {
+                JsonSerializer.Serialize(this.writer, value.Value, TypeConstants.ByteType, this._KiotaJsonSerializationContext);
             }
         }
 
@@ -146,14 +134,13 @@ namespace Microsoft.Kiota.Serialization.Json
         /// </summary>
         /// <param name="key">The key of the json node</param>
         /// <param name="value">The sbyte value</param>
-        public void WriteSbyteValue(string? key, sbyte? value)
-        {
-            if(!string.IsNullOrEmpty(key) && value.HasValue) {
-                writer.WritePropertyName(key!);
+        public void WriteSbyteValue(string? key, sbyte? value) {
+            if (!string.IsNullOrEmpty(key) && value.HasValue) {
+                this.writer.WritePropertyName(key!);
             }
 
-            if(value.HasValue) {
-                JsonSerializer.Serialize(writer, value.Value, TypeConstants.SbyteType, _KiotaJsonSerializationContext);
+            if (value.HasValue) {
+                JsonSerializer.Serialize(this.writer, value.Value, TypeConstants.SbyteType, this._KiotaJsonSerializationContext);
             }
         }
 
@@ -162,14 +149,13 @@ namespace Microsoft.Kiota.Serialization.Json
         /// </summary>
         /// <param name="key">The key of the json node</param>
         /// <param name="value">The int value</param>
-        public void WriteIntValue(string? key, int? value)
-        {
-            if(!string.IsNullOrEmpty(key) && value.HasValue) {
-                writer.WritePropertyName(key!);
+        public void WriteIntValue(string? key, int? value) {
+            if (!string.IsNullOrEmpty(key) && value.HasValue) {
+                this.writer.WritePropertyName(key!);
             }
 
-            if(value.HasValue) {
-                JsonSerializer.Serialize(writer, value, TypeConstants.IntType, _KiotaJsonSerializationContext);
+            if (value.HasValue) {
+                JsonSerializer.Serialize(this.writer, value, TypeConstants.IntType, this._KiotaJsonSerializationContext);
             }
         }
 
@@ -178,14 +164,13 @@ namespace Microsoft.Kiota.Serialization.Json
         /// </summary>
         /// <param name="key">The key of the json node</param>
         /// <param name="value">The float value</param>
-        public void WriteFloatValue(string? key, float? value)
-        {
-            if(!string.IsNullOrEmpty(key) && value.HasValue) {
-                writer.WritePropertyName(key!);
+        public void WriteFloatValue(string? key, float? value) {
+            if (!string.IsNullOrEmpty(key) && value.HasValue) {
+                this.writer.WritePropertyName(key!);
             }
 
-            if(value.HasValue) {
-                JsonSerializer.Serialize(writer, value.Value, TypeConstants.FloatType, _KiotaJsonSerializationContext);
+            if (value.HasValue) {
+                JsonSerializer.Serialize(this.writer, value.Value, TypeConstants.FloatType, this._KiotaJsonSerializationContext);
             }
         }
 
@@ -194,14 +179,13 @@ namespace Microsoft.Kiota.Serialization.Json
         /// </summary>
         /// <param name="key">The key of the json node</param>
         /// <param name="value">The long value</param>
-        public void WriteLongValue(string? key, long? value)
-        {
-            if(!string.IsNullOrEmpty(key) && value.HasValue) {
-                writer.WritePropertyName(key!);
+        public void WriteLongValue(string? key, long? value) {
+            if (!string.IsNullOrEmpty(key) && value.HasValue) {
+                this.writer.WritePropertyName(key!);
             }
 
-            if(value.HasValue) {
-                JsonSerializer.Serialize(writer, value.Value, TypeConstants.LongType, _KiotaJsonSerializationContext);
+            if (value.HasValue) {
+                JsonSerializer.Serialize(this.writer, value.Value, TypeConstants.LongType, this._KiotaJsonSerializationContext);
             }
         }
 
@@ -210,14 +194,13 @@ namespace Microsoft.Kiota.Serialization.Json
         /// </summary>
         /// <param name="key">The key of the json node</param>
         /// <param name="value">The double value</param>
-        public void WriteDoubleValue(string? key, double? value)
-        {
-            if(!string.IsNullOrEmpty(key) && value.HasValue) {
-                writer.WritePropertyName(key!);
+        public void WriteDoubleValue(string? key, double? value) {
+            if (!string.IsNullOrEmpty(key) && value.HasValue) {
+                this.writer.WritePropertyName(key!);
             }
 
-            if(value.HasValue) {
-                JsonSerializer.Serialize(writer, value.Value, TypeConstants.DoubleType, _KiotaJsonSerializationContext);
+            if (value.HasValue) {
+                JsonSerializer.Serialize(this.writer, value.Value, TypeConstants.DoubleType, this._KiotaJsonSerializationContext);
             }
         }
 
@@ -226,14 +209,13 @@ namespace Microsoft.Kiota.Serialization.Json
         /// </summary>
         /// <param name="key">The key of the json node</param>
         /// <param name="value">The decimal value</param>
-        public void WriteDecimalValue(string? key, decimal? value)
-        {
-            if(!string.IsNullOrEmpty(key) && value.HasValue) {
-                writer.WritePropertyName(key!);
+        public void WriteDecimalValue(string? key, decimal? value) {
+            if (!string.IsNullOrEmpty(key) && value.HasValue) {
+                this.writer.WritePropertyName(key!);
             }
 
-            if(value.HasValue) {
-                JsonSerializer.Serialize(writer, value.Value, TypeConstants.DecimalType, _KiotaJsonSerializationContext);
+            if (value.HasValue) {
+                JsonSerializer.Serialize(this.writer, value.Value, TypeConstants.DecimalType, this._KiotaJsonSerializationContext);
             }
         }
 
@@ -242,14 +224,13 @@ namespace Microsoft.Kiota.Serialization.Json
         /// </summary>
         /// <param name="key">The key of the json node</param>
         /// <param name="value">The Guid value</param>
-        public void WriteGuidValue(string? key, Guid? value)
-        {
-            if(!string.IsNullOrEmpty(key) && value.HasValue) {
-                writer.WritePropertyName(key!);
+        public void WriteGuidValue(string? key, Guid? value) {
+            if (!string.IsNullOrEmpty(key) && value.HasValue) {
+                this.writer.WritePropertyName(key!);
             }
 
-            if(value.HasValue) {
-                JsonSerializer.Serialize(writer, value.Value, TypeConstants.GuidType, _KiotaJsonSerializationContext);
+            if (value.HasValue) {
+                JsonSerializer.Serialize(this.writer, value.Value, TypeConstants.GuidType, this._KiotaJsonSerializationContext);
             }
         }
 
@@ -258,14 +239,13 @@ namespace Microsoft.Kiota.Serialization.Json
         /// </summary>
         /// <param name="key">The key of the json node</param>
         /// <param name="value">The DateTimeOffset value</param>
-        public void WriteDateTimeOffsetValue(string? key, DateTimeOffset? value)
-        {
-            if(!string.IsNullOrEmpty(key) && value.HasValue) {
-                writer.WritePropertyName(key!);
+        public void WriteDateTimeOffsetValue(string? key, DateTimeOffset? value) {
+            if (!string.IsNullOrEmpty(key) && value.HasValue) {
+                this.writer.WritePropertyName(key!);
             }
 
-            if(value.HasValue) {
-                JsonSerializer.Serialize(writer, value.Value, TypeConstants.DateTimeOffsetType, _KiotaJsonSerializationContext);
+            if (value.HasValue) {
+                JsonSerializer.Serialize(this.writer, value.Value, TypeConstants.DateTimeOffsetType, this._KiotaJsonSerializationContext);
             }
         }
 
@@ -274,10 +254,9 @@ namespace Microsoft.Kiota.Serialization.Json
         /// </summary>
         /// <param name="key">The key of the json node</param>
         /// <param name="value">The TimeSpan value</param>
-        public void WriteTimeSpanValue(string? key, TimeSpan? value)
-        {
-            if(value.HasValue) {
-                WriteStringValue(key, XmlConvert.ToString(value.Value));
+        public void WriteTimeSpanValue(string? key, TimeSpan? value) {
+            if (value.HasValue) {
+                this.WriteStringValue(key, XmlConvert.ToString(value.Value));
             }
         }
 
@@ -287,7 +266,7 @@ namespace Microsoft.Kiota.Serialization.Json
         /// <param name="key">The key of the json node</param>
         /// <param name="value">The Date value</param>
         public void WriteDateValue(string? key, DateOnly? value)
-            => WriteStringValue(key, value?.ToString());
+            => this.WriteStringValue(key, value?.ToString());
 
         /// <summary>
         /// Write the Time value
@@ -295,19 +274,18 @@ namespace Microsoft.Kiota.Serialization.Json
         /// <param name="key">The key of the json node</param>
         /// <param name="value">The Time value</param>
         public void WriteTimeValue(string? key, TimeOnly? value)
-            => WriteStringValue(key, value?.ToString());
+            => this.WriteStringValue(key, value?.ToString());
 
         /// <summary>
         /// Write the null value
         /// </summary>
         /// <param name="key">The key of the json node</param>
-        public void WriteNullValue(string? key)
-        {
-            if(!string.IsNullOrEmpty(key)) {
-                writer.WritePropertyName(key!);
+        public void WriteNullValue(string? key) {
+            if (!string.IsNullOrEmpty(key)) {
+                this.writer.WritePropertyName(key!);
             }
 
-            writer.WriteNullValue();
+            this.writer.WriteNullValue();
         }
 
         /// <summary>
@@ -321,14 +299,12 @@ namespace Microsoft.Kiota.Serialization.Json
         public void WriteEnumValue<T>(string? key, T? value) where T : struct, Enum
 #endif
         {
-            if(!string.IsNullOrEmpty(key) && value.HasValue) {
-                writer.WritePropertyName(key!);
+            if (!string.IsNullOrEmpty(key) && value.HasValue) {
+                this.writer.WritePropertyName(key!);
             }
 
-            if(value.HasValue)
-            {
-                if(typeof(T).IsDefined(typeof(FlagsAttribute)))
-                {
+            if (value.HasValue) {
+                if (typeof(T).IsDefined(typeof(FlagsAttribute))) {
                     var values =
 #if NET5_0_OR_GREATER
                         Enum.GetValues<T>();
@@ -336,21 +312,18 @@ namespace Microsoft.Kiota.Serialization.Json
                         (T[])Enum.GetValues(typeof(T));
 #endif
                     StringBuilder valueNames = new StringBuilder();
-                    foreach(var x in values)
-                    {
-                        if(value.Value.HasFlag(x) && EnumHelpers.GetEnumStringValue(x) is string valueName)
-                        {
-                            if(valueNames.Length > 0) {
+                    foreach (var x in values) {
+                        if (value.Value.HasFlag(x) && EnumHelpers.GetEnumStringValue(x) is string valueName) {
+                            if (valueNames.Length > 0) {
                                 valueNames.Append(",");
                             }
 
                             valueNames.Append(valueName);
                         }
                     }
-                    WriteStringValue(null, valueNames.ToString());
-                }
-                else {
-                    WriteStringValue(null, EnumHelpers.GetEnumStringValue(value.Value));
+                    this.WriteStringValue(null, valueNames.ToString());
+                } else {
+                    this.WriteStringValue(null, EnumHelpers.GetEnumStringValue(value.Value));
                 }
             }
         }
@@ -360,22 +333,20 @@ namespace Microsoft.Kiota.Serialization.Json
         /// </summary>
         /// <param name="key">The key of the json node</param>
         /// <param name="values">The primitive collection</param>
-        public void WriteCollectionOfPrimitiveValues<T>(string? key, IEnumerable<T>? values) => WriteCollectionOfPrimitiveValuesInternal(key, values);
+        public void WriteCollectionOfPrimitiveValues<T>(string? key, IEnumerable<T>? values) => this.WriteCollectionOfPrimitiveValuesInternal(key, values);
 
-        private void WriteCollectionOfPrimitiveValuesInternal(string? key, IEnumerable? values)
-        {
-            if(values != null)
-            { //empty array is meaningful
-                if(!string.IsNullOrEmpty(key)) {
-                    writer.WritePropertyName(key!);
+        private void WriteCollectionOfPrimitiveValuesInternal(string? key, IEnumerable? values) {
+            if (values != null) { //empty array is meaningful
+                if (!string.IsNullOrEmpty(key)) {
+                    this.writer.WritePropertyName(key!);
                 }
 
-                writer.WriteStartArray();
-                foreach(var collectionValue in values) {
-                    WriteAnyValue(null, collectionValue);
+                this.writer.WriteStartArray();
+                foreach (var collectionValue in values) {
+                    this.WriteAnyValue(null, collectionValue);
                 }
 
-                writer.WriteEndArray();
+                this.writer.WriteEndArray();
             }
         }
 
@@ -384,21 +355,19 @@ namespace Microsoft.Kiota.Serialization.Json
         /// </summary>
         /// <param name="key">The key of the json node</param>
         /// <param name="values">The object collection</param>
-        public void WriteCollectionOfObjectValues<T>(string? key, IEnumerable<T>? values) where T : IParsable
-        {
-            if(values != null)
-            {
+        public void WriteCollectionOfObjectValues<T>(string? key, IEnumerable<T>? values) where T : IParsable {
+            if (values != null) {
                 // empty array is meaningful
-                if(!string.IsNullOrEmpty(key)) {
-                    writer.WritePropertyName(key!);
+                if (!string.IsNullOrEmpty(key)) {
+                    this.writer.WritePropertyName(key!);
                 }
 
-                writer.WriteStartArray();
-                foreach(var item in values) {
-                    WriteObjectValue<T>(null, item);
+                this.writer.WriteStartArray();
+                foreach (var item in values) {
+                    this.WriteObjectValue(null, item);
                 }
 
-                writer.WriteEndArray();
+                this.writer.WriteEndArray();
             }
         }
         /// <summary>
@@ -412,18 +381,17 @@ namespace Microsoft.Kiota.Serialization.Json
         public void WriteCollectionOfEnumValues<T>(string? key, IEnumerable<T?>? values) where T : struct, Enum
 #endif
         {
-            if(values != null)
-            { //empty array is meaningful
-                if(!string.IsNullOrEmpty(key)) {
-                    writer.WritePropertyName(key!);
+            if (values != null) { //empty array is meaningful
+                if (!string.IsNullOrEmpty(key)) {
+                    this.writer.WritePropertyName(key!);
                 }
 
-                writer.WriteStartArray();
-                foreach(var item in values) {
-                    WriteEnumValue<T>(null, item);
+                this.writer.WriteStartArray();
+                foreach (var item in values) {
+                    this.WriteEnumValue(null, item);
                 }
 
-                writer.WriteEndArray();
+                this.writer.WriteEndArray();
             }
         }
         /// <summary>
@@ -437,22 +405,20 @@ namespace Microsoft.Kiota.Serialization.Json
         private void WriteDictionaryValue<T>(string? key, T values) where T : IDictionary
 #endif
         {
-            if(values != null)
-            {
-                if(!string.IsNullOrEmpty(key)) {
-                    writer.WritePropertyName(key!);
+            if (values != null) {
+                if (!string.IsNullOrEmpty(key)) {
+                    this.writer.WritePropertyName(key!);
                 }
 
-                writer.WriteStartObject();
-                foreach(DictionaryEntry entry in values)
-                {
-                    if(entry.Key is not string keyStr) {
+                this.writer.WriteStartObject();
+                foreach (DictionaryEntry entry in values) {
+                    if (entry.Key is not string keyStr) {
                         throw new InvalidOperationException($"Error serializing dictionary value with key {key}, only string keyed dictionaries are supported.");
                     }
 
-                    WriteAnyValue(keyStr, entry.Value);
+                    this.WriteAnyValue(keyStr, entry.Value);
                 }
-                writer.WriteEndObject();
+                this.writer.WriteEndObject();
             }
         }
         /// <summary>
@@ -460,16 +426,13 @@ namespace Microsoft.Kiota.Serialization.Json
         /// </summary>
         /// <param name="key">The key to be used for the written value. May be null.</param>
         /// <param name="value">The byte array to be written.</param>
-        public void WriteByteArrayValue(string? key, byte[]? value)
-        {
+        public void WriteByteArrayValue(string? key, byte[]? value) {
             //empty array is meaningful
-            if(value != null)
-            {
-                if(string.IsNullOrEmpty(key)) {
-                    writer.WriteBase64StringValue(value);
-                }
-                else {
-                    writer.WriteBase64String(key!, value);
+            if (value != null) {
+                if (string.IsNullOrEmpty(key)) {
+                    this.writer.WriteBase64StringValue(value);
+                } else {
+                    this.writer.WriteBase64String(key!, value);
                 }
             }
         }
@@ -480,53 +443,46 @@ namespace Microsoft.Kiota.Serialization.Json
         /// <param name="key">The key of the json node</param>
         /// <param name="value">The object instance to write</param>
         /// <param name="additionalValuesToMerge">The additional values to merge to the main value when serializing an intersection wrapper.</param>
-        public void WriteObjectValue<T>(string? key, T? value, params IParsable?[] additionalValuesToMerge) where T : IParsable
-        {
+        public void WriteObjectValue<T>(string? key, T? value, params IParsable?[] additionalValuesToMerge) where T : IParsable {
             var filteredAdditionalValuesToMerge = (IParsable[])Array.FindAll(additionalValuesToMerge, static x => x is not null);
-            if(value != null || filteredAdditionalValuesToMerge.Length > 0)
-            {
+            if (value != null || filteredAdditionalValuesToMerge.Length > 0) {
                 // until interface exposes WriteUntypedValue()
                 var serializingUntypedNode = value is UntypedNode;
-                if(!serializingUntypedNode && !string.IsNullOrEmpty(key)) {
-                    writer.WritePropertyName(key!);
+                if (!serializingUntypedNode && !string.IsNullOrEmpty(key)) {
+                    this.writer.WritePropertyName(key!);
                 }
 
-                if(value != null) {
-                    OnBeforeObjectSerialization?.Invoke(value);
+                if (value != null) {
+                    this.OnBeforeObjectSerialization?.Invoke(value);
                 }
 
-                if(serializingUntypedNode)
-                {
+                if (serializingUntypedNode) {
                     var untypedNode = value as UntypedNode;
-                    OnStartObjectSerialization?.Invoke(untypedNode!, this);
-                    WriteUntypedValue(key, untypedNode);
-                    OnAfterObjectSerialization?.Invoke(untypedNode!);
-                }
-                else
-                {
+                    this.OnStartObjectSerialization?.Invoke(untypedNode!, this);
+                    this.WriteUntypedValue(key, untypedNode);
+                    this.OnAfterObjectSerialization?.Invoke(untypedNode!);
+                } else {
                     var serializingScalarValue = value is IComposedTypeWrapper;
-                    if(!serializingScalarValue) {
-                        writer.WriteStartObject();
+                    if (!serializingScalarValue) {
+                        this.writer.WriteStartObject();
                     }
 
-                    if(value != null)
-                    {
-                        OnStartObjectSerialization?.Invoke(value, this);
+                    if (value != null) {
+                        this.OnStartObjectSerialization?.Invoke(value, this);
                         value.Serialize(this);
                     }
-                    foreach(var additionalValueToMerge in filteredAdditionalValuesToMerge)
-                    {
-                        OnBeforeObjectSerialization?.Invoke(additionalValueToMerge!);
-                        OnStartObjectSerialization?.Invoke(additionalValueToMerge!, this);
+                    foreach (var additionalValueToMerge in filteredAdditionalValuesToMerge) {
+                        this.OnBeforeObjectSerialization?.Invoke(additionalValueToMerge!);
+                        this.OnStartObjectSerialization?.Invoke(additionalValueToMerge!, this);
                         additionalValueToMerge!.Serialize(this);
-                        OnAfterObjectSerialization?.Invoke(additionalValueToMerge);
+                        this.OnAfterObjectSerialization?.Invoke(additionalValueToMerge);
                     }
-                    if(!serializingScalarValue) {
-                        writer.WriteEndObject();
+                    if (!serializingScalarValue) {
+                        this.writer.WriteEndObject();
                     }
                 }
-                if(value != null) {
-                    OnAfterObjectSerialization?.Invoke(value);
+                if (value != null) {
+                    this.OnAfterObjectSerialization?.Invoke(value);
                 }
             }
         }
@@ -535,14 +491,13 @@ namespace Microsoft.Kiota.Serialization.Json
         /// Write the additional data property bag
         /// </summary>
         /// <param name="value">The additional data dictionary</param>
-        public void WriteAdditionalData(IDictionary<string, object> value)
-        {
-            if(value == null) {
+        public void WriteAdditionalData(IDictionary<string, object> value) {
+            if (value == null) {
                 return;
             }
 
-            foreach(var dataValue in value) {
-                WriteAnyValue(dataValue.Key, dataValue.Value);
+            foreach (var dataValue in value) {
+                this.WriteAnyValue(dataValue.Key, dataValue.Value);
             }
         }
 
@@ -553,96 +508,93 @@ namespace Microsoft.Kiota.Serialization.Json
         private void WriteNonParsableObjectValue<T>(string? key, T value)
 #endif
         {
-            if(!string.IsNullOrEmpty(key)) {
-                writer.WritePropertyName(key!);
+            if (!string.IsNullOrEmpty(key)) {
+                this.writer.WritePropertyName(key!);
             }
 
-            writer.WriteStartObject();
-            if(value == null) {
-                writer.WriteNullValue();
-            }
-            else {
-                foreach(var oProp in value.GetType().GetProperties()) {
-                    WriteAnyValue(oProp.Name, oProp.GetValue(value));
+            this.writer.WriteStartObject();
+            if (value == null) {
+                this.writer.WriteNullValue();
+            } else {
+                foreach (var oProp in value.GetType().GetProperties()) {
+                    this.WriteAnyValue(oProp.Name, oProp.GetValue(value));
                 }
             }
 
-            writer.WriteEndObject();
+            this.writer.WriteEndObject();
         }
 
-        private void WriteAnyValue<T>(string? key, T value)
-        {
-            switch(value)
-            {
+        private void WriteAnyValue<T>(string? key, T value) {
+            switch (value) {
                 case string s:
-                    WriteStringValue(key, s);
+                    this.WriteStringValue(key, s);
                     break;
                 case bool b:
-                    WriteBoolValue(key, b);
+                    this.WriteBoolValue(key, b);
                     break;
                 case byte b:
-                    WriteByteValue(key, b);
+                    this.WriteByteValue(key, b);
                     break;
                 case sbyte b:
-                    WriteSbyteValue(key, b);
+                    this.WriteSbyteValue(key, b);
                     break;
                 case int i:
-                    WriteIntValue(key, i);
+                    this.WriteIntValue(key, i);
                     break;
                 case float f:
-                    WriteFloatValue(key, f);
+                    this.WriteFloatValue(key, f);
                     break;
                 case long l:
-                    WriteLongValue(key, l);
+                    this.WriteLongValue(key, l);
                     break;
                 case double d:
-                    WriteDoubleValue(key, d);
+                    this.WriteDoubleValue(key, d);
                     break;
                 case decimal dec:
-                    WriteDecimalValue(key, dec);
+                    this.WriteDecimalValue(key, dec);
                     break;
                 case Guid g:
-                    WriteGuidValue(key, g);
+                    this.WriteGuidValue(key, g);
                     break;
                 case DateTimeOffset dto:
-                    WriteDateTimeOffsetValue(key, dto);
+                    this.WriteDateTimeOffsetValue(key, dto);
                     break;
                 case TimeSpan timeSpan:
-                    WriteTimeSpanValue(key, timeSpan);
+                    this.WriteTimeSpanValue(key, timeSpan);
                     break;
                 case UntypedNode node:
-                    WriteUntypedValue(key, node);
+                    this.WriteUntypedValue(key, node);
                     break;
                 case IParsable parseable:
-                    WriteObjectValue(key, parseable);
+                    this.WriteObjectValue(key, parseable);
                     break;
                 case DateOnly date:
-                    WriteDateValue(key, date);
+                    this.WriteDateValue(key, date);
                     break;
                 case DateTime dateTime:
-                    WriteDateTimeOffsetValue(key, new DateTimeOffset(dateTime));
+                    this.WriteDateTimeOffsetValue(key, new DateTimeOffset(dateTime));
                     break;
                 case TimeOnly time:
-                    WriteTimeValue(key, time);
+                    this.WriteTimeValue(key, time);
                     break;
                 case JsonElement jsonElement:
-                    if(!string.IsNullOrEmpty(key)) {
-                        writer.WritePropertyName(key!);
+                    if (!string.IsNullOrEmpty(key)) {
+                        this.writer.WritePropertyName(key!);
                     }
 
-                    jsonElement.WriteTo(writer);
+                    jsonElement.WriteTo(this.writer);
                     break;
                 case IDictionary dictionary:
-                    WriteDictionaryValue(key, dictionary);
+                    this.WriteDictionaryValue(key, dictionary);
                     break;
                 case IEnumerable coll:
-                    WriteCollectionOfPrimitiveValuesInternal(key, coll);
+                    this.WriteCollectionOfPrimitiveValuesInternal(key, coll);
                     break;
                 case object o:
-                    WriteNonParsableObjectValue(key, o);
+                    this.WriteNonParsableObjectValue(key, o);
                     break;
                 case null:
-                    WriteNullValue(key);
+                    this.WriteNullValue(key);
                     break;
                 default:
                     throw new InvalidOperationException($"Error serializing additional data value with key {key}, unknown type {value?.GetType()}");
@@ -650,9 +602,8 @@ namespace Microsoft.Kiota.Serialization.Json
         }
 
         /// <inheritdoc />
-        public void Dispose()
-        {
-            writer.Dispose();
+        public void Dispose() {
+            this.writer.Dispose();
             GC.SuppressFinalize(this);
         }
 
@@ -661,39 +612,37 @@ namespace Microsoft.Kiota.Serialization.Json
         /// </summary>
         /// <param name="key">The key to be used for the written value. May be null.</param>
         /// <param name="value">The untyped node.</param>
-        private void WriteUntypedValue(string? key, UntypedNode? value)
-        {
-            switch(value)
-            {
+        private void WriteUntypedValue(string? key, UntypedNode? value) {
+            switch (value) {
                 case UntypedString untypedString:
-                    WriteStringValue(key, untypedString.GetValue());
+                    this.WriteStringValue(key, untypedString.GetValue());
                     break;
                 case UntypedBoolean untypedBoolean:
-                    WriteBoolValue(key, untypedBoolean.GetValue());
+                    this.WriteBoolValue(key, untypedBoolean.GetValue());
                     break;
                 case UntypedInteger untypedInteger:
-                    WriteIntValue(key, untypedInteger.GetValue());
+                    this.WriteIntValue(key, untypedInteger.GetValue());
                     break;
                 case UntypedLong untypedLong:
-                    WriteLongValue(key, untypedLong.GetValue());
+                    this.WriteLongValue(key, untypedLong.GetValue());
                     break;
                 case UntypedDecimal untypedDecimal:
-                    WriteDecimalValue(key, untypedDecimal.GetValue());
+                    this.WriteDecimalValue(key, untypedDecimal.GetValue());
                     break;
                 case UntypedFloat untypedFloat:
-                    WriteFloatValue(key, untypedFloat.GetValue());
+                    this.WriteFloatValue(key, untypedFloat.GetValue());
                     break;
                 case UntypedDouble untypedDouble:
-                    WriteDoubleValue(key, untypedDouble.GetValue());
+                    this.WriteDoubleValue(key, untypedDouble.GetValue());
                     break;
                 case UntypedObject untypedObject:
-                    WriteUntypedObject(key, untypedObject);
+                    this.WriteUntypedObject(key, untypedObject);
                     break;
                 case UntypedArray array:
-                    WriteUntypedArray(key, array);
+                    this.WriteUntypedArray(key, array);
                     break;
                 case UntypedNull:
-                    WriteNullValue(key);
+                    this.WriteNullValue(key);
                     break;
             }
         }
@@ -703,20 +652,18 @@ namespace Microsoft.Kiota.Serialization.Json
         /// </summary>
         /// <param name="key">The key to be used for the written value. May be null.</param>
         /// <param name="value">The untyped object.</param>
-        private void WriteUntypedObject(string? key, UntypedObject? value)
-        {
-            if(value != null)
-            {
-                if(!string.IsNullOrEmpty(key)) {
-                    writer.WritePropertyName(key!);
+        private void WriteUntypedObject(string? key, UntypedObject? value) {
+            if (value != null) {
+                if (!string.IsNullOrEmpty(key)) {
+                    this.writer.WritePropertyName(key!);
                 }
 
-                writer.WriteStartObject();
-                foreach(var item in value.GetValue()) {
-                    WriteUntypedValue(item.Key, item.Value);
+                this.writer.WriteStartObject();
+                foreach (var item in value.GetValue()) {
+                    this.WriteUntypedValue(item.Key, item.Value);
                 }
 
-                writer.WriteEndObject();
+                this.writer.WriteEndObject();
             }
         }
 
@@ -725,20 +672,18 @@ namespace Microsoft.Kiota.Serialization.Json
         /// </summary>
         /// <param name="key">The key to be used for the written value. May be null.</param>
         /// <param name="array">The collection of untyped values.</param>
-        private void WriteUntypedArray(string? key, UntypedArray? array)
-        {
-            if(array != null)
-            {
-                if(!string.IsNullOrEmpty(key)) {
-                    writer.WritePropertyName(key!);
+        private void WriteUntypedArray(string? key, UntypedArray? array) {
+            if (array != null) {
+                if (!string.IsNullOrEmpty(key)) {
+                    this.writer.WritePropertyName(key!);
                 }
 
-                writer.WriteStartArray();
-                foreach(var item in array.GetValue()) {
-                    WriteUntypedValue(null, item);
+                this.writer.WriteStartArray();
+                foreach (var item in array.GetValue()) {
+                    this.WriteUntypedValue(null, item);
                 }
 
-                writer.WriteEndArray();
+                this.writer.WriteEndArray();
             }
         }
     }

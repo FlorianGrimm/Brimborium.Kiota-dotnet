@@ -15,6 +15,6 @@ namespace Microsoft.Kiota.Abstractions.Serialization
         /// Gets the value associated with untyped decimal node.
         /// </summary>
         /// <returns>The value associated with untyped decimal node.</returns>
-        public new decimal GetValue() => _value;
+        public new decimal GetValue() => this._value;
     }
 }

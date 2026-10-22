@@ -52,7 +52,7 @@ namespace Microsoft.Kiota.Abstractions.Store
                 return base.GetSerializationWriter(contentType);
             }
 
-            return ProxiedSerializationWriterFactory.GetSerializationWriter(contentType);
+            return this.ProxiedSerializationWriterFactory.GetSerializationWriter(contentType);
         }
     }
 }

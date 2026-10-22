@@ -2,22 +2,19 @@ using System.Globalization;
 using System.Reflection;
 using System.Text;
 using System.Xml;
-using Microsoft.Kiota.Abstractions;
-using Microsoft.Kiota.Abstractions.Extensions;
+
 using Microsoft.Kiota.Abstractions.Serialization;
-using System.IO;
+
 #if NET5_0_OR_GREATER
 using System.Diagnostics.CodeAnalysis;
+
 #endif
-using System;
-using System.Collections.Generic;
 using Microsoft.Kiota.Abstractions.Helpers;
 using Microsoft.IO;
 
 namespace Microsoft.Kiota.Serialization.Form;
 /// <summary>Represents a serialization writer that can be used to write a form url encoded string.</summary>
-public class FormSerializationWriter : ISerializationWriter
-{
+public class FormSerializationWriter : ISerializationWriter {
     private int _Depth;
     private readonly StringBuilder _Builder = new();
     private static readonly RecyclableMemoryStreamManager _MemoryStreamManager = new RecyclableMemoryStreamManager();
@@ -28,103 +25,96 @@ public class FormSerializationWriter : ISerializationWriter
     /// <inheritdoc/>
     public Action<IParsable, ISerializationWriter>? OnStartObjectSerialization { get; set; }
     /// <inheritdoc/>
-    public void Dispose()
-    {
+    public void Dispose() {
         GC.SuppressFinalize(this);
     }
     /// <inheritdoc/>
-    public Stream GetSerializedContent() => _MemoryStreamManager.GetStream(Encoding.UTF8.GetBytes(_Builder.ToString()));
+    public Stream GetSerializedContent() => _MemoryStreamManager.GetStream(Encoding.UTF8.GetBytes(this._Builder.ToString()));
     /// <inheritdoc/>
-    public void WriteAdditionalData(IDictionary<string, object> value)
-    {
-        if(value == null) {
+    public void WriteAdditionalData(IDictionary<string, object> value) {
+        if (value == null) {
             return;
         }
 
-        foreach(var dataValue in value) {
-            WriteAnyValue(dataValue.Key, dataValue.Value);
+        foreach (var dataValue in value) {
+            this.WriteAnyValue(dataValue.Key, dataValue.Value);
         }
     }
 
-    private void WriteAnyValue(string? key, object value)
-    {
-        switch(value)
-        {
+    private void WriteAnyValue(string? key, object value) {
+        switch (value) {
             case null:
-                WriteNullValue(key);
+                this.WriteNullValue(key);
                 break;
             case decimal d:
-                WriteDecimalValue(key, d);
+                this.WriteDecimalValue(key, d);
                 break;
             case bool b:
-                WriteBoolValue(key, b);
+                this.WriteBoolValue(key, b);
                 break;
             case byte b:
-                WriteByteValue(key, b);
+                this.WriteByteValue(key, b);
                 break;
             case sbyte b:
-                WriteSbyteValue(key, b);
+                this.WriteSbyteValue(key, b);
                 break;
             case int i:
-                WriteIntValue(key, i);
+                this.WriteIntValue(key, i);
                 break;
             case float f:
-                WriteFloatValue(key, f);
+                this.WriteFloatValue(key, f);
                 break;
             case long l:
-                WriteLongValue(key, l);
+                this.WriteLongValue(key, l);
                 break;
             case double d:
-                WriteDoubleValue(key, d);
+                this.WriteDoubleValue(key, d);
                 break;
             case Guid g:
-                WriteGuidValue(key, g);
+                this.WriteGuidValue(key, g);
                 break;
             case DateTimeOffset dto:
-                WriteDateTimeOffsetValue(key, dto);
+                this.WriteDateTimeOffsetValue(key, dto);
                 break;
             case TimeSpan timeSpan:
-                WriteTimeSpanValue(key, timeSpan);
+                this.WriteTimeSpanValue(key, timeSpan);
                 break;
             case TimeOnly time:
-                WriteTimeValue(key, time);
+                this.WriteTimeValue(key, time);
                 break;
             case IEnumerable<object> coll:
-                WriteCollectionOfPrimitiveValues(key, coll);
+                this.WriteCollectionOfPrimitiveValues(key, coll);
                 break;
             case byte[] coll:
-                WriteByteArrayValue(key, coll);
+                this.WriteByteArrayValue(key, coll);
                 break;
             case IParsable:
                 throw new InvalidOperationException("Form serialization does not support nested objects.");
             default:
-                WriteStringValue(key, value.ToString());// works for Date and String types
+                this.WriteStringValue(key, value.ToString());// works for Date and String types
                 break;
         }
     }
 
     /// <inheritdoc/>
-    public void WriteBoolValue(string? key, bool? value)
-    {
-        if(value.HasValue) {
-            WriteStringValue(key, value.Value.ToString().ToLowerInvariant());
+    public void WriteBoolValue(string? key, bool? value) {
+        if (value.HasValue) {
+            this.WriteStringValue(key, value.Value.ToString().ToLowerInvariant());
         }
     }
 
     /// <inheritdoc/>
-    public void WriteByteArrayValue(string? key, byte[]? value)
-    {
-        if(value != null)//empty array is meaningful
+    public void WriteByteArrayValue(string? key, byte[]? value) {
+        if (value != null)//empty array is meaningful
 {
-            WriteStringValue(key, value.Length > 0 ? Convert.ToBase64String(value) : string.Empty);
+            this.WriteStringValue(key, value.Length > 0 ? Convert.ToBase64String(value) : string.Empty);
         }
     }
 
     /// <inheritdoc/>
-    public void WriteByteValue(string? key, byte? value)
-    {
-        if(value.HasValue) {
-            WriteIntValue(key, Convert.ToInt32(value.Value));
+    public void WriteByteValue(string? key, byte? value) {
+        if (value.HasValue) {
+            this.WriteIntValue(key, Convert.ToInt32(value.Value));
         }
     }
 
@@ -132,146 +122,128 @@ public class FormSerializationWriter : ISerializationWriter
     public void WriteCollectionOfObjectValues<T>(string? key, IEnumerable<T>? values) where T : IParsable => throw new InvalidOperationException("Form serialization does not support collections.");
 
     /// <inheritdoc/>
-    public void WriteCollectionOfPrimitiveValues<T>(string? key, IEnumerable<T>? values)
-    {
-        if(values == null) {
+    public void WriteCollectionOfPrimitiveValues<T>(string? key, IEnumerable<T>? values) {
+        if (values == null) {
             return;
         }
 
-        foreach(var value in values)
-        {
-            if(value != null) {
-                WriteAnyValue(key, value);
+        foreach (var value in values) {
+            if (value != null) {
+                this.WriteAnyValue(key, value);
             }
         }
     }
 
     /// <inheritdoc/>
-    public void WriteDateTimeOffsetValue(string? key, DateTimeOffset? value)
-    {
-        if(value.HasValue) {
-            WriteStringValue(key, value.Value.ToString("o", CultureInfo.InvariantCulture));
+    public void WriteDateTimeOffsetValue(string? key, DateTimeOffset? value) {
+        if (value.HasValue) {
+            this.WriteStringValue(key, value.Value.ToString("o", CultureInfo.InvariantCulture));
         }
     }
     /// <inheritdoc/>
-    public void WriteDateValue(string? key, DateOnly? value)
-    {
-        if(value.HasValue) {
-            WriteStringValue(key, value.Value.ToString());
+    public void WriteDateValue(string? key, DateOnly? value) {
+        if (value.HasValue) {
+            this.WriteStringValue(key, value.Value.ToString());
         }
     }
     /// <inheritdoc/>
-    public void WriteDecimalValue(string? key, decimal? value)
-    {
-        if(value.HasValue) {
-            WriteStringValue(key, value.Value.ToString(CultureInfo.InvariantCulture));
+    public void WriteDecimalValue(string? key, decimal? value) {
+        if (value.HasValue) {
+            this.WriteStringValue(key, value.Value.ToString(CultureInfo.InvariantCulture));
         }
     }
     /// <inheritdoc/>
-    public void WriteDoubleValue(string? key, double? value)
-    {
-        if(value.HasValue) {
-            WriteStringValue(key, value.Value.ToString(CultureInfo.InvariantCulture));
+    public void WriteDoubleValue(string? key, double? value) {
+        if (value.HasValue) {
+            this.WriteStringValue(key, value.Value.ToString(CultureInfo.InvariantCulture));
         }
     }
     /// <inheritdoc/>
-    public void WriteFloatValue(string? key, float? value)
-    {
-        if(value.HasValue) {
-            WriteStringValue(key, value.Value.ToString(CultureInfo.InvariantCulture));
+    public void WriteFloatValue(string? key, float? value) {
+        if (value.HasValue) {
+            this.WriteStringValue(key, value.Value.ToString(CultureInfo.InvariantCulture));
         }
     }
     /// <inheritdoc/>
-    public void WriteGuidValue(string? key, Guid? value)
-    {
-        if(value.HasValue) {
-            WriteStringValue(key, value.Value.ToString("D"));
+    public void WriteGuidValue(string? key, Guid? value) {
+        if (value.HasValue) {
+            this.WriteStringValue(key, value.Value.ToString("D"));
         }
     }
     /// <inheritdoc/>
-    public void WriteIntValue(string? key, int? value)
-    {
-        if(value.HasValue) {
-            WriteStringValue(key, value.Value.ToString(CultureInfo.InvariantCulture));
+    public void WriteIntValue(string? key, int? value) {
+        if (value.HasValue) {
+            this.WriteStringValue(key, value.Value.ToString(CultureInfo.InvariantCulture));
         }
     }
     /// <inheritdoc/>
-    public void WriteLongValue(string? key, long? value)
-    {
-        if(value.HasValue) {
-            WriteStringValue(key, value.Value.ToString(CultureInfo.InvariantCulture));
+    public void WriteLongValue(string? key, long? value) {
+        if (value.HasValue) {
+            this.WriteStringValue(key, value.Value.ToString(CultureInfo.InvariantCulture));
         }
     }
     /// <inheritdoc/>
-    public void WriteNullValue(string? key)
-    {
-        WriteStringValue(key, "null");
+    public void WriteNullValue(string? key) {
+        this.WriteStringValue(key, "null");
     }
     /// <inheritdoc/>
-    public void WriteObjectValue<T>(string? key, T? value, params IParsable?[] additionalValuesToMerge) where T : IParsable
-    {
-        if(_Depth > 0) {
+    public void WriteObjectValue<T>(string? key, T? value, params IParsable?[] additionalValuesToMerge) where T : IParsable {
+        if (this._Depth > 0) {
             throw new InvalidOperationException("Form serialization does not support nested objects.");
         }
 
-        _Depth++;
-        if(value == null && !Array.Exists(additionalValuesToMerge, static x => x is not null)) {
+        this._Depth++;
+        if (value == null && !Array.Exists(additionalValuesToMerge, static x => x is not null)) {
             return;
         }
 
-        if(value != null)
-        {
-            OnBeforeObjectSerialization?.Invoke(value);
-            OnStartObjectSerialization?.Invoke(value, this);
+        if (value != null) {
+            this.OnBeforeObjectSerialization?.Invoke(value);
+            this.OnStartObjectSerialization?.Invoke(value, this);
             value.Serialize(this);
         }
-        foreach(var additionalValueToMerge in additionalValuesToMerge)
-        {
-            if(additionalValueToMerge is null) {
+        foreach (var additionalValueToMerge in additionalValuesToMerge) {
+            if (additionalValueToMerge is null) {
                 continue;
             }
 
-            OnBeforeObjectSerialization?.Invoke(additionalValueToMerge);
-            OnStartObjectSerialization?.Invoke(additionalValueToMerge, this);
+            this.OnBeforeObjectSerialization?.Invoke(additionalValueToMerge);
+            this.OnStartObjectSerialization?.Invoke(additionalValueToMerge, this);
             additionalValueToMerge.Serialize(this);
-            OnAfterObjectSerialization?.Invoke(additionalValueToMerge);
+            this.OnAfterObjectSerialization?.Invoke(additionalValueToMerge);
         }
-        if(value != null) {
-            OnAfterObjectSerialization?.Invoke(value);
-        }
-    }
-    /// <inheritdoc/>
-    public void WriteSbyteValue(string? key, sbyte? value)
-    {
-        if(value.HasValue) {
-            WriteIntValue(key, Convert.ToInt32(value.Value));
+        if (value != null) {
+            this.OnAfterObjectSerialization?.Invoke(value);
         }
     }
     /// <inheritdoc/>
-    public void WriteStringValue(string? key, string? value)
-    {
-        if(string.IsNullOrEmpty(key) || string.IsNullOrEmpty(value)) {
+    public void WriteSbyteValue(string? key, sbyte? value) {
+        if (value.HasValue) {
+            this.WriteIntValue(key, Convert.ToInt32(value.Value));
+        }
+    }
+    /// <inheritdoc/>
+    public void WriteStringValue(string? key, string? value) {
+        if (string.IsNullOrEmpty(key) || string.IsNullOrEmpty(value)) {
             return;
         }
 
-        if(_Builder.Length > 0) {
-            _ = _Builder.Append('&');
+        if (this._Builder.Length > 0) {
+            _ = this._Builder.Append('&');
         }
 
-        _ = _Builder.Append(Uri.EscapeDataString(key)).Append('=').Append(Uri.EscapeDataString(value));
+        _ = this._Builder.Append(Uri.EscapeDataString(key)).Append('=').Append(Uri.EscapeDataString(value));
     }
     /// <inheritdoc/>
-    public void WriteTimeSpanValue(string? key, TimeSpan? value)
-    {
-        if(value.HasValue) {
-            WriteStringValue(key, XmlConvert.ToString(value.Value));
+    public void WriteTimeSpanValue(string? key, TimeSpan? value) {
+        if (value.HasValue) {
+            this.WriteStringValue(key, XmlConvert.ToString(value.Value));
         }
     }
     /// <inheritdoc/>
-    public void WriteTimeValue(string? key, TimeOnly? value)
-    {
-        if(value.HasValue) {
-            WriteStringValue(key, value.Value.ToString());
+    public void WriteTimeValue(string? key, TimeOnly? value) {
+        if (value.HasValue) {
+            this.WriteStringValue(key, value.Value.ToString());
         }
     }
     /// <inheritdoc/>
@@ -281,19 +253,16 @@ public class FormSerializationWriter : ISerializationWriter
     public void WriteCollectionOfEnumValues<T>(string? key, IEnumerable<T?>? values) where T : struct, Enum
 #endif
     {
-        if(values == null) {
+        if (values == null) {
             return;
         }
 
         StringBuilder? valueNames = null;
-        foreach(var x in values)
-        {
-            if(x.HasValue && EnumHelpers.GetEnumStringValue(x.Value) is string valueName)
-            {
-                if(valueNames == null) {
+        foreach (var x in values) {
+            if (x.HasValue && EnumHelpers.GetEnumStringValue(x.Value) is string valueName) {
+                if (valueNames == null) {
                     valueNames = new StringBuilder();
-                }
-                else {
+                } else {
                     _ = valueNames.Append(",");
                 }
 
@@ -301,8 +270,8 @@ public class FormSerializationWriter : ISerializationWriter
             }
         }
 
-        if(valueNames is not null) {
-            WriteStringValue(key, valueNames.ToString());
+        if (valueNames is not null) {
+            this.WriteStringValue(key, valueNames.ToString());
         }
     }
 
@@ -313,10 +282,8 @@ public class FormSerializationWriter : ISerializationWriter
     public void WriteEnumValue<T>(string? key, T? value) where T : struct, Enum
 #endif
     {
-        if(value.HasValue)
-        {
-            if(typeof(T).IsDefined(typeof(FlagsAttribute)))
-            {
+        if (value.HasValue) {
+            if (typeof(T).IsDefined(typeof(FlagsAttribute))) {
                 T[] values =
 #if NET5_0_OR_GREATER
                     Enum.GetValues<T>();
@@ -324,21 +291,18 @@ public class FormSerializationWriter : ISerializationWriter
                     (T[])Enum.GetValues(typeof(T));
 #endif
                 StringBuilder valueNames = new StringBuilder();
-                foreach(var x in values)
-                {
-                    if(value.Value.HasFlag(x) && EnumHelpers.GetEnumStringValue(x) is string valueName)
-                    {
-                        if(valueNames.Length > 0) {
+                foreach (var x in values) {
+                    if (value.Value.HasFlag(x) && EnumHelpers.GetEnumStringValue(x) is string valueName) {
+                        if (valueNames.Length > 0) {
                             valueNames.Append(",");
                         }
 
                         valueNames.Append(valueName);
                     }
                 }
-                WriteStringValue(key, valueNames.ToString());
-            }
-            else {
-                WriteStringValue(key, EnumHelpers.GetEnumStringValue(value.Value));
+                this.WriteStringValue(key, valueNames.ToString());
+            } else {
+                this.WriteStringValue(key, EnumHelpers.GetEnumStringValue(value.Value));
             }
         }
     }

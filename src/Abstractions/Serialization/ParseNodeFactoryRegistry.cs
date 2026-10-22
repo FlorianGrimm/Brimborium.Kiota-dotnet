@@ -52,7 +52,7 @@ namespace Microsoft.Kiota.Abstractions.Serialization
 
             _ = content ?? throw new ArgumentNullException(nameof(content));
 
-            var (factory, correctContentType) = GetFactory(contentType);
+            var (factory, correctContentType) = this.GetFactory(contentType);
 
             return await factory.GetRootParseNodeAsync(correctContentType, content, cancellationToken).ConfigureAwait(false);
         }
@@ -67,10 +67,10 @@ namespace Microsoft.Kiota.Abstractions.Serialization
             string resultContentType;
             var vendorSpecificContentType = contentType.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries)[0];
             IParseNodeFactory? factory;
-            if(!ContentTypeAssociatedFactories.TryGetValue(vendorSpecificContentType, out factory))
+            if(!this.ContentTypeAssociatedFactories.TryGetValue(vendorSpecificContentType, out factory))
             {
                 var cleanedContentType = resultContentType = contentTypeVendorCleanupRegex.Replace(vendorSpecificContentType, string.Empty);
-                if(!ContentTypeAssociatedFactories.TryGetValue(cleanedContentType, out factory))
+                if(!this.ContentTypeAssociatedFactories.TryGetValue(cleanedContentType, out factory))
                 {
                     throw new InvalidOperationException($"Content type {cleanedContentType} does not have a factory registered to be parsed");
                 }

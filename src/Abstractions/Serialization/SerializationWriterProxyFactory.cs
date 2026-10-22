@@ -14,7 +14,7 @@ namespace Microsoft.Kiota.Abstractions.Serialization
         /// <summary>
         /// The valid content type for the <see cref="SerializationWriterProxyFactory"/>
         /// </summary>
-        public string ValidContentType { get { return ProxiedSerializationWriterFactory.ValidContentType; } }
+        public string ValidContentType { get { return this.ProxiedSerializationWriterFactory.ValidContentType; } }
 
         /// <summary>
         /// The factory that is being proxied.
@@ -35,10 +35,10 @@ namespace Microsoft.Kiota.Abstractions.Serialization
             Action<IParsable> onAfterSerialization,
             Action<IParsable, ISerializationWriter> onStartSerialization)
         {
-            ProxiedSerializationWriterFactory = factoryToWrap ?? throw new ArgumentNullException(nameof(factoryToWrap));
-            _onBefore = onBeforeSerialization;
-            _onAfter = onAfterSerialization;
-            _onStartSerialization = onStartSerialization;
+            this.ProxiedSerializationWriterFactory = factoryToWrap ?? throw new ArgumentNullException(nameof(factoryToWrap));
+            this._onBefore = onBeforeSerialization;
+            this._onAfter = onAfterSerialization;
+            this._onStartSerialization = onStartSerialization;
         }
         /// <summary>
         /// Creates a new <see cref="ISerializationWriter" /> instance for the given content type.
@@ -47,23 +47,23 @@ namespace Microsoft.Kiota.Abstractions.Serialization
         /// <returns>A new <see cref="ISerializationWriter" /> instance for the given content type.</returns>
         public ISerializationWriter GetSerializationWriter(string contentType)
         {
-            var writer = ProxiedSerializationWriterFactory.GetSerializationWriter(contentType);
+            var writer = this.ProxiedSerializationWriterFactory.GetSerializationWriter(contentType);
             var originalBefore = writer.OnBeforeObjectSerialization;
             var originalAfter = writer.OnAfterObjectSerialization;
             var originalStart = writer.OnStartObjectSerialization;
             writer.OnBeforeObjectSerialization = (x) =>
             {
-                _onBefore?.Invoke(x); // the callback set by the implementation (e.g. backing store)
+                this._onBefore?.Invoke(x); // the callback set by the implementation (e.g. backing store)
                 originalBefore?.Invoke(x); // some callback that might already be set on the target
             };
             writer.OnAfterObjectSerialization = (x) =>
             {
-                _onAfter?.Invoke(x);
+                this._onAfter?.Invoke(x);
                 originalAfter?.Invoke(x);
             };
             writer.OnStartObjectSerialization = (x, y) =>
             {
-                _onStartSerialization?.Invoke(x, y);
+                this._onStartSerialization?.Invoke(x, y);
                 originalStart?.Invoke(x, y);
             };
             return writer;

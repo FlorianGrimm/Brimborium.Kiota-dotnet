@@ -32,16 +32,16 @@ public class RequestHeaders : IDictionary<string, IEnumerable<string>>
             return;
         }
 
-        if(_singleValueHeaders.Contains(headerName)) {
-            _headers[headerName] = new HashSet<string> { headerValues[0] };
+        if(this._singleValueHeaders.Contains(headerName)) {
+            this._headers[headerName] = new HashSet<string> { headerValues[0] };
         }
-        else if(_headers.TryGetValue(headerName, out var values)) {
+        else if(this._headers.TryGetValue(headerName, out var values)) {
             foreach(var headerValue in headerValues) {
                 _ = values.Add(headerValue);
             }
         }
         else {
-            _headers.Add(headerName, new HashSet<string>(headerValues));
+            this._headers.Add(headerName, new HashSet<string>(headerValues));
         }
     }
 
@@ -61,16 +61,16 @@ public class RequestHeaders : IDictionary<string, IEnumerable<string>>
             throw new ArgumentNullException(nameof(headerValue));
         }
 
-        if(!_headers.ContainsKey(headerName))
+        if(!this._headers.ContainsKey(headerName))
         {
-            _headers.Add(headerName, new HashSet<string> { headerValue });
+            this._headers.Add(headerName, new HashSet<string> { headerValue });
             return true;
         }
         return false;
     }
 
     /// <inheritdoc/>
-    public ICollection<string> Keys => _headers.Keys;
+    public ICollection<string> Keys => this._headers.Keys;
 
     /// <inheritdoc/>
     public ICollection<IEnumerable<string>> Values
@@ -78,7 +78,7 @@ public class RequestHeaders : IDictionary<string, IEnumerable<string>>
         get
         {
             var values = new List<IEnumerable<string>>();
-            foreach(var value in _headers.Values)
+            foreach(var value in this._headers.Values)
             {
                 values.Add(value);
             }
@@ -87,13 +87,13 @@ public class RequestHeaders : IDictionary<string, IEnumerable<string>>
     }
 
     /// <inheritdoc/>
-    public int Count => _headers.Count;
+    public int Count => this._headers.Count;
 
     /// <inheritdoc/>
     public bool IsReadOnly => false;
 
     /// <inheritdoc/>
-    public IEnumerable<string> this[string key] { get => TryGetValue(key, out var result) ? result : throw new KeyNotFoundException($"Key not found : {key}"); set => Add(key, value); }
+    public IEnumerable<string> this[string key] { get => this.TryGetValue(key, out var result) ? result : throw new KeyNotFoundException($"Key not found : {key}"); set => this.Add(key, value); }
 
     /// <summary>
     /// Removes the specified value from the header with the specified name.
@@ -110,11 +110,11 @@ public class RequestHeaders : IDictionary<string, IEnumerable<string>>
             throw new ArgumentNullException(nameof(headerValue));
         }
 
-        if(_headers.TryGetValue(headerName, out var values))
+        if(this._headers.TryGetValue(headerName, out var values))
         {
             var result = values.Remove(headerValue);
             if(values.Count == 0) {
-                _ = _headers.Remove(headerName);
+                _ = this._headers.Remove(headerName);
             }
 
             return result;
@@ -134,7 +134,7 @@ public class RequestHeaders : IDictionary<string, IEnumerable<string>>
 
         foreach(var header in headers) {
             foreach(var value in header.Value) {
-                Add(header.Key, value);
+                this.Add(header.Key, value);
             }
         }
     }
@@ -144,18 +144,18 @@ public class RequestHeaders : IDictionary<string, IEnumerable<string>>
     /// </summary>
     public void Clear()
     {
-        _headers.Clear();
+        this._headers.Clear();
     }
 
     /// <inheritdoc/>
-    public bool ContainsKey(string key) => !string.IsNullOrEmpty(key) && _headers.ContainsKey(key);
+    public bool ContainsKey(string key) => !string.IsNullOrEmpty(key) && this._headers.ContainsKey(key);
 
     /// <inheritdoc/>
     public void Add(string key, IEnumerable<string> value)
     {
         if(value == null)
         {
-            Add(key, null!);
+            this.Add(key, null!);
         }
         else
         {
@@ -164,7 +164,7 @@ public class RequestHeaders : IDictionary<string, IEnumerable<string>>
             {
                 valueArray.Add(v);
             }
-            Add(key, valueArray.ToArray());
+            this.Add(key, valueArray.ToArray());
         }
     }
 
@@ -175,7 +175,7 @@ public class RequestHeaders : IDictionary<string, IEnumerable<string>>
             throw new ArgumentNullException(nameof(key));
         }
 
-        return _headers.Remove(key);
+        return this._headers.Remove(key);
     }
     /// <inheritdoc/>
     public bool TryGetValue(string key, out IEnumerable<string> value)
@@ -184,7 +184,7 @@ public class RequestHeaders : IDictionary<string, IEnumerable<string>>
             throw new ArgumentNullException(nameof(key));
         }
 
-        if(_headers.TryGetValue(key, out var values))
+        if(this._headers.TryGetValue(key, out var values))
         {
             value = values;
             return true;
@@ -194,12 +194,12 @@ public class RequestHeaders : IDictionary<string, IEnumerable<string>>
     }
 
     /// <inheritdoc/>
-    public void Add(KeyValuePair<string, IEnumerable<string>> item) => Add(item.Key, item.Value);
+    public void Add(KeyValuePair<string, IEnumerable<string>> item) => this.Add(item.Key, item.Value);
 
     /// <inheritdoc/>
     public bool Contains(KeyValuePair<string, IEnumerable<string>> item)
     {
-        if(!TryGetValue(item.Key, out var values)) {
+        if(!this.TryGetValue(item.Key, out var values)) {
             return false;
         }
 
@@ -226,31 +226,31 @@ public class RequestHeaders : IDictionary<string, IEnumerable<string>>
     {
         var result = false;
         foreach(var value in item.Value) {
-            result |= Remove(item.Key, value);
+            result |= this.Remove(item.Key, value);
         }
 
         return result;
     }
     /// <inheritdoc/>
-    public IEnumerator<KeyValuePair<string, IEnumerable<string>>> GetEnumerator() => new RequestHeadersEnumerator(_headers.GetEnumerator());
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    public IEnumerator<KeyValuePair<string, IEnumerable<string>>> GetEnumerator() => new RequestHeadersEnumerator(this._headers.GetEnumerator());
+    IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
     private sealed class RequestHeadersEnumerator : IEnumerator<KeyValuePair<string, IEnumerable<string>>>
     {
         private readonly IEnumerator _enumerator;
         public RequestHeadersEnumerator(IEnumerator enumerator)
         {
-            _enumerator = enumerator;
+            this._enumerator = enumerator;
         }
-        public KeyValuePair<string, IEnumerable<string>> Current => _enumerator.Current is KeyValuePair<string, HashSet<string>> current ? new(current.Key, current.Value) : throw new InvalidOperationException();
+        public KeyValuePair<string, IEnumerable<string>> Current => this._enumerator.Current is KeyValuePair<string, HashSet<string>> current ? new(current.Key, current.Value) : throw new InvalidOperationException();
 
-        object IEnumerator.Current => Current;
+        object IEnumerator.Current => this.Current;
 
         public void Dispose()
         {
-            (_enumerator as IDisposable)?.Dispose();
+            (this._enumerator as IDisposable)?.Dispose();
             GC.SuppressFinalize(this);
         }
-        public bool MoveNext() => _enumerator.MoveNext();
-        public void Reset() => _enumerator.Reset();
+        public bool MoveNext() => this._enumerator.MoveNext();
+        public void Reset() => this._enumerator.Reset();
     }
 }

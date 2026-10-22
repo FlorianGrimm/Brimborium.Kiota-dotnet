@@ -22,7 +22,7 @@ namespace Microsoft.Kiota.Abstractions.Authentication
         {
             validHosts ??= Array.Empty<string>();
             ValidateHosts(validHosts);
-            _allowedHosts = new HashSet<string>(validHosts, StringComparer.OrdinalIgnoreCase);
+            this._allowedHosts = new HashSet<string>(validHosts, StringComparer.OrdinalIgnoreCase);
         }
 
         /// <summary>
@@ -32,7 +32,7 @@ namespace Microsoft.Kiota.Abstractions.Authentication
         {
             get
             {
-                foreach(var host in _allowedHosts)
+                foreach(var host in this._allowedHosts)
                 {
                     yield return host;
                 }
@@ -45,12 +45,12 @@ namespace Microsoft.Kiota.Abstractions.Authentication
 
                 ValidateHosts(value);
 
-                _allowedHosts = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                this._allowedHosts = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
                 foreach(var host in value)
                 {
                     if(!string.IsNullOrEmpty(host))
                     {
-                        _ = _allowedHosts.Add(host);
+                        _ = this._allowedHosts.Add(host);
                     }
                 }
             }
@@ -64,7 +64,7 @@ namespace Microsoft.Kiota.Abstractions.Authentication
         /// true - if the host is in the <see cref="AllowedHosts"/>. If <see cref="AllowedHosts"/> is empty, it will return true for all urls.
         /// false - if the <see cref="AllowedHosts"/> is not empty and the host is not in the list
         /// </returns>
-        public bool IsUrlHostValid(Uri uri) => _allowedHosts.Count == 0 || _allowedHosts.Contains(uri.Host);
+        public bool IsUrlHostValid(Uri uri) => this._allowedHosts.Count == 0 || this._allowedHosts.Contains(uri.Host);
 
         private static void ValidateHosts(IEnumerable<string> hostsToValidate)
         {

@@ -2,18 +2,15 @@
 //  Copyright (c) Microsoft Corporation.  All Rights Reserved.  Licensed under the MIT License.  See License in the project root for license information.
 // ------------------------------------------------------------------------------
 
-using System;
-using System.Net;
-using System.Net.Http;
 using Microsoft.Kiota.Abstractions;
 
-namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware.Options
-{
+using System.Net;
+
+namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware.Options {
     /// <summary>
     /// The retry request option class
     /// </summary>
-    public class RetryHandlerOption : IRequestOption
-    {
+    public class RetryHandlerOption : IRequestOption {
         internal const int DefaultDelay = 3;
         internal const int DefaultMaxRetry = 3;
         internal const int MaxMaxRetry = 10;
@@ -24,39 +21,31 @@ namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware.Options
         /// <summary>
         /// The waiting time in seconds before retrying a request with a maximum value of 180 seconds. This defaults to 3 seconds.
         /// </summary>
-        public int Delay
-        {
-            get
-            {
-                return _delay;
+        public int Delay {
+            get {
+                return this._delay;
             }
-            set
-            {
-                if(value > MaxDelay)
-                {
+            set {
+                if (value > MaxDelay) {
                     throw new InvalidOperationException($"Maximum value for {nameof(MaxDelay)} property exceeded ");
                 }
 
-                _delay = value;
+                this._delay = value;
             }
         }
 
         /// <summary>
         /// The maximum number of retries for a request with a maximum value of 10. This defaults to 3.
         /// </summary>
-        public int MaxRetry
-        {
-            get
-            {
-                return _maxRetry;
+        public int MaxRetry {
+            get {
+                return this._maxRetry;
             }
-            set
-            {
-                if(value > MaxMaxRetry)
-                {
+            set {
+                if (value > MaxMaxRetry) {
                     throw new InvalidOperationException($"Maximum value for {nameof(MaxMaxRetry)} property exceeded ");
                 }
-                _maxRetry = value;
+                this._maxRetry = value;
             }
         }
 
@@ -70,8 +59,7 @@ namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware.Options
         /// The delegate method should accept a delay time in seconds of, number of retry attempts and <see cref="HttpResponseMessage"/> as its parameters and return a <see cref="bool"/>.
         /// This defaults to a function that returns true for 503, 504, and 429 status codes and false otherwise.
         /// </summary>
-        public Func<int, int, HttpResponseMessage, bool> ShouldRetry { get; set; } = (_, _, response) => response.StatusCode switch
-        {
+        public Func<int, int, HttpResponseMessage, bool> ShouldRetry { get; set; } = (_, _, response) => response.StatusCode switch {
             // By default, retry on 503, 504, and 429 status codes
             HttpStatusCode.ServiceUnavailable => true,
             HttpStatusCode.GatewayTimeout => true,

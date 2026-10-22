@@ -218,7 +218,7 @@ public sealed record ODataSequence(
     /// <inheritdoc/>
     public bool AppendValue(in UriTemplateTarget target) {
         bool result = true;
-        foreach (var item in ListItem) {
+        foreach (var item in this.ListItem) {
             var subResult = item.AppendValue(target);
             if (subResult) {
                 // OK
@@ -283,7 +283,7 @@ public sealed record ODataList(
     public bool AppendValue(in UriTemplateTarget target) {
         bool result = true;
         int lastSeperate = -1;
-        foreach (var item in ListItem) {
+        foreach (var item in this.ListItem) {
             var subResult = item.AppendValue(target);
             if (subResult) {
                 // OK
@@ -432,7 +432,7 @@ public sealed record ODataFunction(
         bool result = true;
         _ = target.Append(this.Name).Append('(');
         var outputLength = target.Output.Length;
-        foreach (var item in ListItem) {
+        foreach (var item in this.ListItem) {
             var subResult = item.AppendValue(target);
             outputLength = target.Output.Length;
             if (subResult) {

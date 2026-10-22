@@ -17,7 +17,7 @@ namespace Microsoft.Kiota.Abstractions.Serialization
         /// <summary>
         /// The valid content type for the <see cref="ParseNodeProxyFactory"/> instance
         /// </summary>
-        public string ValidContentType { get { return _concrete.ValidContentType; } }
+        public string ValidContentType { get { return this._concrete.ValidContentType; } }
         private readonly IParseNodeFactory _concrete;
         private readonly Action<IParsable> _onBefore;
         private readonly Action<IParsable> _onAfter;
@@ -29,9 +29,9 @@ namespace Microsoft.Kiota.Abstractions.Serialization
         /// <param name="onAfter">The callback to invoke after the deserialization of any model object.</param>
         protected ParseNodeProxyFactory(IParseNodeFactory concrete, Action<IParsable> onBefore, Action<IParsable> onAfter)
         {
-            _concrete = concrete ?? throw new ArgumentNullException(nameof(concrete));
-            _onBefore = onBefore;
-            _onAfter = onAfter;
+            this._concrete = concrete ?? throw new ArgumentNullException(nameof(concrete));
+            this._onBefore = onBefore;
+            this._onAfter = onAfter;
         }
         /// <summary>
         /// Create a parse node from the given stream and content type.
@@ -43,17 +43,17 @@ namespace Microsoft.Kiota.Abstractions.Serialization
         public async Task<IParseNode> GetRootParseNodeAsync(string contentType, Stream content,
             CancellationToken cancellationToken = default)
         {
-            var node = await _concrete.GetRootParseNodeAsync(contentType, content, cancellationToken).ConfigureAwait(false);
+            var node = await this._concrete.GetRootParseNodeAsync(contentType, content, cancellationToken).ConfigureAwait(false);
             var originalBefore = node.OnBeforeAssignFieldValues;
             var originalAfter = node.OnAfterAssignFieldValues;
             node.OnBeforeAssignFieldValues = (x) =>
             {
-                _onBefore?.Invoke(x);
+                this._onBefore?.Invoke(x);
                 originalBefore?.Invoke(x);
             };
             node.OnAfterAssignFieldValues = (x) =>
             {
-                _onAfter?.Invoke(x);
+                this._onAfter?.Invoke(x);
                 originalAfter?.Invoke(x);
             };
             return node;

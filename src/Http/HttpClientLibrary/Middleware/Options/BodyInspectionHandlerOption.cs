@@ -2,7 +2,6 @@
 //  Copyright (c) Microsoft Corporation.  All Rights Reserved.  Licensed under the MIT License.  See License in the project root for license information.
 // ------------------------------------------------------------------------------
 
-using System.IO;
 using Microsoft.Kiota.Abstractions;
 
 namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware.Options;
@@ -10,8 +9,7 @@ namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware.Options;
 /// <summary>
 /// The Body Inspection Option allows the developer to inspect the body of the request and response.
 /// </summary>
-public class BodyInspectionHandlerOption : IRequestOption
-{
+public class BodyInspectionHandlerOption : IRequestOption {
     /// <summary>
     /// Gets or sets a value indicating whether the request body should be inspected.
     /// Note tht this setting increases memory usae as the request body is copied to a new stream.

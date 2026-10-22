@@ -4,13 +4,11 @@
 
 using Microsoft.Kiota.Abstractions;
 
-namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware.Options
-{
+namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware.Options {
     /// <summary>
     /// The User Agent Handler Option request class
     /// </summary>
-    public class UserAgentHandlerOption : IRequestOption
-    {
+    public class UserAgentHandlerOption : IRequestOption {
         /// <summary>
         /// Whether to append the kiota version to the user agent header
         /// </summary>

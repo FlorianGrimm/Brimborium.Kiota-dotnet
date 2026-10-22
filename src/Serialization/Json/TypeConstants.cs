@@ -1,10 +1,6 @@
-using System;
-using Microsoft.Kiota.Abstractions;
-
 namespace Microsoft.Kiota.Serialization.Json;
 
-static internal class TypeConstants
-{
+static internal class TypeConstants {
     static readonly internal Type BooleanType = typeof(bool?);
     static readonly internal Type ByteType = typeof(byte?);
     static readonly internal Type SbyteType = typeof(sbyte?);

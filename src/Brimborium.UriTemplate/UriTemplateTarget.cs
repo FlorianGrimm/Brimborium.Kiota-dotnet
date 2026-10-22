@@ -267,7 +267,7 @@ public readonly struct UriTemplateTarget(
             char character = stringValue[pos];
 
             if (character == '%' && !replaceReserved) {
-                _ = _ReservedBuffer.Clear();
+                _ = this._ReservedBuffer.Clear();
                 toReserved = true;
             }
 
@@ -293,12 +293,12 @@ public readonly struct UriTemplateTarget(
             }
 
             if (toReserved) {
-                _ = _ReservedBuffer.Append(toAppend);
+                _ = this._ReservedBuffer.Append(toAppend);
 
-                if (_ReservedBuffer.Length == 3) {
+                if (this._ReservedBuffer.Length == 3) {
                     bool isEncoded = false;
 
-                    var original = _ReservedBuffer.ToStringAndClear();
+                    var original = this._ReservedBuffer.ToStringAndClear();
                     try {
                         isEncoded = !original.Equals(Uri.UnescapeDataString(original));
                     } catch (Exception) {
@@ -330,7 +330,7 @@ public readonly struct UriTemplateTarget(
         if (toReserved) {
             _ = this.Output
                 .Append("%25")
-                .Append(_ReservedBuffer.ToString(1, _ReservedBuffer.Length - 1));
+                .Append(this._ReservedBuffer.ToString(1, this._ReservedBuffer.Length - 1));
         }
     }
 
@@ -360,7 +360,7 @@ public readonly struct UriTemplateTarget(
             char character = stringValue[pos];
 
             if (character == '%') {
-                _ = _ReservedBuffer.Clear();
+                _ = this._ReservedBuffer.Clear();
                 toReserved = true;
             }
 
@@ -388,12 +388,12 @@ public readonly struct UriTemplateTarget(
             }
 
             if (toReserved) {
-                _ = _ReservedBuffer.Append(toAppend);
+                _ = this._ReservedBuffer.Append(toAppend);
 
-                if (_ReservedBuffer.Length == 3) {
+                if (this._ReservedBuffer.Length == 3) {
                     bool isEncoded = false;
 
-                    var original = _ReservedBuffer.ToStringAndClear();
+                    var original = this._ReservedBuffer.ToStringAndClear();
                     try {
                         isEncoded = !original.Equals(Uri.UnescapeDataString(original));
                     } catch (Exception) {
@@ -427,7 +427,7 @@ public readonly struct UriTemplateTarget(
         if (toReserved) {
             _ = this.Output
                 .Append("%25")
-                .Append(_ReservedBuffer.ToString(1, _ReservedBuffer.Length - 1));
+                .Append(this._ReservedBuffer.ToString(1, this._ReservedBuffer.Length - 1));
         }
     }
 

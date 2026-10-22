@@ -8,20 +8,17 @@ namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware.Options;
 /// <summary>
 /// The Headers Inspection Option allows the developer to inspect the headers of the request and response.
 /// </summary>
-public class HeadersInspectionHandlerOption : IRequestOption
-{
+public class HeadersInspectionHandlerOption : IRequestOption {
     /// <summary>
     /// Gets or sets a value indicating whether the request headers should be inspected.
     /// </summary>
-    public bool InspectRequestHeaders
-    {
+    public bool InspectRequestHeaders {
         get; set;
     }
     /// <summary>
     /// Gets or sets a value indicating whether the response headers should be inspected.
     /// </summary>
-    public bool InspectResponseHeaders
-    {
+    public bool InspectResponseHeaders {
         get; set;
     }
     /// <summary>

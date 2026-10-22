@@ -27,8 +27,8 @@ namespace Microsoft.Kiota.Abstractions
         /// <inheritdoc />
         public Task<ModelType?> HandleResponseAsync<NativeResponseType, ModelType>(NativeResponseType response, Dictionary<string, ParsableFactory<IParsable>>? errorMappings)
         {
-            Value = response ?? throw new ArgumentNullException(nameof(response));
-            ErrorMappings = errorMappings;
+            this.Value = response ?? throw new ArgumentNullException(nameof(response));
+            this.ErrorMappings = errorMappings;
             return Task.FromResult(default(ModelType));
         }
     }

@@ -2,18 +2,13 @@
 //  Copyright (c) Microsoft Corporation.  All Rights Reserved.  Licensed under the MIT License.  See License in the project root for license information.
 // ------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
 using Microsoft.Kiota.Abstractions;
 
-namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware.Options
-{
+namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware.Options {
     /// <summary>
     /// The Chaos Handler Option request class
     /// </summary>
-    public class ChaosHandlerOption : IRequestOption
-    {
+    public class ChaosHandlerOption : IRequestOption {
         /// <summary>
         /// Percentage of responses that will have KnownChaos responses injected, assuming no PlannedChaosFactory is provided
         /// </summary>

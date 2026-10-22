@@ -3,6 +3,7 @@
 // ------------------------------------------------------------------------------
 
 using System;
+
 using Microsoft.Kiota.Abstractions;
 
 namespace Microsoft.Kiota.Http.HttpClientLibrary;
@@ -10,15 +11,15 @@ namespace Microsoft.Kiota.Http.HttpClientLibrary;
 /// <summary>
 /// Holds the tracing, metrics and logging configuration for the request adapter
 /// </summary>
-public class ObservabilityOptions : IRequestOption
-{
+public class ObservabilityOptions : IRequestOption {
     /// <summary>
     /// Gets or sets a value indicating whether to include attributes which could contain EUII information.
     /// </summary>
     public bool IncludeEUIIAttributes { get; set; }
-    private static readonly Lazy<string> _name = new Lazy<string>(() => typeof(ObservabilityOptions).Namespace!);
+    private static readonly Lazy<string> _Name = new Lazy<string>(() => typeof(ObservabilityOptions).Namespace!);
+
     /// <summary>
     /// Gets the observability name to use for the tracer
     /// </summary>
-    public string TracerInstrumentationName => _name.Value;
+    public string TracerInstrumentationName => _Name.Value;
 }

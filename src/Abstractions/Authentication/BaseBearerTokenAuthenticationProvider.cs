@@ -19,7 +19,7 @@ public class BaseBearerTokenAuthenticationProvider : IAuthenticationProvider
     /// <param name="accessTokenProvider">The <see cref="IAccessTokenProvider"/> to use for getting the access token.</param>
     public BaseBearerTokenAuthenticationProvider(IAccessTokenProvider accessTokenProvider)
     {
-        AccessTokenProvider = accessTokenProvider ?? throw new ArgumentNullException(nameof(accessTokenProvider));
+        this.AccessTokenProvider = accessTokenProvider ?? throw new ArgumentNullException(nameof(accessTokenProvider));
     }
     /// <summary>
     ///     Gets the <see cref="IAccessTokenProvider" /> to use for getting the access token.
@@ -43,7 +43,7 @@ public class BaseBearerTokenAuthenticationProvider : IAuthenticationProvider
 
         if(!request.Headers.ContainsKey(AuthorizationHeaderKey))
         {
-            var token = await AccessTokenProvider.GetAuthorizationTokenAsync(request.URI, additionalAuthenticationContext, cancellationToken).ConfigureAwait(false);
+            var token = await this.AccessTokenProvider.GetAuthorizationTokenAsync(request.URI, additionalAuthenticationContext, cancellationToken).ConfigureAwait(false);
             if(!string.IsNullOrEmpty(token)) {
                 request.Headers.Add(AuthorizationHeaderKey, $"Bearer {token}");
             }
