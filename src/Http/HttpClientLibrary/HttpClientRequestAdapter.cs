@@ -597,8 +597,20 @@ namespace Microsoft.Kiota.Http.HttpClientLibrary {
                 activityForAttributes?.SetTag("url.full", requestUri.ToString());
             }
 
+            var httpMethod = requestInfo.HttpMethod switch {
+                Method.GET => HttpMethod.Get,
+                Method.POST => HttpMethod.Post,
+                Method.PATCH => HttpMethod.Patch,
+                Method.DELETE => HttpMethod.Delete,
+                Method.OPTIONS => HttpMethod.Options,
+                Method.PUT => HttpMethod.Put,
+                Method.HEAD => HttpMethod.Head,
+                Method.CONNECT => HttpMethod.Connect,
+                Method.TRACE => HttpMethod.Trace,
+                _ => throw new ArgumentException($"Unknown requestInfo.HttpMethod: {requestInfo.HttpMethod.ToString()}")
+            };
             var message = new HttpRequestMessage {
-                Method = new HttpMethod(requestInfo.HttpMethod.ToString().ToUpperInvariant()),
+                Method = httpMethod,
                 RequestUri = requestUri,
                 Version = this._HttpVersion ?? this._Client.DefaultRequestVersion,
                 VersionPolicy = this._Client.DefaultVersionPolicy
