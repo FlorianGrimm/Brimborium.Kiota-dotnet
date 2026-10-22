@@ -8,7 +8,6 @@ namespace Brimborium.UriTemplate;
 /// Parses URI-template strings into abstract syntax trees.
 /// </summary>
 public static class UriTemplateParser {
-
     /// <summary>
     /// Parses a URI template into a sequence of literal text and expressions.
     /// </summary>
@@ -35,6 +34,9 @@ public static class UriTemplateParser {
 
         for (int pos = 0; pos < template.Length; pos++) {
             char character = template[pos];
+            if (character < 32 || character == 0x7F) {
+                throw new ArgumentException($"Control character 0x{(int)character:X2} is not allowed at col:{pos}");
+            }
             switch (character) {
                 case '{':
                     if (toToken) {
@@ -57,11 +59,17 @@ public static class UriTemplateParser {
                             throw new ArgumentException($"Empty prefix after colon at col:{pos}");
                         }
 
+                        var name = CheckVarname(token.ToStringAndClear(), pos);
+                        int maxChar;
+                        if (maxCharBuffer is null) {
+                            maxChar = -1;
+                        } else {
+                            maxChar = GetMaxChar(maxCharBuffer.ToStringAndClear(), pos);
+                        }
                         UriTemplateASTPlaceholder item = new(
-                            Name: CheckVarname(token.ToStringAndClear(), pos),
+                            Name: name,
                             Composite: composite,
-                            MaxChar: (maxCharBuffer is null) ? -1 : GetMaxChar(maxCharBuffer.ToStringAndClear(), pos)
-                            );
+                            MaxChar: maxChar);
                         (listPlaceholder ??= []).Add(item);
 
                         UriTemplateASTOperation uriTemplateASTOperator = new(
@@ -83,11 +91,18 @@ public static class UriTemplateParser {
                         if (toMaxCharBuffer && maxCharBuffer is { } && maxCharBuffer.Length == 0) {
                             throw new ArgumentException($"Empty prefix after colon at col:{pos}");
                         }
+                        var name = CheckVarname(token.ToStringAndClear(), pos);
+                        int maxChar;
+                        if (maxCharBuffer is null) {
+                            maxChar = -1;
+                        } else {
+                            maxChar = GetMaxChar(maxCharBuffer.ToStringAndClear(), pos);
+                        }
                         UriTemplateASTPlaceholder item = new(
                             //Operator: op.GetValueOrDefault(Operator.NO_OP),
-                            Name: CheckVarname(token.ToStringAndClear(), pos),
+                            Name: name,
                             Composite: composite,
-                            MaxChar: (maxCharBuffer is null) ? -1 : GetMaxChar(maxCharBuffer.ToStringAndClear(), pos)
+                            MaxChar: maxChar
                             );
                         (listPlaceholder ??= []).Add(item);
                         composite = false;
@@ -153,10 +168,8 @@ public static class UriTemplateParser {
                         new UriTemplateASTConstant(tail));
                 }
             } else {
-                if (0 < tail.Length) {
-                    throw new ArgumentException(
-                        $"Unterminated token. {tail}");
-                }
+                throw new ArgumentException(
+                    $"Unterminated token at col:{template.Length}");
             }
         }
 
@@ -198,7 +211,15 @@ public static class UriTemplateParser {
     /// contains an invalid percent-encoding sequence.
     /// </exception>
     public static string CheckVarname(string token, int col) {
-        if (token.StartsWith('.') || token.EndsWith('.')) {
+        if (string.IsNullOrEmpty(token)) {
+            throw new ArgumentException($"Variable name cannot be empty at col:{col}");
+        }
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER
+        if (token.StartsWith('.') || token.EndsWith('.'))
+#else
+        if (token.StartsWith(".") || token.EndsWith("."))
+#endif
+        {
             throw new ArgumentException($"Variable name cannot start or end with '.' at col:{col}");
         }
         if (token.Contains("..")) {

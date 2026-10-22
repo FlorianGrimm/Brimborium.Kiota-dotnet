@@ -24,7 +24,7 @@ public readonly struct UriTemplateTarget(
     /// <param name="value">The character to append.</param>
     /// <returns>The output builder, allowing further append operations.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public StringBuilder Append(char value) => this.Output.Append(value);
+    internal StringBuilder Append(char value) => this.Output.Append(value);
 
     /// <summary>
     /// Appends a string to the URI output.
@@ -32,7 +32,7 @@ public readonly struct UriTemplateTarget(
     /// <param name="value">The string to append.</param>
     /// <returns>The output builder, allowing further append operations.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public StringBuilder Append(string value) => this.Output.Append(value);
+    internal StringBuilder Append(string value) => this.Output.Append(value);
 
     /// <summary>
     /// Determines whether a value uses one of the built-in scalar types
@@ -44,7 +44,7 @@ public readonly struct UriTemplateTarget(
     /// otherwise, <see langword="false"/>.
     /// </returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsNativeType(object value) =>
+    internal static bool IsNativeType(object value) =>
         value is string or bool or int or long or float or double or decimal
             or TimeOnly or DateOnly or DateTime or DateTimeOffset;
 
@@ -54,7 +54,7 @@ public readonly struct UriTemplateTarget(
     /// <param name="value">the value to convert</param>
     /// <returns>the value formated</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string? ConvertNativeTypes(object? value) {
+    internal static string? ConvertNativeTypes(object? value) {
         return value switch {
             null => string.Empty,
             string strValue => strValue,
@@ -64,10 +64,10 @@ public readonly struct UriTemplateTarget(
             float number => number.ToString(System.Globalization.CultureInfo.InvariantCulture),
             double number => number.ToString(System.Globalization.CultureInfo.InvariantCulture),
             decimal number => number.ToString(System.Globalization.CultureInfo.InvariantCulture),
-            TimeOnly timeOnly => timeOnly.ToString("hh:mm:ss"),
-            DateOnly dateOnly => dateOnly.ToString("yyyy-MM-dd"),
-            DateTime dateTime => dateTime.ToString("O"),
-            DateTimeOffset dateTimeOffset => dateTimeOffset.ToString("O"),
+            TimeOnly timeOnly => timeOnly.ToString("HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture),
+            DateOnly dateOnly => dateOnly.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture),
+            DateTime dateTime => ((dateTime.Ticks % 10000000) == 0) ? dateTime.ToString("yyyy-MM-ddTHH:mm:ssK", System.Globalization.CultureInfo.InvariantCulture) : dateTime.ToString("O", System.Globalization.CultureInfo.InvariantCulture),
+            DateTimeOffset dateTimeOffset => ((dateTimeOffset.Ticks % 10000000) == 0) ? dateTimeOffset.ToString("yyyy-MM-ddTHH:mm:sszzz", System.Globalization.CultureInfo.InvariantCulture) : dateTimeOffset.ToString("O", System.Globalization.CultureInfo.InvariantCulture),
             _ => null
             //_ => throw new ArgumentException($"Illegal class passed as substitution, found {value.GetType()}"),
         };
@@ -83,7 +83,7 @@ public readonly struct UriTemplateTarget(
     /// <param name="maxChar">Maximum code points for each scalar value, or <c>-1</c> for no limit.</param>
     /// <param name="composite">Whether each list item is expanded as a separate composite value.</param>
     /// <returns><see langword="true"/> if the list contains at least one item.</returns>
-    public bool AddListValue(UriTemplateASTOperation astOperator, string token, IList value, int maxChar, bool composite) {
+    internal bool AddListValue(UriTemplateASTOperation astOperator, string token, IList value, int maxChar, bool composite) {
         bool first = true;
         foreach (object innerValue in value) {
             if (first) {
@@ -113,7 +113,7 @@ public readonly struct UriTemplateTarget(
     /// <param name="composite">Whether dictionary entries use composite key/value formatting.</param>
     /// <returns><see langword="true"/> if the dictionary contains at least one entry.</returns>
     /// <exception cref="ArgumentException"><paramref name="maxChar"/> is not <c>-1</c>.</exception>
-    public bool AddDictionaryValue(UriTemplateASTOperation astOperator, string token, IDictionary value, int maxChar, bool composite) {
+    internal bool AddDictionaryValue(UriTemplateASTOperation astOperator, string token, IDictionary value, int maxChar, bool composite) {
         bool first = true;
         if (maxChar != -1) {
             throw new ArgumentException("Value trimming is not allowed on Dictionaries");
@@ -123,14 +123,23 @@ public readonly struct UriTemplateTarget(
                 if (!first) {
                     astOperator.AddSeparator(this.Output);
                 }
-                this.AddValueElement(astOperator, token, (string)v.Key, maxChar);
+                if (v.Key is not string key) {
+                    throw new ArgumentException($"Dictionary key must be a string, found {v.Key?.GetType()}");
+                }
+                this.AddValueElement(astOperator, token, key, maxChar);
                 _ = this.Output.Append('=');
             } else {
                 if (first) {
-                    this.AddScalarValue(astOperator, token, (string)v.Key, maxChar);
+                    if (v.Key is not string key) {
+                        throw new ArgumentException($"Dictionary key must be a string, found {v.Key?.GetType()}");
+                    }
+                    this.AddScalarValue(astOperator, token, key, maxChar);
                 } else {
+                    if (v.Key is not string key) {
+                        throw new ArgumentException($"Dictionary key must be a string, found {v.Key?.GetType()}");
+                    }
                     _ = this.Output.Append(',');
-                    this.AddValueElement(astOperator, token, (string)v.Key, maxChar);
+                    this.AddValueElement(astOperator, token, key, maxChar);
                 }
                 _ = this.Output.Append(',');
             }
@@ -148,7 +157,7 @@ public readonly struct UriTemplateTarget(
     /// <param name="token">The variable name associated with the value.</param>
     /// <param name="value">The scalar substitution to append.</param>
     /// <param name="maxChar">Maximum Unicode code points to emit, or <c>-1</c> for no limit.</param>
-    public void AddScalarValue(UriTemplateASTOperation astOperator, string token, object value, int maxChar) {
+    internal void AddScalarValue(UriTemplateASTOperation astOperator, string token, object value, int maxChar) {
         if (astOperator.Operator is { } op) {
             switch (op) {
                 case UriTemplateASTOperator.Plus:
@@ -181,7 +190,7 @@ public readonly struct UriTemplateTarget(
     /// <param name="token">The variable name associated with the element.</param>
     /// <param name="value">The element to append.</param>
     /// <param name="maxChar">Maximum Unicode code points to emit, or <c>-1</c> for no limit.</param>
-    public void AddValueElement(UriTemplateASTOperation astOperator, string token, object? value, int maxChar) {
+    internal void AddValueElement(UriTemplateASTOperation astOperator, string token, object? value, int maxChar) {
         if (astOperator.Operator is { } op) {
             switch (op) {
                 case UriTemplateASTOperator.Plus:
@@ -212,7 +221,7 @@ public readonly struct UriTemplateTarget(
     /// otherwise, preserve reserved characters.
     /// </param>
     /// <exception cref="ArgumentException">The value is not a supported substitution type.</exception>
-    public void AddValueInner(string? prefix, object? value, int maxChar, bool replaceReserved) {
+    internal void AddValueInner(string? prefix, object? value, int maxChar, bool replaceReserved) {
         if (value is null) {
             this.AddValueText(prefix, string.Empty, maxChar, replaceReserved);
             return;
@@ -242,7 +251,7 @@ public readonly struct UriTemplateTarget(
     /// <see langword="true"/> to percent-encode reserved characters;
     /// otherwise, preserve reserved characters.
     /// </param>
-    public void AddValueText(string? prefix, string stringValue, int maxChar, bool replaceReserved) {
+    internal void AddValueText(string? prefix, string stringValue, int maxChar, bool replaceReserved) {
         int codePointCount = 0;
         bool foundSurrogate = false;
         for (int ci = 0; ci < stringValue.Length; ci++) {
@@ -267,7 +276,7 @@ public readonly struct UriTemplateTarget(
             char character = stringValue[pos];
 
             if (character == '%' && !replaceReserved) {
-                _ = this._ReservedBuffer.Clear();
+                _ = _ReservedBuffer.Clear();
                 toReserved = true;
             }
 
@@ -275,7 +284,14 @@ public readonly struct UriTemplateTarget(
             if (foundSurrogate && IsSurrogate(character)) {
                 toAppend = Uri.EscapeDataString(char.ConvertFromUtf32(char.ConvertToUtf32(stringValue, pos)));
                 pos++; // skip the low surrogate
-            } else if (replaceReserved || IsUcschar(character) || IsIprivate(character)) {
+            } else if (replaceReserved || IsNotAllowedInUri(character) || IsUcschar(character) || IsIprivate(character)) {
+                if (toReserved) {
+                    // the pending "%x" is not a valid percent-encoding; emit it as literal "%25x"
+                    charCount += _ReservedBuffer.Length;
+                    _ = this.Output.Append("%25").Append(_ReservedBuffer.ToString(1, _ReservedBuffer.Length - 1));
+                    _ = _ReservedBuffer.Clear();
+                    toReserved = false;
+                }
                 toAppend = Uri.EscapeDataString(character.ToString());
             } else {
                 if (toReserved) {
@@ -283,22 +299,25 @@ public readonly struct UriTemplateTarget(
                 } else {
                     if (character == ' ') {
                         _ = this.Output.Append("%20");
+                        charCount++;
                     } else if (character == '%') {
                         _ = this.Output.Append("%25");
+                        charCount++;
                     } else {
                         _ = this.Output.Append(character);
+                        charCount++;
                     }
                     continue;
                 }
             }
 
             if (toReserved) {
-                _ = this._ReservedBuffer.Append(toAppend);
+                _ = _ReservedBuffer.Append(toAppend);
 
-                if (this._ReservedBuffer.Length == 3) {
+                if (_ReservedBuffer.Length == 3) {
                     bool isEncoded = false;
 
-                    var original = this._ReservedBuffer.ToStringAndClear();
+                    var original = _ReservedBuffer.ToStringAndClear();
                     try {
                         isEncoded = !original.Equals(Uri.UnescapeDataString(original));
                     } catch (Exception) {
@@ -307,30 +326,34 @@ public readonly struct UriTemplateTarget(
 
                     if (isEncoded) {
                         _ = this.Output.Append(original);
+                        charCount++;
                     } else {
                         _ = this.Output.Append("%25");
                         // only if !replaceReserved
                         _ = this.Output.Append(original.AsSpan(1, 2));
+                        charCount++;
                     }
                     toReserved = false;
                 }
             } else {
                 if (character == ' ') {
                     _ = this.Output.Append("%20");
+                    charCount++;
                 } else if (character == '%') {
                     _ = this.Output.Append("%25");
+                    charCount++;
                 } else {
                     _ = this.Output.Append(toAppend);
+                    charCount++;
                 }
             }
 
-            charCount++;
         }
 
         if (toReserved) {
             _ = this.Output
                 .Append("%25")
-                .Append(this._ReservedBuffer.ToString(1, this._ReservedBuffer.Length - 1));
+                .Append(_ReservedBuffer.ToString(1, _ReservedBuffer.Length - 1));
         }
     }
 
@@ -338,7 +361,7 @@ public readonly struct UriTemplateTarget(
     /// Appends a string as an OData string literal value, escaping URI-sensitive
     /// characters and doubling apostrophes.
     /// </summary>
-    /// <param name="stringValue">The string contents to append.</param>
+    /// <param name="stringValue">The string contents to append after formatted.</param>
     public void AddODataValue(string stringValue) {
         int codePointCount = 0;
         bool foundSurrogate = false;
@@ -360,7 +383,7 @@ public readonly struct UriTemplateTarget(
             char character = stringValue[pos];
 
             if (character == '%') {
-                _ = this._ReservedBuffer.Clear();
+                _ = _ReservedBuffer.Clear();
                 toReserved = true;
             }
 
@@ -380,20 +403,22 @@ public readonly struct UriTemplateTarget(
                         _ = this.Output.Append("%25");
                     } else if (character == '\'') {
                         _ = this.Output.Append("\'\'");
-                    } else {
+                    } else if (char.IsAsciiLetter(character) || char.IsAsciiDigit(character)) {
                         _ = this.Output.Append(character);
+                    } else {
+                        _ = this.Output.Append(Uri.EscapeDataString(character.ToString()));
                     }
                     continue;
                 }
             }
 
             if (toReserved) {
-                _ = this._ReservedBuffer.Append(toAppend);
+                _ = _ReservedBuffer.Append(toAppend);
 
-                if (this._ReservedBuffer.Length == 3) {
+                if (_ReservedBuffer.Length == 3) {
                     bool isEncoded = false;
 
-                    var original = this._ReservedBuffer.ToStringAndClear();
+                    var original = _ReservedBuffer.ToStringAndClear();
                     try {
                         isEncoded = !original.Equals(Uri.UnescapeDataString(original));
                     } catch (Exception) {
@@ -427,7 +452,7 @@ public readonly struct UriTemplateTarget(
         if (toReserved) {
             _ = this.Output
                 .Append("%25")
-                .Append(this._ReservedBuffer.ToString(1, this._ReservedBuffer.Length - 1));
+                .Append(_ReservedBuffer.ToString(1, _ReservedBuffer.Length - 1));
         }
     }
 
@@ -443,6 +468,10 @@ public readonly struct UriTemplateTarget(
 
     private static bool IsIprivate(char cp)
         => (0xE000 <= cp && cp <= 0xF8FF);
+
+    private static bool IsNotAllowedInUri(char cp)
+        => cp < 0x20 || cp == 0x7F
+        || cp is '"' or '<' or '>' or '\\' or '^' or '`' or '{' or '|' or '}';
 
     private static bool IsUcschar(char cp)
         => (0xA0 <= cp && cp <= 0xD7FF)

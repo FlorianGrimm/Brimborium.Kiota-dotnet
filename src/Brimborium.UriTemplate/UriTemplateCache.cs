@@ -17,6 +17,11 @@ public sealed class UriTemplateCache {
     /// Gets or sets the shared default cache used by the static
     /// <see cref="UriTemplate"/> methods.
     /// </summary>
+    /// <remarks>
+    /// Condition: In your Application you have a fixed static number of endpoints - UriTemplates. In this case you can use the default cache. If you have a dynamic number of endpoints - UriTemplates, you use this instance.
+    /// This is because the default cache is a static instance and will never be garbage collected. If you have a dynamic number of endpoints, you should use your own instance of UriTemplateCache, which can be garbage collected when no longer needed.
+    /// I assume this is the standard use of this library.
+    /// </remarks>
     [System.Diagnostics.CodeAnalysis.AllowNull]
     public static UriTemplateCache Default {
         get {
