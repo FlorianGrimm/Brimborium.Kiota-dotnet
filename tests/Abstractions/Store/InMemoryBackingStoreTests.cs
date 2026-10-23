@@ -4,12 +4,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using Brimborium.Kiota.Abstractions.Serialization;
-using Brimborium.Kiota.Abstractions.Store;
-using Brimborium.Kiota.Abstractions.Tests.Mocks;
+using Microsoft.Kiota.Abstractions.Serialization;
+using Microsoft.Kiota.Abstractions.Store;
+using Microsoft.Kiota.Abstractions.Tests.Mocks;
 using Xunit;
 
-namespace Brimborium.Kiota.Abstractions.Tests.Store
+namespace Microsoft.Kiota.Abstractions.Tests.Store
 {
     public class InMemoryBackingStoreTests
     {

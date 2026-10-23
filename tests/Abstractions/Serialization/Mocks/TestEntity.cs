@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Brimborium.Kiota.Abstractions.Serialization;
+using Microsoft.Kiota.Abstractions.Serialization;
 
-namespace Brimborium.Kiota.Abstractions.Tests.Serialization.Mocks;
+namespace Microsoft.Kiota.Abstractions.Tests.Serialization.Mocks;
 
 public class TestEntity : IParsable, IAdditionalDataHolder
 {
@@ -13,11 +13,11 @@ public class TestEntity : IParsable, IAdditionalDataHolder
     /// <summary>Read-only.</summary>
     public TimeSpan? WorkDuration { get; set; }
     /// <summary>Read-only.</summary>
-    public Date? BirthDay { get; set; }
+    public DateOnly? BirthDay { get; set; }
     /// <summary>Read-only.</summary>
-    public Time? StartWorkTime { get; set; }
+    public TimeOnly? StartWorkTime { get; set; }
     /// <summary>Read-only.</summary>
-    public Time? EndWorkTime { get; set; }
+    public TimeOnly? EndWorkTime { get; set; }
     /// <summary>Read-only.</summary>
     public DateTimeOffset? CreatedDateTime { get; set; }
     /// <summary>Read-only.</summary>

@@ -3,15 +3,15 @@ using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
 using System.Text;
-using Brimborium.Kiota.Abstractions;
-using Brimborium.Kiota.Abstractions.Authentication;
-using Brimborium.Kiota.Http.HttpClientLibrary.Tests.Mocks;
-using Brimborium.Kiota.Serialization.Json;
+using Microsoft.Kiota.Abstractions;
+using Microsoft.Kiota.Abstractions.Authentication;
+using Microsoft.Kiota.Http.HttpClientLibrary.Tests.Mocks;
+using Microsoft.Kiota.Serialization.Json;
 using Moq;
 using Moq.Protected;
 using Xunit;
 
-namespace Brimborium.Kiota.Http.HttpClientLibrary.Tests;
+namespace Microsoft.Kiota.Http.HttpClientLibrary.Tests;
 
 /// <summary>
 /// Tests for OpenTelemetry observability instrumentation in HttpClientRequestAdapter.

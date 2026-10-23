@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
-using Brimborium.Kiota.Abstractions.Serialization;
-using Brimborium.Kiota.Abstractions.Tests.Mocks;
+using Microsoft.Kiota.Abstractions.Serialization;
+using Microsoft.Kiota.Abstractions.Tests.Mocks;
 using Moq;
 using Xunit;
 
-namespace Brimborium.Kiota.Abstractions.Tests
+namespace Microsoft.Kiota.Abstractions.Tests
 {
     public class RequestInformationTests
     {
@@ -227,7 +227,7 @@ namespace Brimborium.Kiota.Abstractions.Tests
             };
 
             // Act
-            var date = new Date(2023, 10, 26);
+            var date = new DateOnly(2023, 10, 26);
             var pathParameters = new Dictionary<string, object>
             {
                 { "%24date", date }
@@ -249,7 +249,7 @@ namespace Brimborium.Kiota.Abstractions.Tests
             };
 
             // Act
-            var time = new Time(6, 0, 0);
+            var time = new TimeOnly(6, 0, 0);
             var pathParameters = new Dictionary<string, object>
             {
                 { "%24time", time }
@@ -320,7 +320,7 @@ namespace Brimborium.Kiota.Abstractions.Tests
 
             // Act
             Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("da-DK");
-            var time = new Time(6, 0, 0);
+            var time = new TimeOnly(6, 0, 0);
             var pathParameters = new Dictionary<string, object>
             {
                 { "%24time", time }
@@ -730,8 +730,8 @@ namespace Brimborium.Kiota.Abstractions.Tests
             };
 
             // Act
-            var date1 = new Date(2022, 8, 1);
-            var date2 = new Date(2022, 8, 2);
+            var date1 = new DateOnly(2022, 8, 1);
+            var date2 = new DateOnly(2022, 8, 2);
 
             requestInfo.AddQueryParameters(new GetQueryParameters { Items = new object[] { date1, date2 } });
 
@@ -749,8 +749,8 @@ namespace Brimborium.Kiota.Abstractions.Tests
             };
 
             // Act
-            var time1 = new Time(10, 0, 0);
-            var time2 = new Time(11, 1, 1);
+            var time1 = new TimeOnly(10, 0, 0);
+            var time2 = new TimeOnly(11, 1, 1);
 
             requestInfo.AddQueryParameters(new GetQueryParameters { Items = new object[] { time1, time2 } });
 
@@ -769,8 +769,8 @@ namespace Brimborium.Kiota.Abstractions.Tests
             };
 
             // Act
-            Date date1 = new DateOnly(2022, 8, 1);
-            DateOnly date2 = new Date(2022, 8, 2);
+            DateOnly date1 = new DateOnly(2022, 8, 1);
+            DateOnly date2 = new DateOnly(2022, 8, 2);
 
             requestInfo.AddQueryParameters(new GetQueryParameters { Items = new object[] { date1, date2 } });
 
@@ -788,8 +788,8 @@ namespace Brimborium.Kiota.Abstractions.Tests
             };
 
             // Act
-            Time time1 = new TimeOnly(10, 0, 0);
-            TimeOnly time2 = new Time(11, 1, 1);
+            TimeOnly time1 = new TimeOnly(10, 0, 0);
+            TimeOnly time2 = new TimeOnly(11, 1, 1);
 
             requestInfo.AddQueryParameters(new GetQueryParameters { Items = new object[] { time1, time2 } });
 

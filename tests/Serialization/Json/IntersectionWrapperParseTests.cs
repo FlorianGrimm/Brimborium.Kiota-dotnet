@@ -2,10 +2,10 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Brimborium.Kiota.Serialization.Json.Tests.Mocks;
+using Microsoft.Kiota.Serialization.Json.Tests.Mocks;
 using Xunit;
 
-namespace Brimborium.Kiota.Serialization.Json.Tests;
+namespace Microsoft.Kiota.Serialization.Json.Tests;
 
 public class IntersectionWrapperParseTests
 {

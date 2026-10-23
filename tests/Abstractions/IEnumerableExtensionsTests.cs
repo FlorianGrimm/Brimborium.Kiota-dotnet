@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Brimborium.Kiota.Abstractions.Extensions;
+using Microsoft.Kiota.Abstractions.Extensions;
 using Xunit;
 
 public class IEnumerableExtensionsTests

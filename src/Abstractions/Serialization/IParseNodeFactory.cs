@@ -32,7 +32,15 @@ namespace Microsoft.Kiota.Abstractions.Serialization {
     /// <param name="RootNode">Result</param>
     /// <param name="BufferStream">Dispose after Parse</param>
     /// <param name="JsonDocument">Dispose after Parse</param>
-    public record struct GetRootParseNodeResult(IParseNode RootNode, IDisposable? BufferStream, JsonDocument? JsonDocument);
+    public record struct GetRootParseNodeResult(IParseNode RootNode, IDisposable? BufferStream, JsonDocument? JsonDocument) {
+        /// <summary>
+        /// Dispose BufferStream and JsonDocument
+        /// </summary>
+        public void Dispose() {
+            BufferStream?.Dispose();
+            JsonDocument?.Dispose();
+        }
+    }
 
     /// <summary>
     /// Result and Late Dispose

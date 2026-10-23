@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Brimborium.Kiota.Http.HttpClientLibrary.Middleware;
-using Brimborium.Kiota.Http.HttpClientLibrary.Middleware.Options;
-using Brimborium.Kiota.Http.HttpClientLibrary.Tests.Mocks;
+using Microsoft.Kiota.Http.HttpClientLibrary.Middleware;
+using Microsoft.Kiota.Http.HttpClientLibrary.Middleware.Options;
+using Microsoft.Kiota.Http.HttpClientLibrary.Tests.Mocks;
 using Xunit;
 
-namespace Brimborium.Kiota.Http.HttpClientLibrary.Tests.Middleware;
+namespace Microsoft.Kiota.Http.HttpClientLibrary.Tests.Middleware;
 
 public sealed class HeadersInspectionHandlerTests : IDisposable
 {

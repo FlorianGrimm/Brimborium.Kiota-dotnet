@@ -1,9 +1,9 @@
 ﻿using System.IO;
-using Brimborium.Kiota.Abstractions.Serialization;
+using Microsoft.Kiota.Abstractions.Serialization;
 using Moq;
 using Xunit;
 
-namespace Brimborium.Kiota.Abstractions.Tests;
+namespace Microsoft.Kiota.Abstractions.Tests;
 
 public class MultipartBodyTests
 {

@@ -4,7 +4,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Brimborium.Kiota.Http.HttpClientLibrary.Tests.Mocks
+namespace Microsoft.Kiota.Http.HttpClientLibrary.Tests.Mocks
 {
     public class TestHttpMessageHandler : DelegatingHandler
     {

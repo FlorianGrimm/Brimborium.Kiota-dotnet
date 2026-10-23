@@ -1,9 +1,9 @@
 
 using System;
 using System.Collections.Generic;
-using Brimborium.Kiota.Abstractions.Serialization;
+using Microsoft.Kiota.Abstractions.Serialization;
 
-namespace Brimborium.Kiota.Serialization.Json.Tests.Mocks;
+namespace Microsoft.Kiota.Serialization.Json.Tests.Mocks;
 
 public class SecondTestEntity : IParsable
 {

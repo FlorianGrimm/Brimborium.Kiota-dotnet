@@ -1,7 +1,7 @@
 ﻿using System;
 using Xunit;
 
-namespace Brimborium.Kiota.Serialization.Json.Tests
+namespace Microsoft.Kiota.Serialization.Json.Tests
 {
     public class JsonSerializationWriterFactoryTests
     {

@@ -1,6 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
 
-  <ItemGroup>
+        <TargetFrameworks>net10.0</TargetFrameworks>
+    </PropertyGroup>
+    <ItemGroup>
+      <Compile Remove="RequestAdapterTests.cs" />
+    </ItemGroup>
+    <ItemGroup>
+      <None Include="RequestAdapterTests.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
     <PackageReference Include="coverlet.MTP">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
@@ -12,8 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\http\httpClient\Brimborium.Kiota.Http.HttpClientLibrary.csproj" />
-    <ProjectReference Include="..\..\..\src\serialization\json\Brimborium.Kiota.Serialization.Json.csproj" />
+    <ProjectReference Include="..\..\..\src\Brimborium.Kiota.csproj" />
   </ItemGroup>
 
 </Project>

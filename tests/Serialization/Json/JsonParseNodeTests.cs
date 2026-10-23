@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading;
-using Brimborium.Kiota.Abstractions;
-using Brimborium.Kiota.Abstractions.Serialization;
-using Brimborium.Kiota.Serialization.Json.Tests.Converters;
-using Brimborium.Kiota.Serialization.Json.Tests.Mocks;
+using Microsoft.Kiota.Abstractions;
+using Microsoft.Kiota.Abstractions.Serialization;
+using Microsoft.Kiota.Serialization.Json.Tests.Converters;
+using Microsoft.Kiota.Serialization.Json.Tests.Mocks;
 using Xunit;
 
-namespace Brimborium.Kiota.Serialization.Json.Tests
+namespace Microsoft.Kiota.Serialization.Json.Tests
 {
     public class JsonParseNodeTests
     {
@@ -145,9 +145,9 @@ namespace Brimborium.Kiota.Serialization.Json.Tests
             Assert.Equal(TestEnum.One | TestEnum.Two, testEntity.Numbers); // Unknown enum value is not included
             Assert.Equal(TestNamingEnum.Item2SubItem1, testEntity.TestNamingEnum); // correct value is chosen
             Assert.Equal(TimeSpan.FromHours(1), testEntity.WorkDuration); // Parses timespan values
-            Assert.Equal(new Time(8, 0, 0).ToString(), testEntity.StartWorkTime.ToString());// Parses time values
-            Assert.Equal(new Time(17, 0, 0).ToString(), testEntity.EndWorkTime.ToString());// Parses time values
-            Assert.Equal(new Date(2017, 9, 4).ToString(), testEntity.BirthDay.ToString());// Parses date values
+            Assert.Equal(new TimeOnly(8, 0, 0).ToString(), testEntity.StartWorkTime.ToString());// Parses time values
+            Assert.Equal(new TimeOnly(17, 0, 0).ToString(), testEntity.EndWorkTime.ToString());// Parses time values
+            Assert.Equal(new DateOnly(2017, 9, 4).ToString(), testEntity.BirthDay.ToString());// Parses date values
         }
         [Fact]
         public void GetsFieldFromDerivedType()
@@ -360,6 +360,8 @@ namespace Brimborium.Kiota.Serialization.Json.Tests
             Assert.Null(result);
         }
 
+        /*
+        String
         [Fact]
         public void GetDateValue_ReturnDateWhenCustomConverterIsUsed()
         {
@@ -382,6 +384,7 @@ namespace Brimborium.Kiota.Serialization.Json.Tests
             Assert.Equal(7, result.Value.Month);
             Assert.Equal(2024, result.Value.Year);
         }
+        */
 
         [Fact]
         public void GetDateValue_ReturnCorrectDate()

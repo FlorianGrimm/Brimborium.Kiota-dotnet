@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using Brimborium.Kiota.Abstractions.Serialization;
-using Brimborium.Kiota.Abstractions.Tests.Mocks;
+using Microsoft.Kiota.Abstractions.Serialization;
+using Microsoft.Kiota.Abstractions.Tests.Mocks;
 using Moq;
 using Xunit;
 
-namespace Brimborium.Kiota.Abstractions.Tests.Serialization;
+namespace Microsoft.Kiota.Abstractions.Tests.Serialization;
 
 public partial class DeserializationHelpersTests
 {
@@ -35,8 +35,8 @@ public partial class DeserializationHelpersTests
     public async Task DeserializesObjectWithoutReflection()
     {
         var strValue = "{'id':'123'}";
-        var mockParseNode = new Mock<IParseNode>();
-        mockParseNode.Setup(x => x.GetObjectValue(It.IsAny<ParsableFactory<TestEntity>>())).Returns(new TestEntity()
+        var mockParseNode = new Mock<GetRootParseNodeResult>();
+        mockParseNode.Setup(x => x.RootNode.GetObjectValue(It.IsAny<ParsableFactory<TestEntity>>())).Returns(new TestEntity()
         {
             Id = "123"
         });

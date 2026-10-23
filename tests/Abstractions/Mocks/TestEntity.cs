@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Brimborium.Kiota.Abstractions.Serialization;
-using Brimborium.Kiota.Abstractions.Store;
+using Microsoft.Kiota.Abstractions.Serialization;
+using Microsoft.Kiota.Abstractions.Store;
 
-namespace Brimborium.Kiota.Abstractions.Tests.Mocks
+namespace Microsoft.Kiota.Abstractions.Tests.Mocks
 {
     public class TestEntity : IParsable, IAdditionalDataHolder, IBackedModel
     {

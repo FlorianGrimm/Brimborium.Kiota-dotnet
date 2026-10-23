@@ -70,6 +70,9 @@ public class FormSerializationWriter : ISerializationWriter {
             case Guid g:
                 this.WriteGuidValue(key, g);
                 break;
+            case DateOnly dateOnly:
+                this.WriteDateValue(key, dateOnly);
+                break;
             case DateTimeOffset dto:
                 this.WriteDateTimeOffsetValue(key, dto);
                 break;
@@ -141,14 +144,14 @@ public class FormSerializationWriter : ISerializationWriter {
     /// <inheritdoc/>
     public void WriteDateValue(string? key, DateOnly? value) {
         if (value.HasValue) {
-            this.WriteStringValue(key, value.Value.ToString());
+            this.WriteStringValue(key, value.Value.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture));
         }
     }
 
     /// <inheritdoc/>
     public void WriteDecimalValue(string? key, decimal? value) {
         if (value.HasValue) {
-            this.WriteStringValue(key, value.Value.ToString(CultureInfo.InvariantCulture));
+            this.WriteStringValue(key, value.Value.ToString(System.Globalization.CultureInfo.InvariantCulture));
         }
     }
 
@@ -253,7 +256,7 @@ public class FormSerializationWriter : ISerializationWriter {
     /// <inheritdoc/>
     public void WriteTimeValue(string? key, TimeOnly? value) {
         if (value.HasValue) {
-            this.WriteStringValue(key, value.Value.ToString());
+            this.WriteStringValue(key, value.Value.ToString("HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture));
         }
     }
 

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Xunit;
 
-namespace Brimborium.Kiota.Abstractions.Tests;
+namespace Microsoft.Kiota.Abstractions.Tests;
 
 public class RequestHeadersTests
 {

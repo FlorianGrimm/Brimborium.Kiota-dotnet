@@ -1,10 +1,10 @@
 
-using Brimborium.Kiota.Abstractions.Serialization;
-using Brimborium.Kiota.Abstractions.Tests.Mocks;
+using Microsoft.Kiota.Abstractions.Serialization;
+using Microsoft.Kiota.Abstractions.Tests.Mocks;
 using Moq;
 using Xunit;
 
-namespace Brimborium.Kiota.Abstractions.Tests.Serialization;
+namespace Microsoft.Kiota.Abstractions.Tests.Serialization;
 
 public partial class DeserializationHelpersTests
 {

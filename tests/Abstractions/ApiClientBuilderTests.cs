@@ -1,9 +1,9 @@
-using Brimborium.Kiota.Abstractions.Serialization;
-using Brimborium.Kiota.Abstractions.Store;
+using Microsoft.Kiota.Abstractions.Serialization;
+using Microsoft.Kiota.Abstractions.Store;
 using Moq;
 using Xunit;
 
-namespace Brimborium.Kiota.Abstractions.Tests
+namespace Microsoft.Kiota.Abstractions.Tests
 {
     public class ApiClientBuilderTests
     {
@@ -98,7 +98,7 @@ namespace Brimborium.Kiota.Abstractions.Tests
             Assert.IsType<BackingStoreParseNodeFactory>(factory);
 
             //make sure the concrete version of the factory is the same as the orginal
-            Assert.Equal(mockParseNodeFactory.Object, concreteFieldInfo!.GetValue(factory));
+            Assert.Equal(mockParseNodeFactory.Object, concreteFieldInfo?.GetValue(factory));
         }
 
         [Fact]

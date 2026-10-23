@@ -3,13 +3,13 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
-using Brimborium.Kiota.Abstractions.Authentication;
-using Brimborium.Kiota.Http.HttpClientLibrary.Middleware;
-using Brimborium.Kiota.Http.HttpClientLibrary.Tests.Mocks;
+using Microsoft.Kiota.Abstractions.Authentication;
+using Microsoft.Kiota.Http.HttpClientLibrary.Middleware;
+using Microsoft.Kiota.Http.HttpClientLibrary.Tests.Mocks;
 using Moq;
 using Xunit;
 
-namespace Brimborium.Kiota.Http.HttpClientLibrary.Tests.Middleware
+namespace Microsoft.Kiota.Http.HttpClientLibrary.Tests.Middleware
 {
     public sealed class AuthorizationHandlerTests : IDisposable
     {

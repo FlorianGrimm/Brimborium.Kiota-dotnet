@@ -1,4 +1,4 @@
-﻿namespace Brimborium.Kiota.Serialization.Form.Tests;
+﻿namespace Microsoft.Kiota.Serialization.Form.Tests;
 
 public class FormSerializationWriterFactoryTests
 {

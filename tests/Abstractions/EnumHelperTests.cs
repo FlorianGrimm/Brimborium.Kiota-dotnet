@@ -1,8 +1,8 @@
-﻿using Brimborium.Kiota.Abstractions.Helpers;
-using Brimborium.Kiota.Abstractions.Tests.Mocks;
+﻿using Microsoft.Kiota.Abstractions.Helpers;
+using Microsoft.Kiota.Abstractions.Tests.Mocks;
 using Xunit;
 
-namespace Brimborium.Kiota.Abstractions.Tests
+namespace Microsoft.Kiota.Abstractions.Tests
 {
     public class EnumHelperTests
     {

@@ -1,4 +1,4 @@
-﻿namespace Brimborium.Kiota.Serialization.Form.Tests.Mocks;
+﻿namespace Microsoft.Kiota.Serialization.Form.Tests.Mocks;
 
 [Flags]
 public enum TestEnum

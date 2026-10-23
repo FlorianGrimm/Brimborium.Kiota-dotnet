@@ -1,10 +1,10 @@
 using System.IO;
-using Brimborium.Kiota.Abstractions.Serialization;
-using Brimborium.Kiota.Abstractions.Store;
-using Brimborium.Kiota.Serialization.Json.Tests.Mocks;
+using Microsoft.Kiota.Abstractions.Serialization;
+using Microsoft.Kiota.Abstractions.Store;
+using Microsoft.Kiota.Serialization.Json.Tests.Mocks;
 using Xunit;
 
-namespace Brimborium.Kiota.Serialization.Json.Tests
+namespace Microsoft.Kiota.Serialization.Json.Tests
 {
     public class IParsableExtensionsTests
     {

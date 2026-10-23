@@ -1,9 +1,9 @@
 using System;
 using System.Threading.Tasks;
-using Brimborium.Kiota.Abstractions.Authentication;
+using Microsoft.Kiota.Abstractions.Authentication;
 using Xunit;
 
-namespace Brimborium.Kiota.Abstractions.Tests;
+namespace Microsoft.Kiota.Abstractions.Tests;
 
 public class ApiKeyAuthenticationProviderTests
 {

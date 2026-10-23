@@ -1,4 +1,4 @@
-﻿namespace Brimborium.Kiota.Trimming.Validation
+﻿namespace Microsoft.Kiota.Trimming.Validation
 {
     internal class Program
     {

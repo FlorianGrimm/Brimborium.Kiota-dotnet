@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Brimborium.Kiota.Serialization.Json.Tests.Converters;
+namespace Microsoft.Kiota.Serialization.Json.Tests.Converters;
 
 /// <summary>
 /// Converts a DateTimeOffset object or value to/from JSON.

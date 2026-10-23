@@ -1,16 +1,16 @@
 using System;
 using System.Collections.Generic;
-using Brimborium.Kiota.Abstractions;
-using Brimborium.Kiota.Abstractions.Serialization;
+using Microsoft.Kiota.Abstractions;
+using Microsoft.Kiota.Abstractions.Serialization;
 
-namespace Brimborium.Kiota.Serialization.Json.Tests.Mocks
+namespace Microsoft.Kiota.Serialization.Json.Tests.Mocks
 {
     public class DerivedTestEntity : TestEntity
     {
         /// <summary>
         /// Date enrolled in primary school
         /// </summary>
-        public Date? EnrolmentDate { get; set; }
+        public DateOnly? EnrolmentDate { get; set; }
         public override IDictionary<string, Action<IParseNode>> GetFieldDeserializers()
         {
             var parentDeserializers = base.GetFieldDeserializers();

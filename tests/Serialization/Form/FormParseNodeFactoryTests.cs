@@ -1,7 +1,7 @@
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Brimborium.Kiota.Serialization.Form.Tests;
+namespace Microsoft.Kiota.Serialization.Form.Tests;
 
 public class FormParseNodeFactoryTests
 {
@@ -14,7 +14,7 @@ public class FormParseNodeFactoryTests
         var formParseNode = await _formParseNodeFactory.GetRootParseNodeAsync(_formParseNodeFactory.ValidContentType, formStream, TestContext.Current.CancellationToken);
 
         // Assert
-        Assert.NotNull(formParseNode);
+        Assert.NotNull(formParseNode.RootNode);
         Assert.IsAssignableFrom<FormParseNode>(formParseNode);
     }
     [Fact]

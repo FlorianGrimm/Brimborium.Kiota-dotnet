@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace Brimborium.Kiota.Abstractions.Tests.Mocks;
+namespace Microsoft.Kiota.Abstractions.Tests.Mocks;
 
 public enum TestEnum
 {

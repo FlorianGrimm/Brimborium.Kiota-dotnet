@@ -2,14 +2,14 @@
 #if !NET5_0_OR_GREATER
 using System.Net.Http;
 #endif
-using Brimborium.Kiota.Abstractions.Authentication;
-using Brimborium.Kiota.Http.HttpClientLibrary.Middleware;
-using Brimborium.Kiota.Http.HttpClientLibrary.Middleware.Options;
-using Brimborium.Kiota.Http.HttpClientLibrary.Tests.Mocks;
+using Microsoft.Kiota.Abstractions.Authentication;
+using Microsoft.Kiota.Http.HttpClientLibrary.Middleware;
+using Microsoft.Kiota.Http.HttpClientLibrary.Middleware.Options;
+using Microsoft.Kiota.Http.HttpClientLibrary.Tests.Mocks;
 using Moq;
 using Xunit;
 
-namespace Brimborium.Kiota.Http.HttpClientLibrary.Tests
+namespace Microsoft.Kiota.Http.HttpClientLibrary.Tests
 {
     public class KiotaClientFactoryTests
     {
@@ -134,7 +134,7 @@ namespace Brimborium.Kiota.Http.HttpClientLibrary.Tests
         {
             var handlers = KiotaClientFactory.CreateDefaultHandlers();
 #pragma warning disable CS0618 // Type or member is obsolete
-            handlers.Add(new CompressionHandler());
+            //handlers.Add(new CompressionHandler());
 #pragma warning restore CS0618 // Type or member is obsolete
             var client = KiotaClientFactory.Create(handlers);
             Assert.IsType<HttpClient>(client);

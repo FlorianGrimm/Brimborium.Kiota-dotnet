@@ -498,8 +498,9 @@ namespace Microsoft.Kiota.Serialization.Json {
                 holder.AdditionalData ??= new Dictionary<string, object>();
                 itemAdditionalData = holder.AdditionalData;
             }
-            var fieldDeserializers = item.GetFieldDeserializers();
 
+            var fieldDeserializers = item.GetFieldDeserializers();
+            JsonParseNode? jsonParseNode = null;
             foreach (var fieldValue in this._JsonNode.EnumerateObject()) {
                 if (fieldDeserializers.TryGetValue(fieldValue.Name, out var fieldDeserializer)) {
                     if (fieldValue.Value.ValueKind == JsonValueKind.Null) {
@@ -507,11 +508,15 @@ namespace Microsoft.Kiota.Serialization.Json {
                     }
 
                     // Debug.WriteLine($"found property {fieldValue.Name} to deserialize");
-                    fieldDeserializer.Invoke(
-                        new JsonParseNode(fieldValue.Value, this._JsonSerializerContext) {
+                    if (jsonParseNode is null) {
+                        jsonParseNode = new JsonParseNode(fieldValue.Value, this._JsonSerializerContext) {
                             OnBeforeAssignFieldValues = this.OnBeforeAssignFieldValues,
                             OnAfterAssignFieldValues = this.OnAfterAssignFieldValues
-                        });
+                        };
+                    } else { 
+                        jsonParseNode._JsonNode = fieldValue.Value;
+                    }
+                    fieldDeserializer.Invoke(jsonParseNode);
                 } else if (itemAdditionalData != null) {
                     // Debug.WriteLine($"found additional property {fieldValue.Name} to deserialize");
                     _ = IDictionaryExtensions.TryAdd(itemAdditionalData, fieldValue.Name, this.TryGetAnything(fieldValue.Value)!);

@@ -1,3 +1,6 @@
+#pragma warning disable IL2026 // Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code
+#pragma warning disable IL3050 // Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.
+
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -7,13 +10,13 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading;
-using Brimborium.Kiota.Abstractions;
-using Brimborium.Kiota.Abstractions.Serialization;
-using Brimborium.Kiota.Serialization.Json.Tests.Converters;
-using Brimborium.Kiota.Serialization.Json.Tests.Mocks;
+using Microsoft.Kiota.Abstractions;
+using Microsoft.Kiota.Abstractions.Serialization;
+using Microsoft.Kiota.Serialization.Json.Tests.Converters;
+using Microsoft.Kiota.Serialization.Json.Tests.Mocks;
 using Xunit;
 
-namespace Brimborium.Kiota.Serialization.Json.Tests
+namespace Microsoft.Kiota.Serialization.Json.Tests
 {
     public class JsonSerializationWriterTests
     {
@@ -30,8 +33,8 @@ namespace Brimborium.Kiota.Serialization.Json.Tests
             {
                 Id = "48d31887-5fad-4d73-a9f5-3c356e68a038",
                 WorkDuration = TimeSpan.FromHours(1),
-                StartWorkTime = new Time(8, 0, 0),
-                BirthDay = new Date(2017, 9, 4),
+                StartWorkTime = new TimeOnly(8, 0, 0),
+                BirthDay = new DateOnly(2017, 9, 4),
                 HeightInMetres = 1.80m,
                 AdditionalData = new Dictionary<string, object>
                 {
@@ -92,8 +95,8 @@ namespace Brimborium.Kiota.Serialization.Json.Tests
             {
                 Id = "48d31887-5fad-4d73-a9f5-3c356e68a038",
                 WorkDuration = TimeSpan.FromHours(1),
-                StartWorkTime = new Time(8, 0, 0),
-                BirthDay = new Date(2017, 9, 4),
+                StartWorkTime = new TimeOnly(8, 0, 0),
+                BirthDay = new DateOnly(2017, 9, 4),
                 AdditionalData = new Dictionary<string, object>
                 {
                     {"mobilePhone", new UntypedNull()}, // write null value
@@ -565,7 +568,7 @@ namespace Brimborium.Kiota.Serialization.Json.Tests
         public void WriteDateValue_IsWrittenCorrectly()
         {
             // Arrange
-            var value = new Date(2024, 11, 30);
+            var value = new DateOnly(2024, 11, 30);
 
             using var jsonSerializationWriter = new JsonSerializationWriter();
 
@@ -733,7 +736,7 @@ namespace Brimborium.Kiota.Serialization.Json.Tests
         public void WriteTimeValue_IsWrittenCorrectly()
         {
             // Arrange
-            var value = new Time(23, 46, 59);
+            var value = new TimeOnly(23, 46, 59);
 
             using var jsonSerializationWriter = new JsonSerializationWriter();
 

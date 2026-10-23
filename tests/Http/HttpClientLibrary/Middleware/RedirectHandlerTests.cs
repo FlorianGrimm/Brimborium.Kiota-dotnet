@@ -5,12 +5,12 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
-using Brimborium.Kiota.Http.HttpClientLibrary.Middleware;
-using Brimborium.Kiota.Http.HttpClientLibrary.Middleware.Options;
-using Brimborium.Kiota.Http.HttpClientLibrary.Tests.Mocks;
+using Microsoft.Kiota.Http.HttpClientLibrary.Middleware;
+using Microsoft.Kiota.Http.HttpClientLibrary.Middleware.Options;
+using Microsoft.Kiota.Http.HttpClientLibrary.Tests.Mocks;
 using Xunit;
 
-namespace Brimborium.Kiota.Http.HttpClientLibrary.Tests.Middleware
+namespace Microsoft.Kiota.Http.HttpClientLibrary.Tests.Middleware
 {
     /// <summary>
     /// A mock IWebProxy implementation for testing proxy bypass scenarios.

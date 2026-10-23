@@ -5,16 +5,16 @@ using System.Net.Http;
 using System.Runtime.Serialization;
 using System.Text;
 using Microsoft.Extensions.DependencyInjection;
-using Brimborium.Kiota.Abstractions;
-using Brimborium.Kiota.Abstractions.Authentication;
-using Brimborium.Kiota.Abstractions.Serialization;
-using Brimborium.Kiota.Abstractions.Store;
-using Brimborium.Kiota.Http.HttpClientLibrary.Tests.Mocks;
+using Microsoft.Kiota.Abstractions;
+using Microsoft.Kiota.Abstractions.Authentication;
+using Microsoft.Kiota.Abstractions.Serialization;
+using Microsoft.Kiota.Abstractions.Store;
+using Microsoft.Kiota.Http.HttpClientLibrary.Tests.Mocks;
 using Moq;
 using Moq.Protected;
 using Xunit;
 
-namespace Brimborium.Kiota.Http.HttpClientLibrary.Tests
+namespace Microsoft.Kiota.Http.HttpClientLibrary.Tests
 {
     public class HttpClientRequestAdapterTests
     {

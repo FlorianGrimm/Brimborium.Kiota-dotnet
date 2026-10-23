@@ -1,9 +1,9 @@
 ﻿using System.Globalization;
 using System.Text;
-using Brimborium.Kiota.Abstractions;
-using Brimborium.Kiota.Serialization.Form.Tests.Mocks;
+using Microsoft.Kiota.Abstractions;
+using Microsoft.Kiota.Serialization.Form.Tests.Mocks;
 
-namespace Brimborium.Kiota.Serialization.Form.Tests;
+namespace Microsoft.Kiota.Serialization.Form.Tests;
 
 public class FormSerializationWriterTests
 {
@@ -20,8 +20,8 @@ public class FormSerializationWriterTests
         {
             Id = "48d31887-5fad-4d73-a9f5-3c356e68a038",
             WorkDuration = TimeSpan.FromHours(1),
-            StartWorkTime = new Time(8, 0, 0),
-            BirthDay = new Date(2017, 9, 4),
+            StartWorkTime = new TimeOnly(8, 0, 0),
+            BirthDay = new DateOnly(2017, 9, 4),
             Numbers = TestEnum.One | TestEnum.Two,
             DeviceNames = new List<string>
             {
@@ -192,7 +192,7 @@ public class FormSerializationWriterTests
     public void WriteDateValue_IsWrittenCorrectly()
     {
         // Arrange
-        var value = new Date(2024, 11, 30);
+        var value = new DateOnly(2024, 11, 30);
 
         using var formSerializationWriter = new FormSerializationWriter();
 
@@ -352,7 +352,7 @@ public class FormSerializationWriterTests
     public void WriteTimeValue_IsWrittenCorrectly()
     {
         // Arrange
-        var value = new Time(23, 46, 59);
+        var value = new TimeOnly(23, 46, 59);
 
         using var formSerializationWriter = new FormSerializationWriter();
 
@@ -398,8 +398,8 @@ public class FormSerializationWriterTests
             { "prop6", 4L },
             { "prop7", 5m },
             { "prop8", new DateTimeOffset(2024, 11, 30, 15, 35, 45, 987, TimeSpan.FromHours(3)) },
-            { "prop9", new Date(2024, 11, 30) },
-            { "prop10", new Time(23, 46, 59) },
+            { "prop9", new DateOnly(2024, 11, 30) },
+            { "prop10", new TimeOnly(23, 46, 59) },
             { "prop11", new TimeSpan(756, 4, 6, 8, 10) },
             { "prop12", new byte[] { 2, 4, 6 } },
             { "prop13", new Guid("3adeb301-58f1-45c5-b820-ae5f4af13c89") },

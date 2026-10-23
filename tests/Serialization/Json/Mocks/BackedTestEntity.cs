@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using Brimborium.Kiota.Abstractions.Serialization;
-using Brimborium.Kiota.Abstractions.Store;
+using Microsoft.Kiota.Abstractions.Serialization;
+using Microsoft.Kiota.Abstractions.Store;
 
-namespace Brimborium.Kiota.Serialization.Json.Tests.Mocks
+namespace Microsoft.Kiota.Serialization.Json.Tests.Mocks
 {
     public class BackedTestEntity : IParsable, IBackedModel
     {

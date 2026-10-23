@@ -4,7 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Brimborium.Kiota.Serialization.Json.Tests
+namespace Microsoft.Kiota.Serialization.Json.Tests
 {
     public class JsonAsyncParseNodeFactoryTests
     {
@@ -19,12 +19,13 @@ namespace Brimborium.Kiota.Serialization.Json.Tests
         [Fact]
         public async Task GetsWriterForJsonContentType()
         {
-            using var jsonStream = new MemoryStream(Encoding.UTF8.GetBytes(TestJsonString));
+            var jsonStream = new MemoryStream(Encoding.UTF8.GetBytes(TestJsonString));
             var jsonWriter = await _jsonParseNodeFactory.GetRootParseNodeAsync(_jsonParseNodeFactory.ValidContentType, jsonStream, TestContext.Current.CancellationToken);
 
             // Assert
-            Assert.NotNull(jsonWriter);
-            Assert.IsAssignableFrom<JsonParseNode>(jsonWriter);
+            Assert.NotNull(jsonWriter.RootNode);
+            Assert.IsAssignableFrom<JsonParseNode>(jsonWriter.RootNode);
+            jsonWriter.Dispose();
         }
 
         [Fact]

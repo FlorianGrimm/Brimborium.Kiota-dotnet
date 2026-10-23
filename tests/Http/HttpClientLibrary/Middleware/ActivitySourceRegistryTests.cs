@@ -1,8 +1,8 @@
 ﻿using System;
-using Brimborium.Kiota.Http.HttpClientLibrary.Middleware;
+using Microsoft.Kiota.Http.HttpClientLibrary.Middleware;
 using Xunit;
 
-namespace Brimborium.Kiota.Http.HttpClientLibrary.Tests.Middleware.Registries
+namespace Microsoft.Kiota.Http.HttpClientLibrary.Tests.Middleware.Registries
 {
     public class ActivitySourceRegistryTests
     {

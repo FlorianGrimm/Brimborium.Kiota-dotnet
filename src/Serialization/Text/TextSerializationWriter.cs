@@ -61,9 +61,18 @@ public class TextSerializationWriter : ISerializationWriter, IDisposable {
     /// <inheritdoc />
     public void WriteCollectionOfPrimitiveValues<T>(string? key, IEnumerable<T>? values) => throw new InvalidOperationException(TextParseNode.NoStructuredDataMessage);
     /// <inheritdoc />
-    public void WriteDateTimeOffsetValue(string? key, DateTimeOffset? value) => this.WriteStringValue(key, value.HasValue ? value.Value.ToString("o", CultureInfo.InvariantCulture) : null);
+    public void WriteDateTimeOffsetValue(string? key, DateTimeOffset? value) {
+        if(value.HasValue) {
+            this.WriteStringValue(key, value.Value.ToString("o", CultureInfo.InvariantCulture));
+        }
+    }
     /// <inheritdoc />
-    public void WriteDateValue(string? key, DateOnly? value) => this.WriteStringValue(key, value?.ToString());
+    public void WriteDateValue(string? key, DateOnly? value) {
+        if(value.HasValue) {
+            this.WriteStringValue(key, value.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
+        }
+    }
+
     /// <inheritdoc />
     public void WriteDecimalValue(string? key, decimal? value) => this.WriteStringValue(key, value?.ToString(CultureInfo.InvariantCulture));
     /// <inheritdoc />
@@ -101,7 +110,11 @@ public class TextSerializationWriter : ISerializationWriter, IDisposable {
     /// <inheritdoc />
     public void WriteTimeSpanValue(string? key, TimeSpan? value) => this.WriteStringValue(key, value.HasValue ? XmlConvert.ToString(value.Value) : null);
     /// <inheritdoc />
-    public void WriteTimeValue(string? key, TimeOnly? value) => this.WriteStringValue(key, value?.ToString());
+    public void WriteTimeValue(string? key, TimeOnly? value) {
+        if (value.HasValue) { 
+            this.WriteStringValue(key, value.Value.ToString("HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture));
+        }
+    }
 
     /// <inheritdoc />
     public void WriteCollectionOfEnumValues<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>(string? key, IEnumerable<T?>? values) where T : struct, Enum

@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Brimborium.Kiota.Abstractions.Authentication;
+using Microsoft.Kiota.Abstractions.Authentication;
 using Moq;
 using Xunit;
 
-namespace Brimborium.Kiota.Abstractions.Tests;
+namespace Microsoft.Kiota.Abstractions.Tests;
 
 public class AuthenticationTests
 {

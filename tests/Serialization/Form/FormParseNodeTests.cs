@@ -1,8 +1,8 @@
 ﻿using System.Globalization;
-using Brimborium.Kiota.Abstractions;
-using Brimborium.Kiota.Serialization.Form.Tests.Mocks;
+using Microsoft.Kiota.Abstractions;
+using Microsoft.Kiota.Serialization.Form.Tests.Mocks;
 
-namespace Brimborium.Kiota.Serialization.Form.Tests;
+namespace Microsoft.Kiota.Serialization.Form.Tests;
 
 public class FormParseNodeTests
 {
@@ -52,9 +52,9 @@ public class FormParseNodeTests
         Assert.Equal("48d31887-5fad-4d73-a9f5-3c356e68a038", testEntity.Id);
         Assert.Equal(TestEnum.One | TestEnum.Two, testEntity.Numbers); // Unknown enum value is not included
         Assert.Equal(TimeSpan.FromHours(1), testEntity.WorkDuration); // Parses timespan values
-        Assert.Equal(new Time(8, 0, 0).ToString(), testEntity.StartWorkTime.ToString());// Parses time values
-        Assert.Equal(new Time(17, 0, 0).ToString(), testEntity.EndWorkTime.ToString());// Parses time values
-        Assert.Equal(new Date(2017, 9, 4).ToString(), testEntity.BirthDay.ToString());// Parses date values
+        Assert.Equal(new TimeOnly(8, 0, 0).ToString(), testEntity.StartWorkTime.ToString());// Parses time values
+        Assert.Equal(new TimeOnly(17, 0, 0).ToString(), testEntity.EndWorkTime.ToString());// Parses time values
+        Assert.Equal(new DateOnly(2017, 9, 4).ToString(), testEntity.BirthDay.ToString());// Parses date values
     }
 
     [Fact]
@@ -201,7 +201,7 @@ public class FormParseNodeTests
         var result = parseNode.GetDateValue();
 
         // Assert
-        Assert.Equal(new Date(2021, 11, 30), result);
+        Assert.Equal(new DateOnly(2021, 11, 30), result);
     }
 
     [Fact]
@@ -229,7 +229,7 @@ public class FormParseNodeTests
         var result = parseNode.GetTimeValue();
 
         // Assert
-        Assert.Equal(new Time(12, 24, 36), result);
+        Assert.Equal(new TimeOnly(12, 24, 36), result);
     }
 
     [Fact]
@@ -439,11 +439,11 @@ public class FormParseNodeTests
         var formParseNode = new FormParseNode(TestFormData);
         var node = formParseNode.GetChildNode("values");
         Assert.NotNull(node);
-        var collection = node.GetCollectionOfPrimitiveValues<Date?>();
+        var collection = node.GetCollectionOfPrimitiveValues<DateOnly?>();
         Assert.NotNull(collection);
         var items = collection.ToArray();
         Assert.Equal(2, items.Length);
-        Assert.Equal(new Date(2021, 11, 30), items[0]);
-        Assert.Equal(new Date(2022, 6, 15), items[1]);
+        Assert.Equal(new DateOnly(2021, 11, 30), items[0]);
+        Assert.Equal(new DateOnly(2022, 6, 15), items[1]);
     }
 }

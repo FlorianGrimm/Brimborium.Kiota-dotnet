@@ -256,16 +256,22 @@ namespace Microsoft.Kiota.Serialization.Json {
         /// </summary>
         /// <param name="key">The key of the json node</param>
         /// <param name="value">The Date value</param>
-        public void WriteDateValue(string? key, DateOnly? value)
-            => this.WriteStringValue(key, value?.ToString());
+        public void WriteDateValue(string? key, DateOnly? value) {
+            if (value.HasValue) { 
+                this.WriteStringValue(key, value.Value.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture));
+            }
+        }
 
         /// <summary>
         /// Write the Time value
         /// </summary>
         /// <param name="key">The key of the json node</param>
         /// <param name="value">The Time value</param>
-        public void WriteTimeValue(string? key, TimeOnly? value)
-            => this.WriteStringValue(key, value?.ToString());
+        public void WriteTimeValue(string? key, TimeOnly? value) {
+            if (value.HasValue) { 
+                this.WriteStringValue(key, value.Value.ToString("HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture));
+            }
+        }
 
         /// <summary>
         /// Write the null value
