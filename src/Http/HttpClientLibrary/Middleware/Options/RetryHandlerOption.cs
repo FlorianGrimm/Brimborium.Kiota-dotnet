@@ -15,22 +15,22 @@ namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware.Options {
         internal const int DefaultMaxRetry = 3;
         internal const int MaxMaxRetry = 10;
         internal const int MaxDelay = 180;
-        private int _maxRetry = DefaultMaxRetry;
-        private int _delay = DefaultDelay;
+        private int _MaxRetry = DefaultMaxRetry;
+        private int _Delay = DefaultDelay;
 
         /// <summary>
         /// The waiting time in seconds before retrying a request with a maximum value of 180 seconds. This defaults to 3 seconds.
         /// </summary>
         public int Delay {
             get {
-                return this._delay;
+                return this._Delay;
             }
             set {
                 if (value > MaxDelay) {
                     throw new InvalidOperationException($"Maximum value for {nameof(MaxDelay)} property exceeded ");
                 }
 
-                this._delay = value;
+                this._Delay = value;
             }
         }
 
@@ -39,13 +39,13 @@ namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware.Options {
         /// </summary>
         public int MaxRetry {
             get {
-                return this._maxRetry;
+                return this._MaxRetry;
             }
             set {
                 if (value > MaxMaxRetry) {
                     throw new InvalidOperationException($"Maximum value for {nameof(MaxMaxRetry)} property exceeded ");
                 }
-                this._maxRetry = value;
+                this._MaxRetry = value;
             }
         }
 

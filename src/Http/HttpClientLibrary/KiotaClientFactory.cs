@@ -100,25 +100,6 @@ namespace Microsoft.Kiota.Http.HttpClientLibrary {
         /// </summary>
         /// <returns>A list of all the default handlers</returns>
         /// <remarks>Order matters</remarks>
-        [Obsolete("Use GetDefaultHandlerActivatableTypes instead")]
-        public static IList<System.Type> GetDefaultHandlerTypes() {
-            return new List<System.Type>
-            {
-                typeof(UriReplacementHandler<UriReplacementHandlerOption>),
-                typeof(RetryHandler),
-                typeof(RedirectHandler),
-                typeof(ParametersNameDecodingHandler),
-                typeof(UserAgentHandler),
-                typeof(HeadersInspectionHandler),
-                typeof(BodyInspectionHandler),
-            };
-        }
-
-        /// <summary>
-        /// Gets the default handler types.
-        /// </summary>
-        /// <returns>A list of all the default handlers</returns>
-        /// <remarks>Order matters</remarks>
         public static IList<ActivatableType> GetDefaultHandlerActivatableTypes() {
             return new List<ActivatableType>()
             {

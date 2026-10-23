@@ -6,6 +6,10 @@ using System;
 using System.Linq;
 using Microsoft.Kiota.Abstractions.Serialization;
 using Microsoft.Kiota.Abstractions.Store;
+using Microsoft.Kiota.Serialization.Form;
+using Microsoft.Kiota.Serialization.Json;
+using Microsoft.Kiota.Serialization.Multipart;
+using Microsoft.Kiota.Serialization.Text;
 
 namespace Microsoft.Kiota.Abstractions
 {
@@ -15,7 +19,23 @@ namespace Microsoft.Kiota.Abstractions
     /// </summary>
     public static class ApiClientBuilder
     {
+        private static bool _IsDefaultsSetup = false;
 
+        /// <summary>
+        /// Setup the default serializers/deserializers.
+        /// </summary>
+        public static void SetupDefaults() {
+            if (_IsDefaultsSetup) { return; }
+            // Setup the default serializers/deserializers
+            ApiClientBuilder.RegisterDefaultSerializer<JsonSerializationWriterFactory>();
+            ApiClientBuilder.RegisterDefaultSerializer<TextSerializationWriterFactory>();
+            ApiClientBuilder.RegisterDefaultSerializer<FormSerializationWriterFactory>();
+            ApiClientBuilder.RegisterDefaultSerializer<MultipartSerializationWriterFactory>();
+            ApiClientBuilder.RegisterDefaultDeserializer<JsonParseNodeFactory>();
+            ApiClientBuilder.RegisterDefaultDeserializer<TextParseNodeFactory>();
+            ApiClientBuilder.RegisterDefaultDeserializer<FormParseNodeFactory>();
+            _IsDefaultsSetup = true;
+        }
         /// <summary>
         /// Registers the default serializer to the registry.
         /// </summary>

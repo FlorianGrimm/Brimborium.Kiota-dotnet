@@ -29,18 +29,7 @@ namespace Microsoft.Kiota.Bundle {
         /// <param name="httpClient">The native HTTP client.</param>
         /// <param name="observabilityOptions">The observability options.</param>
         public DefaultRequestAdapter(IAuthenticationProvider authenticationProvider, IParseNodeFactory? parseNodeFactory = null, ISerializationWriterFactory? serializationWriterFactory = null, HttpClient? httpClient = null, ObservabilityOptions? observabilityOptions = null) : base(authenticationProvider, parseNodeFactory, serializationWriterFactory, httpClient, observabilityOptions) {
-            SetupDefaults();
-        }
-
-        private static void SetupDefaults() {
-            // Setup the default serializers/deserializers
-            ApiClientBuilder.RegisterDefaultSerializer<JsonSerializationWriterFactory>();
-            ApiClientBuilder.RegisterDefaultSerializer<TextSerializationWriterFactory>();
-            ApiClientBuilder.RegisterDefaultSerializer<FormSerializationWriterFactory>();
-            ApiClientBuilder.RegisterDefaultSerializer<MultipartSerializationWriterFactory>();
-            ApiClientBuilder.RegisterDefaultDeserializer<JsonParseNodeFactory>();
-            ApiClientBuilder.RegisterDefaultDeserializer<TextParseNodeFactory>();
-            ApiClientBuilder.RegisterDefaultDeserializer<FormParseNodeFactory>();
+            ApiClientBuilder.SetupDefaults();
         }
     }
 }
