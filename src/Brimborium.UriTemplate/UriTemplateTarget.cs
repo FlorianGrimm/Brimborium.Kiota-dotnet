@@ -8,15 +8,28 @@ namespace Brimborium.UriTemplate;
 /// Wrap the Output - the url to be generated
 /// </summary>
 /// <param name="output">the builder for the url</param>
+/// <param name="options">How OData date and time literals are written.</param>
 public readonly struct UriTemplateTarget(
-    StringBuilder output
+    StringBuilder output,
+    ODataConvertOptions options
     ) {
-    private readonly StringBuilder _ReservedBuffer = new(3);
+    /// <summary>
+    /// Wrap the Output using the current value of <see cref="ODataConvertOptions.Default"/>.
+    /// </summary>
+    /// <param name="output">the builder for the url</param>
+    public UriTemplateTarget(StringBuilder output)
+        : this(output, ODataConvertOptions.Default) {
+    }
 
     /// <summary>
     /// The Url to be build
     /// </summary>
     public readonly StringBuilder Output = output;
+
+    /// <summary>
+    /// How OData date and time literals are written.
+    /// </summary>
+    public readonly ODataConvertOptions Options = options;
 
     /// <summary>
     /// Appends a character to the URI output.
@@ -58,16 +71,17 @@ public readonly struct UriTemplateTarget(
         return value switch {
             null => string.Empty,
             string strValue => strValue,
-            bool boolValue => boolValue ? "true" : "false",
-            int number => number.ToString(System.Globalization.CultureInfo.InvariantCulture),
-            long number => number.ToString(System.Globalization.CultureInfo.InvariantCulture),
+            bool boolValue => ODataConvert.ConvertBooleanToString(boolValue),
+            int number => ODataConvert.ConvertIntToString(number),
+            long number => ODataConvert.ConvertLongToString(number),
+            // plain values keep "Infinity"; ODataConvert writes the OData "INF"
             float number => number.ToString(System.Globalization.CultureInfo.InvariantCulture),
             double number => number.ToString(System.Globalization.CultureInfo.InvariantCulture),
-            decimal number => number.ToString(System.Globalization.CultureInfo.InvariantCulture),
-            TimeOnly timeOnly => timeOnly.ToString("HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture),
-            DateOnly dateOnly => dateOnly.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture),
-            DateTime dateTime => ((dateTime.Ticks % 10000000) == 0) ? dateTime.ToString("yyyy-MM-ddTHH:mm:ssK", System.Globalization.CultureInfo.InvariantCulture) : dateTime.ToString("O", System.Globalization.CultureInfo.InvariantCulture),
-            DateTimeOffset dateTimeOffset => ((dateTimeOffset.Ticks % 10000000) == 0) ? dateTimeOffset.ToString("yyyy-MM-ddTHH:mm:sszzz", System.Globalization.CultureInfo.InvariantCulture) : dateTimeOffset.ToString("O", System.Globalization.CultureInfo.InvariantCulture),
+            decimal number => ODataConvert.ConvertDecimalToString(number),
+            TimeOnly timeOnly => ODataConvert.ConvertTimeOnlyToString(timeOnly),
+            DateOnly dateOnly => ODataConvert.ConvertDateOnlyToString(dateOnly),
+            DateTime dateTime => ODataConvert.ConvertDateTimeToString(dateTime, null),
+            DateTimeOffset dateTimeOffset => ODataConvert.ConvertDateTimeOffsetToString(dateTimeOffset),
             _ => null
             //_ => throw new ArgumentException($"Illegal class passed as substitution, found {value.GetType()}"),
         };
@@ -85,19 +99,24 @@ public readonly struct UriTemplateTarget(
     /// <returns><see langword="true"/> if the list contains at least one item.</returns>
     internal bool AddListValue(UriTemplateASTOperation astOperator, string token, IList value, int maxChar, bool composite) {
         bool first = true;
-        foreach (object innerValue in value) {
-            if (first) {
+        if (composite) {
+            foreach (object innerValue in value) {
+                if (!first) {
+                    astOperator.AddSeparator(this.Output);
+                }
                 this.AddScalarValue(astOperator, token, innerValue, maxChar);
                 first = false;
-            } else {
-                if (composite) {
-                    astOperator.AddSeparator(this.Output);
-                    this.AddScalarValue(astOperator, token, innerValue, maxChar);
-                } else {
-                    _ = this.Output.Append(',');
-                    this.AddValueElement(astOperator, token, innerValue, maxChar);
-                }
             }
+        } else {
+            int mark = this.AddNamePrefix(astOperator, token);
+            foreach (object innerValue in value) {
+                if (!first) {
+                    _ = this.Output.Append(',');
+                }
+                this.AddValueElement(astOperator, token, innerValue, maxChar);
+                first = false;
+            }
+            this.RemoveEmptyNamePrefix(mark);
         }
         return !first;
     }
@@ -118,35 +137,64 @@ public readonly struct UriTemplateTarget(
         if (maxChar != -1) {
             throw new ArgumentException("Value trimming is not allowed on Dictionaries");
         }
+        int mark = composite ? -1 : this.AddNamePrefix(astOperator, token);
         foreach (DictionaryEntry v in value) {
+            if (v.Key is not string key) {
+                throw new ArgumentException($"Dictionary key must be a string, found {v.Key?.GetType()}");
+            }
             if (composite) {
                 if (!first) {
                     astOperator.AddSeparator(this.Output);
                 }
-                if (v.Key is not string key) {
-                    throw new ArgumentException($"Dictionary key must be a string, found {v.Key?.GetType()}");
-                }
                 this.AddValueElement(astOperator, token, key, maxChar);
                 _ = this.Output.Append('=');
             } else {
-                if (first) {
-                    if (v.Key is not string key) {
-                        throw new ArgumentException($"Dictionary key must be a string, found {v.Key?.GetType()}");
-                    }
-                    this.AddScalarValue(astOperator, token, key, maxChar);
-                } else {
-                    if (v.Key is not string key) {
-                        throw new ArgumentException($"Dictionary key must be a string, found {v.Key?.GetType()}");
-                    }
+                if (!first) {
                     _ = this.Output.Append(',');
-                    this.AddValueElement(astOperator, token, key, maxChar);
                 }
+                this.AddValueElement(astOperator, token, key, maxChar);
                 _ = this.Output.Append(',');
             }
             this.AddValueElement(astOperator, token, v.Value, maxChar);
             first = false;
         }
+        this.RemoveEmptyNamePrefix(mark);
         return !first;
+    }
+
+    /// <summary>
+    /// Appends the variable name and <c>=</c> that precede a non-exploded list
+    /// or dictionary for the named operators.
+    /// </summary>
+    /// <param name="astOperator">The expression operator.</param>
+    /// <param name="token">The variable name.</param>
+    /// <returns>
+    /// The output length after the <c>=</c> when it must be removed for an empty
+    /// value (<c>;</c> operator); otherwise, <c>-1</c>.
+    /// </returns>
+    private int AddNamePrefix(UriTemplateASTOperation astOperator, string token) {
+        switch (astOperator.Operator) {
+            case UriTemplateASTOperator.Questionmark:
+            case UriTemplateASTOperator.Ampersand:
+                _ = this.Output.Append(token).Append('=');
+                return -1;
+            case UriTemplateASTOperator.Semicolon:
+                _ = this.Output.Append(token).Append('=');
+                return this.Output.Length;
+            default:
+                return -1;
+        }
+    }
+
+    /// <summary>
+    /// Removes the <c>=</c> written by <see cref="AddNamePrefix"/> when no value
+    /// followed it.
+    /// </summary>
+    /// <param name="mark">The value returned by <see cref="AddNamePrefix"/>.</param>
+    private void RemoveEmptyNamePrefix(int mark) {
+        if (0 <= mark && this.Output.Length == mark) {
+            this.Output.Length = mark - 1;
+        }
     }
 
     /// <summary>
@@ -229,8 +277,14 @@ public readonly struct UriTemplateTarget(
 
         {
             if (value is IUriTemplateValue uriTemplateValue) {
-                uriTemplateValue.AppendValue(prefix, maxChar, replaceReserved, this);
+                if (prefix is not null) {
+                    _ = this.Append(prefix);
+                }
+                uriTemplateValue.AppendValue(null, maxChar, replaceReserved, this);
             } else if (value is IODataValue oDataValue) {
+                if (prefix is not null) {
+                    _ = this.Append(prefix);
+                }
                 _ = oDataValue.AppendValue(this);
             } else if (ConvertNativeTypes(value) is { } stringValue) {
                 this.AddValueText(prefix, stringValue, maxChar, replaceReserved);
@@ -252,20 +306,61 @@ public readonly struct UriTemplateTarget(
     /// otherwise, preserve reserved characters.
     /// </param>
     internal void AddValueText(string? prefix, string stringValue, int maxChar, bool replaceReserved) {
+        if (maxChar == -1) {
+            this.AddValueTextComplete(prefix, stringValue, replaceReserved);
+        } else {
+            this.AddValueTextWithMaxChar(prefix, stringValue, maxChar, replaceReserved);
+        }
+    }
+
+    /// <summary>
+    /// Appends the whole text after applying the requested URI escaping,
+    /// without counting code points.
+    /// </summary>
+    /// <param name="prefix">An optional prefix to append before non-empty text.</param>
+    /// <param name="stringValue">The text to append.</param>
+    /// <param name="replaceReserved">
+    /// <see langword="true"/> to percent-encode reserved characters;
+    /// otherwise, preserve reserved characters.
+    /// </param>
+    private void AddValueTextComplete(string? prefix, string stringValue, bool replaceReserved) {
+        if (stringValue.Length == 0) {
+            return;
+        }
+        _ = this.Output.EnsureCapacity(this.Output.Length + stringValue.Length * 2); // hint to SB
+
+        if (prefix != null) {
+            _ = this.Append(prefix);
+        }
+
+        for (int pos = 0; pos < stringValue.Length; pos++) {
+            pos = AppendValueCharacter(stringValue, pos, replaceReserved, this.Output);
+        }
+    }
+
+    /// <summary>
+    /// Appends at most <paramref name="maxChar"/> code points of the text after
+    /// applying the requested URI escaping.
+    /// </summary>
+    /// <param name="prefix">An optional prefix to append before non-empty text.</param>
+    /// <param name="stringValue">The text to append.</param>
+    /// <param name="maxChar">Maximum Unicode code points to emit.</param>
+    /// <param name="replaceReserved">
+    /// <see langword="true"/> to percent-encode reserved characters;
+    /// otherwise, preserve reserved characters.
+    /// </param>
+    private void AddValueTextWithMaxChar(string? prefix, string stringValue, int maxChar, bool replaceReserved) {
         int codePointCount = 0;
-        bool foundSurrogate = false;
         for (int ci = 0; ci < stringValue.Length; ci++) {
             if (char.IsHighSurrogate(stringValue[ci])
                 && (ci + 1 < stringValue.Length)
                 && char.IsLowSurrogate(stringValue[ci + 1])) {
                 ci++;
-                foundSurrogate = true;
             }
             codePointCount++;
         }
-        int max = (maxChar != -1) ? Math.Min(maxChar, codePointCount) : codePointCount;
+        int max = Math.Min(maxChar, codePointCount);
         _ = this.Output.EnsureCapacity(this.Output.Length + max * 2); // hint to SB
-        bool toReserved = false;
 
         if (max > 0 && prefix != null) {
             _ = this.Append(prefix);
@@ -273,88 +368,52 @@ public readonly struct UriTemplateTarget(
 
         int charCount = 0;
         for (int pos = 0; pos < stringValue.Length && charCount < max; pos++) {
-            char character = stringValue[pos];
+            pos = AppendValueCharacter(stringValue, pos, replaceReserved, this.Output);
+            charCount++;
+        }
+    }
 
-            if (character == '%' && !replaceReserved) {
-                _ = _ReservedBuffer.Clear();
-                toReserved = true;
-            }
+    /// <summary>
+    /// Appends the character (or surrogate pair / pct-encoded triplet) at
+    /// <paramref name="pos"/> after applying the requested URI escaping.
+    /// </summary>
+    /// <param name="stringValue">The text containing the character.</param>
+    /// <param name="pos">The position of the character.</param>
+    /// <param name="replaceReserved">
+    /// <see langword="true"/> to percent-encode reserved characters;
+    /// otherwise, preserve reserved characters.
+    /// </param>
+    /// <returns>The position of the last consumed character.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static int AppendValueCharacter(string stringValue, int pos, bool replaceReserved, StringBuilder output) {
+        char character = stringValue[pos];
 
-            string toAppend;
-            if (foundSurrogate && IsSurrogate(character)) {
-                toAppend = Uri.EscapeDataString(char.ConvertFromUtf32(char.ConvertToUtf32(stringValue, pos)));
+        if (UriCharacterUtility.IsSurrogate(character)) {
+            if (UriCharacterUtility.AppendSurrogate(stringValue, pos, output)) {
                 pos++; // skip the low surrogate
-            } else if (replaceReserved || IsNotAllowedInUri(character) || IsUcschar(character) || IsIprivate(character)) {
-                if (toReserved) {
-                    // the pending "%x" is not a valid percent-encoding; emit it as literal "%25x"
-                    charCount += _ReservedBuffer.Length;
-                    _ = this.Output.Append("%25").Append(_ReservedBuffer.ToString(1, _ReservedBuffer.Length - 1));
-                    _ = _ReservedBuffer.Clear();
-                    toReserved = false;
-                }
-                toAppend = Uri.EscapeDataString(character.ToString());
-            } else {
-                if (toReserved) {
-                    toAppend = character.ToString();
-                } else {
-                    if (character == ' ') {
-                        _ = this.Output.Append("%20");
-                        charCount++;
-                    } else if (character == '%') {
-                        _ = this.Output.Append("%25");
-                        charCount++;
-                    } else {
-                        _ = this.Output.Append(character);
-                        charCount++;
-                    }
-                    continue;
-                }
             }
-
-            if (toReserved) {
-                _ = _ReservedBuffer.Append(toAppend);
-
-                if (_ReservedBuffer.Length == 3) {
-                    bool isEncoded = false;
-
-                    var original = _ReservedBuffer.ToStringAndClear();
-                    try {
-                        isEncoded = !original.Equals(Uri.UnescapeDataString(original));
-                    } catch (Exception) {
-                        // ignore
-                    }
-
-                    if (isEncoded) {
-                        _ = this.Output.Append(original);
-                        charCount++;
-                    } else {
-                        _ = this.Output.Append("%25");
-                        // only if !replaceReserved
-                        _ = this.Output.Append(original.AsSpan(1, 2));
-                        charCount++;
-                    }
-                    toReserved = false;
-                }
+        } else if (character == '%') {
+            // keep a valid pct-encoded triplet when reserved characters are allowed
+            if (!replaceReserved
+                && pos + 2 < stringValue.Length
+                && char.IsAsciiHexDigit(stringValue[pos + 1])
+                && char.IsAsciiHexDigit(stringValue[pos + 2])) {
+                _ = output.Append(stringValue, pos, 3);
+                pos += 2;
             } else {
-                if (character == ' ') {
-                    _ = this.Output.Append("%20");
-                    charCount++;
-                } else if (character == '%') {
-                    _ = this.Output.Append("%25");
-                    charCount++;
-                } else {
-                    _ = this.Output.Append(toAppend);
-                    charCount++;
-                }
+                _ = output.Append("%25");
             }
-
+        } else if (replaceReserved
+            || UriCharacterUtility.IsNotAllowedInUri(character)
+            || UriCharacterUtility.IsUcschar(character)
+            || UriCharacterUtility.IsIprivate(character)) {
+            _ = output.Append(Uri.EscapeDataString(character.ToString()));
+        } else if (character == ' ') {
+            _ = output.Append("%20");
+        } else {
+            _ = output.Append(character);
         }
-
-        if (toReserved) {
-            _ = this.Output
-                .Append("%25")
-                .Append(_ReservedBuffer.ToString(1, _ReservedBuffer.Length - 1));
-        }
+        return pos;
     }
 
     /// <summary>
@@ -362,99 +421,8 @@ public readonly struct UriTemplateTarget(
     /// characters and doubling apostrophes.
     /// </summary>
     /// <param name="stringValue">The string contents to append after formatted.</param>
-    public void AddODataValue(string stringValue) {
-        int codePointCount = 0;
-        bool foundSurrogate = false;
-        for (int ci = 0; ci < stringValue.Length; ci++) {
-            if (char.IsHighSurrogate(stringValue[ci])
-                && (ci + 1 < stringValue.Length)
-                && char.IsLowSurrogate(stringValue[ci + 1])) {
-                ci++;
-                foundSurrogate = true;
-            }
-            codePointCount++;
-        }
-        int max = codePointCount;
-        _ = this.Output.EnsureCapacity(this.Output.Length + max * 2); // hint to SB
-        bool toReserved = false;
-
-        int charCount = 0;
-        for (int pos = 0; pos < stringValue.Length && charCount < max; pos++) {
-            char character = stringValue[pos];
-
-            if (character == '%') {
-                _ = _ReservedBuffer.Clear();
-                toReserved = true;
-            }
-
-            string toAppend;
-            if (foundSurrogate && IsSurrogate(character)) {
-                toAppend = Uri.EscapeDataString(char.ConvertFromUtf32(char.ConvertToUtf32(stringValue, pos)));
-                pos++; // skip the low surrogate
-            } else if (IsUcschar(character) || IsIprivate(character)) {
-                toAppend = Uri.EscapeDataString(character.ToString());
-            } else {
-                if (toReserved) {
-                    toAppend = character.ToString();
-                } else {
-                    if (character == ' ') {
-                        _ = this.Output.Append("%20");
-                    } else if (character == '%') {
-                        _ = this.Output.Append("%25");
-                    } else if (character == '\'') {
-                        _ = this.Output.Append("\'\'");
-                    } else if (char.IsAsciiLetter(character) || char.IsAsciiDigit(character)) {
-                        _ = this.Output.Append(character);
-                    } else {
-                        _ = this.Output.Append(Uri.EscapeDataString(character.ToString()));
-                    }
-                    continue;
-                }
-            }
-
-            if (toReserved) {
-                _ = _ReservedBuffer.Append(toAppend);
-
-                if (_ReservedBuffer.Length == 3) {
-                    bool isEncoded = false;
-
-                    var original = _ReservedBuffer.ToStringAndClear();
-                    try {
-                        isEncoded = !original.Equals(Uri.UnescapeDataString(original));
-                    } catch (Exception) {
-                        // ignore
-                    }
-
-                    if (isEncoded) {
-                        _ = this.Output.Append(original);
-                    } else {
-                        _ = this.Output.Append("%25");
-                        // only if !replaceReserved
-                        _ = this.Output.Append(original.AsSpan(1, 2));
-                    }
-                    toReserved = false;
-                }
-            } else {
-                if (character == ' ') {
-                    _ = this.Output.Append("%20");
-                } else if (character == '%') {
-                    _ = this.Output.Append("%25");
-                } else if (character == '\'') {
-                    _ = this.Output.Append("\'\'");
-                } else {
-                    _ = this.Output.Append(toAppend);
-                }
-            }
-
-            charCount++;
-        }
-
-        if (toReserved) {
-            _ = this.Output
-                .Append("%25")
-                .Append(_ReservedBuffer.ToString(1, _ReservedBuffer.Length - 1));
-        }
-    }
+    public void AddODataValue(string stringValue)
+        => UriCharacterUtility.AppendODataStringContent(stringValue, this.Output);
 
     /// <summary>
     /// Returns the current URI output as a string.
@@ -462,19 +430,4 @@ public readonly struct UriTemplateTarget(
     /// <returns>The contents of the output builder.</returns>
     public override string ToString()
         => this.Output.ToString();
-
-    private static bool IsSurrogate(char cp)
-        => (cp >= 0xD800 && cp <= 0xDFFF);
-
-    private static bool IsIprivate(char cp)
-        => (0xE000 <= cp && cp <= 0xF8FF);
-
-    private static bool IsNotAllowedInUri(char cp)
-        => cp < 0x20 || cp == 0x7F
-        || cp is '"' or '<' or '>' or '\\' or '^' or '`' or '{' or '|' or '}';
-
-    private static bool IsUcschar(char cp)
-        => (0xA0 <= cp && cp <= 0xD7FF)
-        || (0xF900 <= cp && cp <= 0xFDCF)
-        || (0xFDF0 <= cp && cp <= 0xFFEF);
 }

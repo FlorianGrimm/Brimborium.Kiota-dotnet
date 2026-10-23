@@ -18,7 +18,7 @@ public sealed record ODataVariable(
         IReadOnlyDictionary<string, object?> substitutions,
         [MaybeNullWhen(false)] out IODataValue result) {
         if (substitutions.TryGetValue(this.Name, out var substitutionValue)) {
-            if (substitutionValue is ODataValue oDataValue) {
+            if (substitutionValue is IODataValue oDataValue) {
                 result = oDataValue;
                 return true;
             } else {

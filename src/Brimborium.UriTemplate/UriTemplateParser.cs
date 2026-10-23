@@ -116,11 +116,13 @@ public static class UriTemplateParser {
                         if (op == null) {
                             op = GetOperator(character, token, pos);
                         } else if (toMaxCharBuffer) {
-                            if (char.IsDigit(character)) {
+                            if (char.IsAsciiDigit(character)) {
                                 _ = (maxCharBuffer ?? throw new Exception()).Append(character);
                             } else {
                                 throw new ArgumentException($"Illegal character identified in the token at col:{pos}");
                             }
+                        } else if (composite) {
+                            throw new ArgumentException($"Illegal character after '*' at col:{pos}");
                         } else {
                             if (character == ':') {
                                 toMaxCharBuffer = true;
@@ -134,7 +136,7 @@ public static class UriTemplateParser {
                             } else if (character == '$' && token.Length == 0) {
                                 _ = token.Append(character);
                             } else {
-                                ValidateLiteral(character, pos);
+                                ValidateVarchar(character, pos);
                                 _ = token.Append(character);
                             }
                         }
@@ -151,6 +153,16 @@ public static class UriTemplateParser {
                             foreach (byte b in bytes) {
                                 _ = constant.Append($"%{b:X2}");
                             }
+                        } else if (character == '%') {
+                            if (pos + 2 < template.Length
+                                && IsHexDigit(template[pos + 1])
+                                && IsHexDigit(template[pos + 2])) {
+                                _ = constant.Append(character);
+                            } else {
+                                _ = constant.Append("%25");
+                            }
+                        } else if (IsNotAllowedInLiteral(character)) {
+                            _ = constant.Append($"%{(int)character:X2}");
                         } else {
                             _ = constant.Append(character);
                         }
@@ -185,8 +197,8 @@ public static class UriTemplateParser {
         }
         int result;
         try {
-            result = int.Parse(str);
-        } catch (FormatException) {
+            result = int.Parse(str, System.Globalization.CultureInfo.InvariantCulture);
+        } catch (Exception error) when (error is FormatException or OverflowException) {
             throw new ArgumentException($"Cannot parse max chars at col:{col}");
         }
 
@@ -247,28 +259,14 @@ public static class UriTemplateParser {
         */
     }
 
-    private static void ValidateLiteral(char c, int col) {
-        switch (c) {
-            case '+':
-            case '#':
-            case '/':
-            case ';':
-            case '?':
-            case '&':
-            case ' ':
-            case '!':
-            case '=':
-            case '$':
-            case '|':
-            case '*':
-            case ':':
-            case '~':
-            case '-':
-                throw new ArgumentException($"Illegal character identified in the token at col:{col}");
-            default:
-                break;
+    private static void ValidateVarchar(char c, int col) {
+        if (!(char.IsAsciiLetterOrDigit(c) || c is '_' or '.' or '%')) {
+            throw new ArgumentException($"Illegal character identified in the token at col:{col}");
         }
     }
+
+    private static bool IsNotAllowedInLiteral(char c)
+        => c is ' ' or '"' or '<' or '>' or '\\' or '^' or '`' or '|';
 
     private static UriTemplateASTOperator GetOperator(char c, StringBuilder token, int col) {
         switch (c) {
@@ -280,7 +278,7 @@ public static class UriTemplateParser {
             case '?': return UriTemplateASTOperator.Questionmark;
             case '&': return UriTemplateASTOperator.Ampersand;
             default:
-                ValidateLiteral(c, col);
+                ValidateVarchar(c, col);
                 _ = token.Append(c);
                 return UriTemplateASTOperator.Noop;
         }

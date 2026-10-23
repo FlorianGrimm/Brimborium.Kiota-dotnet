@@ -53,10 +53,12 @@ public sealed record ODataSequence(
     public bool AppendValue(in UriTemplateTarget target) {
         bool result = true;
         foreach (var item in ListItem) {
+            var itemStart = target.Output.Length;
             var subResult = item.AppendValue(target);
             if (subResult) {
                 // OK
             } else {
+                target.Output.Length = itemStart;
                 result = false;
             }
         }

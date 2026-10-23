@@ -22,8 +22,7 @@ public sealed record ODataConstant(string Value) : IUriTemplateValue, IODataValu
 
     /// <inheritdoc/>
     public bool AppendValue(in UriTemplateTarget target) {
-        var output = target.Output;
-        target.AddODataValue(this.Value);
+        UriCharacterUtility.AppendODataStringContent(this.Value, target.Output);
         return true;
     }
 }

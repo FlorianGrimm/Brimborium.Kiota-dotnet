@@ -54,20 +54,20 @@ public sealed record ODataList(
     /// <inheritdoc/>
     public bool AppendValue(in UriTemplateTarget target) {
         bool result = true;
-        int lastSeperate = -1;
+        int lastSeperate = target.Output.Length;
         foreach (var item in ListItem) {
+            var itemStart = target.Output.Length;
             var subResult = item.AppendValue(target);
             if (subResult) {
                 // OK
                 lastSeperate = target.Output.Length;
                 target.Append(this.Seperation);
             } else {
+                target.Output.Length = itemStart;
                 result = false;
             }
         }
-        if (0 <= lastSeperate) {
-            target.Output.Length = lastSeperate;
-        }
+        target.Output.Length = lastSeperate;
         return result;
     }
 }

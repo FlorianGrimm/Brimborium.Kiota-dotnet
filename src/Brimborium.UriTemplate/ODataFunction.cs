@@ -57,12 +57,14 @@ public sealed record ODataFunction(
         _ = target.Append(this.Name).Append('(');
         var outputLength = target.Output.Length;
         foreach (var item in ListItem) {
+            var itemStart = target.Output.Length;
             var subResult = item.AppendValue(target);
             if (subResult) {
                 // OK
                 outputLength = target.Output.Length;
                 _ = target.Append(',');
             } else {
+                target.Output.Length = itemStart;
                 result = false;
             }
         }

@@ -70,12 +70,16 @@ public sealed record ODataOperation(
 
     /// <inheritdoc/>
     public bool AppendValue(in UriTemplateTarget target) {
-        bool result = true;
-        var subResultLeft = this.Left.AppendValue(target);
-        if (!subResultLeft) { result = false; }
+        var outputLength = target.Output.Length;
+        if (!this.Left.AppendValue(target)) {
+            target.Output.Length = outputLength;
+            return false;
+        }
         _ = target.Append("%20").Append(this.Name).Append("%20");
-        var subResultRight = this.Right.AppendValue(target);
-        if (!subResultRight) { result = false; }
-        return result;
+        if (!this.Right.AppendValue(target)) {
+            target.Output.Length = outputLength;
+            return false;
+        }
+        return true;
     }
 }

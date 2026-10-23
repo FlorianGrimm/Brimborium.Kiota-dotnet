@@ -13,6 +13,14 @@ namespace Brimborium.UriTemplate;
 public sealed class UriTemplateCache {
     private static UriTemplateCache? _Default;
 
+    private static DefaultObjectPool<StringBuilder> CreateStringBuilderPool() {
+        return new DefaultObjectPool<StringBuilder>(
+                    new StringBuilderPooledObjectPolicy {
+                        InitialCapacity = 4 * 1024,
+                        MaximumRetainedCapacity = 16 * 1024,
+                    });
+    }
+
     /// <summary>
     /// Gets or sets the shared default cache used by the static
     /// <see cref="UriTemplate"/> methods.
@@ -21,6 +29,9 @@ public sealed class UriTemplateCache {
     /// Condition: In your Application you have a fixed static number of endpoints - UriTemplates. In this case you can use the default cache. If you have a dynamic number of endpoints - UriTemplates, you use this instance.
     /// This is because the default cache is a static instance and will never be garbage collected. If you have a dynamic number of endpoints, you should use your own instance of UriTemplateCache, which can be garbage collected when no longer needed.
     /// I assume this is the standard use of this library.
+    /// The default cache is created on first use and captures <see cref="ODataConvertOptions.Default"/> at that moment;
+    /// set <see cref="ODataConvertOptions.Default"/> before the first call to <see cref="UriTemplate.Expand"/>,
+    /// or assign a new cache with the desired options to this property.
     /// </remarks>
     [System.Diagnostics.CodeAnalysis.AllowNull]
     public static UriTemplateCache Default {
@@ -46,25 +57,38 @@ public sealed class UriTemplateCache {
     private readonly DefaultObjectPool<StringBuilder> _StringBuilderPool;
 
     /// <summary>
+    /// Gets the options used to format OData values during expansion.
+    /// </summary>
+    /// <remarks>
+    /// Fixed for the lifetime of the cache. When not specified, this is the value of
+    /// <see cref="ODataConvertOptions.Default"/> at the time the cache was created;
+    /// later changes to <see cref="ODataConvertOptions.Default"/> do not affect this cache.
+    /// </remarks>
+    public ODataConvertOptions Options { get; init; }
+
+    /// <summary>
     /// Initializes a cache with a default pool for expansion string builders.
     /// </summary>
-    public UriTemplateCache() : this(
-        new DefaultObjectPool<StringBuilder>(
-            new StringBuilderPooledObjectPolicy {
-                InitialCapacity = 4 * 1024,
-                MaximumRetainedCapacity = 16 * 1024,
-            })
-        ) {
+    /// <remarks>
+    /// Captures <see cref="ODataConvertOptions.Default"/> at construction, see <see cref="Options"/>.
+    /// </remarks>
+    public UriTemplateCache() : this(default, default) {
     }
 
     /// <summary>
     /// Initializes a cache using the specified string builder pool.
     /// </summary>
+    /// <param name="options">
+    /// Options for the URI template cache; <see langword="null"/> captures
+    /// <see cref="ODataConvertOptions.Default"/> at construction, see <see cref="Options"/>.
+    /// </param>
     /// <param name="stringBuilderPool">The pool used to obtain and return expansion buffers.</param>
     public UriTemplateCache(
-        DefaultObjectPool<StringBuilder> stringBuilderPool
+        ODataConvertOptions? options,
+        DefaultObjectPool<StringBuilder>? stringBuilderPool
         ) {
-        this._StringBuilderPool = stringBuilderPool;
+        this.Options = options ?? ODataConvertOptions.Default;
+        this._StringBuilderPool = stringBuilderPool ?? CreateStringBuilderPool();
     }
 
     /// <summary>
@@ -78,7 +102,7 @@ public sealed class UriTemplateCache {
             IReadOnlyDictionary<string, object?> substitutions
         ) {
         var output = this._StringBuilderPool.Get();
-        UriTemplateTarget target = new(output);
+        UriTemplateTarget target = new(output, this.Options);
         _ = this.Parse(template).Expand(substitutions, target);
         var result = output.ToStringAndClear();
         this._StringBuilderPool.Return(output);
@@ -96,7 +120,7 @@ public sealed class UriTemplateCache {
             IReadOnlyDictionary<string, object?> substitutions
         ) {
         var output = this._StringBuilderPool.Get();
-        UriTemplateTarget target = new(output);
+        UriTemplateTarget target = new(output, this.Options);
         _ = template.Expand(substitutions, target);
         var result = output.ToStringAndClear();
         this._StringBuilderPool.Return(output);
