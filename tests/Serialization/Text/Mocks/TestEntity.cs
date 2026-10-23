@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Brimborium.Kiota.Abstractions.Serialization;
+using Microsoft.Kiota.Abstractions.Serialization;
 
-namespace Brimborium.Kiota.Serialization.Text.Tests.Mocks
+namespace Microsoft.Kiota.Serialization.Text.Tests.Mocks
 {
     public class TestEntity : IParsable
     {

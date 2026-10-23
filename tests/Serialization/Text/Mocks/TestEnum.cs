@@ -1,4 +1,4 @@
-﻿namespace Brimborium.Kiota.Serialization.Text.Tests.Mocks
+﻿namespace Microsoft.Kiota.Serialization.Text.Tests.Mocks
 {
     public enum TestEnum
     {

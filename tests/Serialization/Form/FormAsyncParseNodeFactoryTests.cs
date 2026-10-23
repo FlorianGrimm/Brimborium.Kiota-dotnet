@@ -9,12 +9,13 @@ public class FormAsyncParseNodeFactoryTests
     [Fact]
     public async Task GetsWriterForFormContentType()
     {
-        using var formStream = new MemoryStream(Encoding.UTF8.GetBytes(TestJsonString));
+         var formStream = new MemoryStream(Encoding.UTF8.GetBytes(TestJsonString));
         var formParseNode = await _formParseNodeFactory.GetRootParseNodeAsync(_formParseNodeFactory.ValidContentType, formStream, TestContext.Current.CancellationToken);
 
         // Assert
         Assert.NotNull(formParseNode.RootNode);
-        Assert.IsAssignableFrom<FormParseNode>(formParseNode);
+        Assert.IsAssignableFrom<FormParseNode>(formParseNode.RootNode);
+        formParseNode.Dispose();
     }
     [Fact]
     public async Task ThrowsArgumentOutOfRangeExceptionForInvalidContentType()

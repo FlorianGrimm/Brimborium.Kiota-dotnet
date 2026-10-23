@@ -70,7 +70,7 @@ public class FormParseNode : IParseNode {
             OnAfterAssignFieldValues = this.OnAfterAssignFieldValues
         } : null;
     /// <inheritdoc/>
-    public IEnumerable<T> GetCollectionOfObjectValues<T>(ParsableFactory<T> factory) where T : IParsable => throw new InvalidOperationException("collections are not supported with uri form encoding");
+    public List<T> GetCollectionOfObjectValues<T>(ParsableFactory<T> factory) where T : IParsable => throw new InvalidOperationException("collections are not supported with uri form encoding");
 
     private static readonly Type _BooleanType = typeof(bool?);
     private static readonly Type _ByteType = typeof(byte?);
@@ -93,45 +93,62 @@ public class FormParseNode : IParseNode {
     /// Get the collection of primitives of type <typeparam name="T"/>from the form node
     /// </summary>
     /// <returns>A collection of objects</returns>
-    public IEnumerable<T> GetCollectionOfPrimitiveValues<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>() {
+    public List<T> GetCollectionOfPrimitiveValues<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>() {
+        List<T> result = new();
         var genericType = typeof(T);
         var primitiveValueCollection = this.DecodedValue.Split(_ComaSeparator, StringSplitOptions.RemoveEmptyEntries);
         foreach (var collectionValue in primitiveValueCollection) {
             var decodedCollectionValue = Uri.UnescapeDataString(collectionValue);
             if (genericType == _BooleanType) {
-                yield return (T)(object)GetBoolValue(decodedCollectionValue)!;
+                var value = (T)(object)GetBoolValue(decodedCollectionValue)!;
+                result.Add(value);
             } else if (genericType == _ByteType) {
-                yield return (T)(object)GetByteValue(decodedCollectionValue)!;
+                var value = (T)(object)GetByteValue(decodedCollectionValue)!;
+                result.Add(value);
             } else if (genericType == _SbyteType) {
-                yield return (T)(object)GetSbyteValue(decodedCollectionValue)!;
+                var value = (T)(object)GetSbyteValue(decodedCollectionValue)!;
+                result.Add(value);
             } else if (genericType == _StringType) {
-                yield return (T)(object)decodedCollectionValue;
+                var value = (T)(object)decodedCollectionValue;
+                result.Add(value);
             } else if (genericType == _IntType) {
-                yield return (T)(object)GetIntValue(decodedCollectionValue)!;
+                var value = (T)(object)GetIntValue(decodedCollectionValue)!;
+                result.Add(value);
             } else if (genericType == _LongType) {
-                yield return (T)(object)GetLongValue(decodedCollectionValue)!;
+                var value = (T)(object)GetLongValue(decodedCollectionValue)!;
+                result.Add(value);
             } else if (genericType == _FloatType) {
-                yield return (T)(object)GetFloatValue(decodedCollectionValue)!;
+                var value = (T)(object)GetFloatValue(decodedCollectionValue)!;
+                result.Add(value);
             } else if (genericType == _DoubleType) {
-                yield return (T)(object)GetDoubleValue(decodedCollectionValue)!;
+                var value = (T)(object)GetDoubleValue(decodedCollectionValue)!;
+                result.Add(value);
             } else if (genericType == _DecimalType) {
-                yield return (T)(object)GetDecimalValue(decodedCollectionValue)!;
+                var value = (T)(object)GetDecimalValue(decodedCollectionValue)!;
+                result.Add(value);
             } else if (genericType == _GuidType) {
-                yield return (T)(object)GetGuidValue(decodedCollectionValue)!;
+                var value = (T)(object)GetGuidValue(decodedCollectionValue)!;
+                result.Add(value);
             } else if (genericType == _DateTimeType) {
-                yield return (T)(object)GetDateTimeValue(decodedCollectionValue)!;
+                var value = (T)(object)GetDateTimeValue(decodedCollectionValue)!;
+                result.Add(value);
             } else if (genericType == _DateTimeOffsetType) {
-                yield return (T)(object)GetDateTimeOffsetValue(decodedCollectionValue)!;
+                var value = (T)(object)GetDateTimeOffsetValue(decodedCollectionValue)!;
+                result.Add(value);
             } else if (genericType == _TimeSpanType) {
-                yield return (T)(object)GetTimeSpanValue(decodedCollectionValue)!;
+                var value = (T)(object)GetTimeSpanValue(decodedCollectionValue)!;
+                result.Add(value);
             } else if (genericType == _DateType) {
-                yield return (T)(object)GetDateValue(decodedCollectionValue)!;
+                var value = (T)(object)GetDateValue(decodedCollectionValue)!;
+                result.Add(value);
             } else if (genericType == _TimeType) {
-                yield return (T)(object)GetTimeValue(decodedCollectionValue)!;
+                var value = (T)(object)GetTimeValue(decodedCollectionValue)!;
+                result.Add(value);
             } else {
                 throw new InvalidOperationException($"unknown type for deserialization {genericType.FullName}");
             }
         }
+        return result;
     }
     /// <inheritdoc/>
     public DateTime? GetDateTimeValue() => DateTime.TryParse(this.DecodedValue, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out var result) ? result : null;
@@ -244,10 +261,12 @@ public class FormParseNode : IParseNode {
     }
 
     /// <inheritdoc/>
-    public IEnumerable<T?> GetCollectionOfEnumValues<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>() where T : struct, Enum {
+    public List<T?> GetCollectionOfEnumValues<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>() where T : struct, Enum {
+        List<T?> result = new();
         foreach (var v in this.DecodedValue.Split(_ComaSeparator, StringSplitOptions.RemoveEmptyEntries)) {
-            yield return EnumHelpers.GetEnumValue<T>(v);
+            result.Add(EnumHelpers.GetEnumValue<T>(v));
         }
+        return result;
     }
 
     /// <inheritdoc/>

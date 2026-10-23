@@ -5,11 +5,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Compile Remove="IntersectionWrapperParseTests.cs" />
-        <Compile Remove="UnionWrapperParseTests.cs" />
-    </ItemGroup>
-
-    <ItemGroup>
         <PackageReference Include="coverlet.MTP">
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
@@ -20,11 +15,6 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\..\src\Brimborium.Kiota.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <None Include="IntersectionWrapperParseTests.cs" />
-        <None Include="UnionWrapperParseTests.cs" />
     </ItemGroup>
 
 </Project>

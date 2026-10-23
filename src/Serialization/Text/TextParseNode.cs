@@ -37,10 +37,10 @@ public class TextParseNode : IParseNode {
     public IParseNode GetChildNode(string identifier) => throw new InvalidOperationException(NoStructuredDataMessage);
 
     /// <inheritdoc />
-    public IEnumerable<T> GetCollectionOfObjectValues<T>(ParsableFactory<T> factory) where T : IParsable => throw new InvalidOperationException(NoStructuredDataMessage);
+    public List<T> GetCollectionOfObjectValues<T>(ParsableFactory<T> factory) where T : IParsable => throw new InvalidOperationException(NoStructuredDataMessage);
 
     /// <inheritdoc />
-    public IEnumerable<T> GetCollectionOfPrimitiveValues<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>() => throw new InvalidOperationException(NoStructuredDataMessage);
+    public List<T> GetCollectionOfPrimitiveValues<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>() => throw new InvalidOperationException(NoStructuredDataMessage);
 
     /// <inheritdoc />
     public DateTime? GetDateTimeValue() => DateTime.TryParse(this._Text, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out var result) ? result : null;
@@ -85,7 +85,7 @@ public class TextParseNode : IParseNode {
     public TimeOnly? GetTimeValue() => DateTime.TryParse(this._Text, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out var result) ? TimeOnly.FromDateTime(result) : null;
 
     /// <inheritdoc />
-    public IEnumerable<T?> GetCollectionOfEnumValues<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>() where T : struct, Enum
+    public List<T?> GetCollectionOfEnumValues<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>() where T : struct, Enum
         => throw new InvalidOperationException(NoStructuredDataMessage);
     
     /// <inheritdoc />

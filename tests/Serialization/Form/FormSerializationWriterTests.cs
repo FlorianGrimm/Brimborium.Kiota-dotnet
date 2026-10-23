@@ -418,6 +418,51 @@ public class FormSerializationWriterTests
         Assert.Equal("prop1=value1&prop2=2&prop3=true&prop4=2.25&prop5=3.14&prop6=4&prop7=5&prop8=2024-11-30T15%3A35%3A45.9870000%2B03%3A00&prop9=2024-11-30&prop10=23%3A46%3A59&prop11=P756DT4H6M8.01S&prop12=AgQG&prop13=3adeb301-58f1-45c5-b820-ae5f4af13c89&prop14=127", serializedString);
     }
 
+    [Theory]
+    [InlineData("cs-CZ")]
+    [InlineData("en-US")]
+    [InlineData("th-TH")]
+    public void WriteDateAndTimeValues_AreCultureInvariant(string cultureName)
+    {
+        // Arrange
+        var originalCulture = Thread.CurrentThread.CurrentCulture;
+        Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture(cultureName);
+        try
+        {
+            var date = new DateOnly(2024, 11, 30);
+            var time = new TimeOnly(23, 46, 59);
+            var dateTime = new DateTime(2024, 11, 30, 15, 35, 45, DateTimeKind.Utc);
+
+            using var formSerializationWriter = new FormSerializationWriter();
+
+            // Act
+            formSerializationWriter.WriteDateValue("date", date);
+            formSerializationWriter.WriteTimeValue("time", time);
+            formSerializationWriter.WriteCollectionOfPrimitiveValues("dates", new[] { date });
+            formSerializationWriter.WriteAdditionalData(new Dictionary<string, object>
+            {
+                { "additionalDate", date },
+                { "additionalTime", time },
+                { "additionalDateTime", dateTime }
+            });
+            var contentStream = formSerializationWriter.GetSerializedContent();
+            using var reader = new StreamReader(contentStream, Encoding.UTF8);
+            var serializedString = reader.ReadToEnd();
+
+            // Assert
+            Assert.Equal("date=2024-11-30&" +
+                         "time=23%3A46%3A59&" +
+                         "dates=2024-11-30&" +
+                         "additionalDate=2024-11-30&" +
+                         "additionalTime=23%3A46%3A59&" +
+                         "additionalDateTime=2024-11-30T15%3A35%3A45.0000000%2B00%3A00", serializedString);
+        }
+        finally
+        {
+            Thread.CurrentThread.CurrentCulture = originalCulture;
+        }
+    }
+
     [Fact]
     public void WriteEnumValue_IsWrittenCorrectly()
     {

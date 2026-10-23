@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Brimborium.Kiota.Serialization.Text.Tests
+namespace Microsoft.Kiota.Serialization.Text.Tests
 {
     public class TextSerializationWriterFactoryTests
     {

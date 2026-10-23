@@ -1,6 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <TargetFrameworks>net10.0</TargetFrameworks>
+    </PropertyGroup>
 
-  <ItemGroup>
+    <ItemGroup>
     <PackageReference Include="coverlet.MTP">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
@@ -10,8 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\serialization\json\Brimborium.Kiota.Serialization.Json.csproj" />
-    <ProjectReference Include="..\..\..\src\serialization\multipart\Brimborium.Kiota.Serialization.Multipart.csproj" />
+    <ProjectReference Include="..\..\..\src\Brimborium.Kiota.csproj" />
   </ItemGroup>
 
 </Project>

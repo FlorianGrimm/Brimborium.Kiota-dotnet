@@ -1,7 +1,7 @@
 ﻿using System;
 using Xunit;
 
-namespace Brimborium.Kiota.Serialization.Multipart.Tests;
+namespace Microsoft.Kiota.Serialization.Multipart.Tests;
 
 public class MultipartSerializationWriterFactoryTests
 {

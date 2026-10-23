@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace Brimborium.Kiota.Serialization.Multipart.Tests.Mocks
+namespace Microsoft.Kiota.Serialization.Multipart.Tests.Mocks
 {
     public enum TestNamingEnum
     {

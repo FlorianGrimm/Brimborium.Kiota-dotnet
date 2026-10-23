@@ -20,7 +20,8 @@ public class IntersectionWrapperParseTests
         var parseNode = await _parseNodeFactory.GetRootParseNodeAsync(contentType, payload, TestContext.Current.CancellationToken);
 
         // When
-        var result = parseNode.GetObjectValue<IntersectionTypeMock>(IntersectionTypeMock.CreateFromDiscriminator);
+        var result = parseNode.RootNode.GetObjectValue<IntersectionTypeMock>(IntersectionTypeMock.CreateFromDiscriminator);
+        parseNode.Dispose();
 
         // Then
         Assert.NotNull(result);
@@ -35,11 +36,12 @@ public class IntersectionWrapperParseTests
     public async Task ParsesIntersectionTypeComplexProperty2()
     {
         // Given
-        using var payload = new MemoryStream(Encoding.UTF8.GetBytes("{\"displayName\":\"McGill\",\"officeLocation\":\"Montreal\", \"id\": 10}"));
+        var payload = new MemoryStream(Encoding.UTF8.GetBytes("{\"displayName\":\"McGill\",\"officeLocation\":\"Montreal\", \"id\": 10}"));
         var parseNode = await _parseNodeFactory.GetRootParseNodeAsync(contentType, payload, TestContext.Current.CancellationToken);
 
         // When
-        var result = parseNode.GetObjectValue<IntersectionTypeMock>(IntersectionTypeMock.CreateFromDiscriminator);
+        var result = parseNode.RootNode.GetObjectValue<IntersectionTypeMock>(IntersectionTypeMock.CreateFromDiscriminator);
+        parseNode.Dispose();
 
         // Then
         Assert.NotNull(result);
@@ -59,7 +61,8 @@ public class IntersectionWrapperParseTests
         var parseNode = await _parseNodeFactory.GetRootParseNodeAsync(contentType, payload, TestContext.Current.CancellationToken);
 
         // When
-        var result = parseNode.GetObjectValue<IntersectionTypeMock>(IntersectionTypeMock.CreateFromDiscriminator);
+        var result = parseNode.RootNode.GetObjectValue<IntersectionTypeMock>(IntersectionTypeMock.CreateFromDiscriminator);
+        parseNode.Dispose();
 
         // Then
         Assert.NotNull(result);
@@ -78,7 +81,8 @@ public class IntersectionWrapperParseTests
         var parseNode = await _parseNodeFactory.GetRootParseNodeAsync(contentType, payload, TestContext.Current.CancellationToken);
 
         // When
-        var result = parseNode.GetObjectValue<IntersectionTypeMock>(IntersectionTypeMock.CreateFromDiscriminator);
+        var result = parseNode.RootNode.GetObjectValue<IntersectionTypeMock>(IntersectionTypeMock.CreateFromDiscriminator);
+        parseNode.Dispose();
 
         // Then
         Assert.NotNull(result);

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Brimborium.Kiota.Serialization.Multipart.Tests.Mocks
+namespace Microsoft.Kiota.Serialization.Multipart.Tests.Mocks
 {
     [Flags]
     public enum TestEnum

@@ -4,11 +4,11 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Threading;
-using Brimborium.Kiota.Abstractions;
-using Brimborium.Kiota.Serialization.Text.Tests.Mocks;
+using Microsoft.Kiota.Abstractions;
+using Microsoft.Kiota.Serialization.Text.Tests.Mocks;
 using Xunit;
 
-namespace Brimborium.Kiota.Serialization.Text.Tests
+namespace Microsoft.Kiota.Serialization.Text.Tests
 {
     public class TextSerializationWriterTests
     {
@@ -131,7 +131,7 @@ namespace Brimborium.Kiota.Serialization.Text.Tests
         public void WriteDateValue_IsWrittenCorrectly()
         {
             // Arrange
-            var value = new Date(2024, 11, 30);
+            var value = new DateOnly(2024, 11, 30);
 
             using var textSerializationWriter = new TextSerializationWriter();
 
@@ -291,7 +291,7 @@ namespace Brimborium.Kiota.Serialization.Text.Tests
         public void WriteTimeValue_IsWrittenCorrectly()
         {
             // Arrange
-            var value = new Time(23, 46, 59);
+            var value = new TimeOnly(23, 46, 59);
 
             using var textSerializationWriter = new TextSerializationWriter();
 

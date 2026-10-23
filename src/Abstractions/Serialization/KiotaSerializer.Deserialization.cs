@@ -35,7 +35,7 @@ public static partial class KiotaSerializer {
     /// <param name="cancellationToken">The cancellation token for the task</param>
     public static async Task<T?> DeserializeAsync<T>(string contentType, string serializedRepresentation, ParsableFactory<T> parsableFactory,
         CancellationToken cancellationToken = default) where T : IParsable {
-        if(string.IsNullOrEmpty(serializedRepresentation)) {
+        if (string.IsNullOrEmpty(serializedRepresentation)) {
             throw new ArgumentNullException(nameof(serializedRepresentation));
         }
 
@@ -52,24 +52,20 @@ public static partial class KiotaSerializer {
     /// <param name="cancellationToken">The cancellation token for the task</param>
     public static async Task<T?> DeserializeAsync<T>(string contentType, Stream stream, ParsableFactory<T> parsableFactory,
         CancellationToken cancellationToken = default) where T : IParsable {
-        if(string.IsNullOrEmpty(contentType)) {
+        if (string.IsNullOrEmpty(contentType)) {
             throw new ArgumentNullException(nameof(contentType));
         }
 
-        if(stream == null) {
+        if (stream == null) {
             throw new ArgumentNullException(nameof(stream));
         }
 
-        if(parsableFactory == null) {
+        if (parsableFactory == null) {
             throw new ArgumentNullException(nameof(parsableFactory));
         }
 
-        var (parseNode, bufferStream, jsonDocument) = await ParseNodeFactoryRegistry.DefaultInstance.GetRootParseNodeAsync(contentType, stream, cancellationToken).ConfigureAwait(false);
-        using (bufferStream) {
-            using (jsonDocument) {
-                var result = parseNode.GetObjectValue(parsableFactory);
-                return result;
-            }
+        using (var getResult = await ParseNodeFactoryRegistry.DefaultInstance.GetRootParseNodeAsync(contentType, stream, cancellationToken).ConfigureAwait(false)) {
+            return getResult.RootNode.GetObjectValue(parsableFactory);
         }
     }
 
@@ -99,24 +95,22 @@ public static partial class KiotaSerializer {
     /// <param name="parsableFactory">The factory to create the object.</param>
     /// <param name="cancellationToken">The cancellation token for the task</param>
     public static async Task<IEnumerable<T>> DeserializeCollectionAsync<T>(string contentType, Stream stream, ParsableFactory<T> parsableFactory, CancellationToken cancellationToken = default) where T : IParsable {
-        if(string.IsNullOrEmpty(contentType)) {
+        if (string.IsNullOrEmpty(contentType)) {
             throw new ArgumentNullException(nameof(contentType));
         }
 
-        if(stream == null) {
+        if (stream == null) {
             throw new ArgumentNullException(nameof(stream));
         }
 
-        if(parsableFactory == null) {
+        if (parsableFactory == null) {
             throw new ArgumentNullException(nameof(parsableFactory));
         }
 
-        var (parseNode, bufferStream, jsonDocument) = await ParseNodeFactoryRegistry.DefaultInstance.GetRootParseNodeAsync(contentType, stream, cancellationToken);
-        using (stream) {
-            using (jsonDocument) {
-                var result = parseNode.GetCollectionOfObjectValues(parsableFactory);
-                return result;
-            }
+        var parseResult = await ParseNodeFactoryRegistry.DefaultInstance.GetRootParseNodeAsync(contentType, stream, cancellationToken).ConfigureAwait(false);
+        using (parseResult) {
+            var result = parseResult.RootNode.GetCollectionOfObjectValues(parsableFactory);
+            return result;
         }
     }
 
@@ -129,7 +123,7 @@ public static partial class KiotaSerializer {
     /// <param name="cancellationToken">The cancellation token for the task</param>
     public static async Task<IEnumerable<T>> DeserializeCollectionAsync<T>(string contentType, string serializedRepresentation,
         ParsableFactory<T> parsableFactory, CancellationToken cancellationToken = default) where T : IParsable {
-        if(string.IsNullOrEmpty(serializedRepresentation)) {
+        if (string.IsNullOrEmpty(serializedRepresentation)) {
             throw new ArgumentNullException(nameof(serializedRepresentation));
         }
 

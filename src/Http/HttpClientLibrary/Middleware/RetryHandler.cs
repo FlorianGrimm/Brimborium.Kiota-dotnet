@@ -112,8 +112,8 @@ namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware {
                 if (originalRequest == null) {
                     return response;// We can't clone the original request to replay it.
                 }
-                var request = await originalRequest.CloneAsync(cancellationToken).ConfigureAwait(false);
 
+                var request = await originalRequest.CloneAsync(cancellationToken).ConfigureAwait(false);
                 // Increase retryCount and then update Retry-Attempt in request header
                 retryCount++;
                 AddOrUpdateRetryAttempt(request, retryCount);
@@ -121,6 +121,7 @@ namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware {
                 // Delay time
                 await delay.ConfigureAwait(false);
 
+                response.Dispose();
                 // Call base.SendAsync to send the request
                 response = await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
@@ -164,9 +165,9 @@ namespace Microsoft.Kiota.Http.HttpClientLibrary.Middleware {
                 if (int.TryParse(retryAfter, out int delaySeconds)) {
                     delayInSeconds = delaySeconds;
                 } else if (DateTime.TryParseExact(retryAfter, CultureInfo.InvariantCulture.DateTimeFormat.RFC1123Pattern, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateTime)) {
-                    var timeSpan = dateTime - DateTime.Now;
+                    var timeSpan = dateTime - DateTime.UtcNow;
                     // ensure the delay is a positive span otherwise use the exponential back-off
-                    delayInSeconds = timeSpan.Seconds > 0 ? timeSpan.Seconds : CalculateExponentialDelay(retryCount, delay);
+                    delayInSeconds = timeSpan.TotalSeconds > 0 ? timeSpan.TotalSeconds : CalculateExponentialDelay(retryCount, delay);
                 }
             } else {
                 delayInSeconds = CalculateExponentialDelay(retryCount, delay);

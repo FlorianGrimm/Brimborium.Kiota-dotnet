@@ -3,7 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Brimborium.Kiota.Serialization.Text.Tests
+namespace Microsoft.Kiota.Serialization.Text.Tests
 {
     public class TextParseNodeFactoryTests
     {

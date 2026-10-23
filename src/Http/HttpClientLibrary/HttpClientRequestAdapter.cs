@@ -175,15 +175,12 @@ namespace Microsoft.Kiota.Http.HttpClientLibrary {
                     if (shouldReturnNull(response)) {
                         return default;
                     }
-                    var (rootNode, bufferstream, jsonDocument) = await this.GetRootParseNodeQAsync(response, cancellationToken).ConfigureAwait(false);
-                    using (bufferstream) {
-                        using (jsonDocument) {
-                            using var spanForDeserialization = this._ActivitySource?.StartActivity(nameof(IParseNode.GetCollectionOfObjectValues));
-                            // TODO
-                            var result = rootNode?.GetCollectionOfObjectValues<ModelType>(factory).ToList();
-                            SetResponseType(result, span);
-                            return result;
-                        }
+                    var parseResult = await this.GetRootParseNodeQAsync(response, cancellationToken).ConfigureAwait(false);
+                    using (parseResult) {
+                        using var spanForDeserialization = this._ActivitySource?.StartActivity(nameof(IParseNode.GetCollectionOfObjectValues));
+                        var result = parseResult.RootNode?.GetCollectionOfObjectValues<ModelType>(factory);
+                        SetResponseType(result, span);
+                        return result;
                     }
                 } finally {
                     await DrainAsync(response, cancellationToken).ConfigureAwait(false);
@@ -216,14 +213,12 @@ namespace Microsoft.Kiota.Http.HttpClientLibrary {
                         return default;
                     }
 
-                    var (rootNode, bufferstream, jsonDocument) = await this.GetRootParseNodeQAsync(response, cancellationToken).ConfigureAwait(false);
-                    using (bufferstream) {
-                        using (jsonDocument) {
-                            using var spanForDeserialization = this._ActivitySource?.StartActivity(nameof(IParseNode.GetCollectionOfPrimitiveValues));
-                            var result = rootNode?.GetCollectionOfPrimitiveValues<ModelType>();
-                            SetResponseType(result, span);
-                            return result;
-                        }
+                    var parseResult = await this.GetRootParseNodeQAsync(response, cancellationToken).ConfigureAwait(false);
+                    using (parseResult) {
+                        using var spanForDeserialization = this._ActivitySource?.StartActivity(nameof(IParseNode.GetCollectionOfPrimitiveValues));
+                        var result = parseResult.RootNode?.GetCollectionOfPrimitiveValues<ModelType>();
+                        SetResponseType(result, span);
+                        return result;
                     }
                 } finally {
                     await DrainAsync(response, cancellationToken).ConfigureAwait(false);
@@ -261,14 +256,11 @@ namespace Microsoft.Kiota.Http.HttpClientLibrary {
                     if (shouldReturnNull(response)) {
                         return default;
                     }
-
-                    var (rootNode, bufferstream, jsonDocument) = await this.GetRootParseNodeQAsync(response, cancellationToken).ConfigureAwait(false);
-                    using (bufferstream) {
-                        using (jsonDocument) {
-                            if (rootNode == null) {
-                                return default;
-                            }
-
+                    var parseResult = await this.GetRootParseNodeQAsync(response, cancellationToken).ConfigureAwait(false);
+                    using (parseResult) {
+                        if (parseResult.RootNode is not { } rootNode) {
+                            return default;
+                        } else {
                             using var spanForDeserialization = this._ActivitySource?.StartActivity(nameof(IParseNode.GetObjectValue));
                             var result = rootNode.GetObjectValue<ModelType>(factory);
                             SetResponseType(result, span);
@@ -318,51 +310,50 @@ namespace Microsoft.Kiota.Http.HttpClientLibrary {
                         SetResponseType(result, span);
                         return (ModelType)(result as object);
                     } else {
-                        var (rootNode, bufferstream, jsonDocument) = await this.GetRootParseNodeQAsync(response, cancellationToken).ConfigureAwait(false);
-                        using (bufferstream) {
-                            using (jsonDocument) {
-                                object? result;
-                                using var spanForDeserialization = this._ActivitySource?.StartActivity($"Get{modelType.Name.TrimEnd('?')}Value");
-                                if (rootNode == null) {
-                                    result = null;
-                                } else if (modelType == typeof(bool?)) {
-                                    result = rootNode.GetBoolValue();
-                                } else if (modelType == typeof(byte?)) {
-                                    result = rootNode.GetByteValue();
-                                } else if (modelType == typeof(sbyte?)) {
-                                    result = rootNode.GetSbyteValue();
-                                } else if (modelType == typeof(string)) {
-                                    result = rootNode.GetStringValue();
-                                } else if (modelType == typeof(int?)) {
-                                    result = rootNode.GetIntValue();
-                                } else if (modelType == typeof(float?)) {
-                                    result = rootNode.GetFloatValue();
-                                } else if (modelType == typeof(long?)) {
-                                    result = rootNode.GetLongValue();
-                                } else if (modelType == typeof(double?)) {
-                                    result = rootNode.GetDoubleValue();
-                                } else if (modelType == typeof(decimal?)) {
-                                    result = rootNode.GetDecimalValue();
-                                } else if (modelType == typeof(Guid?)) {
-                                    result = rootNode.GetGuidValue();
-                                } else if (modelType == typeof(DateTime?)) {
-                                    result = rootNode.GetDateTimeValue();
-                                } else if (modelType == typeof(DateTimeOffset?)) {
-                                    result = rootNode.GetDateTimeOffsetValue();
-                                } else if (modelType == typeof(TimeSpan?)) {
-                                    result = rootNode.GetTimeSpanValue();
-                                } else if (modelType == typeof(DateOnly?)) {
-                                    result = rootNode.GetDateValue();
-                                } else if (modelType == typeof(TimeOnly?)) {
-                                    result = rootNode.GetTimeValue();
-                                } else if (rootNode.GetStringValue() is { Length: > 0 } rawValue) {
-                                    result = EnumHelpers.GetEnumValue(modelType, rawValue);
-                                } else {
-                                    throw new InvalidOperationException("error handling the response, unexpected type");
-                                }
-                                SetResponseType(result, span);
-                                return (ModelType)result!;
+                        var parseResult = await this.GetRootParseNodeQAsync(response, cancellationToken).ConfigureAwait(false);
+                        using (parseResult) {
+                            var rootNode = parseResult.RootNode;
+                            object? result;
+                            using var spanForDeserialization = this._ActivitySource?.StartActivity($"Get{modelType.Name.TrimEnd('?')}Value");
+                            if (rootNode == null) {
+                                result = null;
+                            } else if (modelType == typeof(bool?)) {
+                                result = rootNode.GetBoolValue();
+                            } else if (modelType == typeof(byte?)) {
+                                result = rootNode.GetByteValue();
+                            } else if (modelType == typeof(sbyte?)) {
+                                result = rootNode.GetSbyteValue();
+                            } else if (modelType == typeof(string)) {
+                                result = rootNode.GetStringValue();
+                            } else if (modelType == typeof(int?)) {
+                                result = rootNode.GetIntValue();
+                            } else if (modelType == typeof(float?)) {
+                                result = rootNode.GetFloatValue();
+                            } else if (modelType == typeof(long?)) {
+                                result = rootNode.GetLongValue();
+                            } else if (modelType == typeof(double?)) {
+                                result = rootNode.GetDoubleValue();
+                            } else if (modelType == typeof(decimal?)) {
+                                result = rootNode.GetDecimalValue();
+                            } else if (modelType == typeof(Guid?)) {
+                                result = rootNode.GetGuidValue();
+                            } else if (modelType == typeof(DateTime?)) {
+                                result = rootNode.GetDateTimeValue();
+                            } else if (modelType == typeof(DateTimeOffset?)) {
+                                result = rootNode.GetDateTimeOffsetValue();
+                            } else if (modelType == typeof(TimeSpan?)) {
+                                result = rootNode.GetTimeSpanValue();
+                            } else if (modelType == typeof(DateOnly?)) {
+                                result = rootNode.GetDateValue();
+                            } else if (modelType == typeof(TimeOnly?)) {
+                                result = rootNode.GetTimeValue();
+                            } else if (rootNode.GetStringValue() is { Length: > 0 } rawValue) {
+                                result = EnumHelpers.GetEnumValue(modelType, rawValue);
+                            } else {
+                                throw new InvalidOperationException("error handling the response, unexpected type");
                             }
+                            SetResponseType(result, span);
+                            return (ModelType)result!;
                         }
                     }
                 } finally {
@@ -462,28 +453,27 @@ namespace Microsoft.Kiota.Http.HttpClientLibrary {
             }
             activityForAttributes?.SetTag(ErrorMappingFoundAttributeName, true);
 
-            var (rootNode, bufferstream, jsonDocument) = await this.GetRootParseNodeQAsync(response, cancellationToken).ConfigureAwait(false);
-            using (bufferstream) {
-                using (jsonDocument) {
-                    activityForAttributes?.SetTag(ErrorBodyFoundAttributeName, rootNode != null);
-                    var spanForDeserialization = this._ActivitySource?.StartActivity(nameof(IParseNode.GetObjectValue));
-                    var result = rootNode?.GetObjectValue(errorFactory);
-                    SetResponseType(result, activityForAttributes);
-                    spanForDeserialization?.Dispose();
-                    if (result is not Exception ex) {
-                        throw new ApiException($"The server returned an unexpected status code and the error registered for this code failed to deserialize: {statusCodeAsString}") {
-                            ResponseStatusCode = statusCodeAsInt,
-                            ResponseHeaders = responseHeadersDictionary
-                        };
-                    }
-
-                    if (result is ApiException apiEx) {
-                        apiEx.ResponseStatusCode = statusCodeAsInt;
-                        apiEx.ResponseHeaders = responseHeadersDictionary;
-                    }
-
-                    throw ex;
+            var parseResult = await this.GetRootParseNodeQAsync(response, cancellationToken).ConfigureAwait(false);
+            using (parseResult) {
+                var rootNode = parseResult.RootNode;
+                activityForAttributes?.SetTag(ErrorBodyFoundAttributeName, rootNode != null);
+                var spanForDeserialization = this._ActivitySource?.StartActivity(nameof(IParseNode.GetObjectValue));
+                var result = rootNode?.GetObjectValue(errorFactory);
+                SetResponseType(result, activityForAttributes);
+                spanForDeserialization?.Dispose();
+                if (result is not Exception ex) {
+                    throw new ApiException($"The server returned an unexpected status code and the error registered for this code failed to deserialize: {statusCodeAsString}") {
+                        ResponseStatusCode = statusCodeAsInt,
+                        ResponseHeaders = responseHeadersDictionary
+                    };
                 }
+
+                if (result is ApiException apiEx) {
+                    apiEx.ResponseStatusCode = statusCodeAsInt;
+                    apiEx.ResponseHeaders = responseHeadersDictionary;
+                }
+
+                throw ex;
             }
         }
         private static IResponseHandler? GetResponseHandler(RequestInformation requestInfo) {
@@ -498,7 +488,7 @@ namespace Microsoft.Kiota.Http.HttpClientLibrary {
             }
             var contentStream = await (response.Content?.ReadAsStreamAsync(cancellationToken) ?? Task.FromResult(Stream.Null)).ConfigureAwait(false);
             if (contentStream == Stream.Null || (contentStream.CanSeek && contentStream.Length == 0)) {
-                return new GetRootParseNodeResultQ(default, default, default); // ensure a useful stream is passed to the factory
+                return new GetRootParseNodeResultQ(default, contentStream, default); // ensure a useful stream is passed to the factory
             }
             var (rootNode, bufferStream, jsonDocument) = await this._PNodeFactory.GetRootParseNodeAsync(responseContentType!, contentStream, cancellationToken).ConfigureAwait(false);
             return new(rootNode, contentStream, jsonDocument);

@@ -18,6 +18,8 @@ namespace Microsoft.Kiota.Http.HttpClientLibrary.Tests.Middleware
         private readonly HttpClientRequestAdapter requestAdapter;
         public TelemetryHandlerTests()
         {
+            ApiClientBuilder.SetupDefaults();
+
             var telemetryHandler = new TelemetryHandler
             {
                 InnerHandler = new FakeSuccessHandler()

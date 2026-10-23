@@ -383,6 +383,7 @@ public readonly struct UriTemplateTarget(
     /// <see langword="true"/> to percent-encode reserved characters;
     /// otherwise, preserve reserved characters.
     /// </param>
+    /// <param name="output">The target</param>
     /// <returns>The position of the last consumed character.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static int AppendValueCharacter(string stringValue, int pos, bool replaceReserved, StringBuilder output) {

@@ -8,10 +8,18 @@
     <File Path="LICENSE" />
     <File Path="README.md" />
   </Folder>
-  <Project Path="src/Brimborium.Kiota.csproj" />
-  <Project Path="tests/Abstractions/Microsoft.Kiota.Abstractions.Tests.csproj" />
-  <Project Path="tests/Http/HttpClientLibrary/Microsoft.Kiota.Http.HttpClientLibrary.Tests.csproj" />
-  <Project Path="tests/Serialization/Form/Microsoft.Kiota.Serialization.Form.Tests.csproj" />
-  <Project Path="tests/Serialization/Json/Microsoft.Kiota.Serialization.Json.Tests.csproj" />
-  <Project Path="tests/Trimming/Brimborium.Kiota.Trimming.Validation/Microsoft.Kiota.Trimming.Validation.csproj" />
+  <Folder Name="/src/">
+    <Project Path="KiotaGenerated/KiotaGenerated.csproj" />
+    <Project Path="src/Brimborium.Kiota.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <File Path="tests/Directory.Build.props" />
+    <Project Path="tests/Abstractions/Microsoft.Kiota.Abstractions.Tests.csproj" />
+    <Project Path="tests/Http/HttpClientLibrary/Microsoft.Kiota.Http.HttpClientLibrary.Tests.csproj" />
+    <Project Path="tests/Serialization/Form/Microsoft.Kiota.Serialization.Form.Tests.csproj" />
+    <Project Path="tests/Serialization/Json/Microsoft.Kiota.Serialization.Json.Tests.csproj" />
+    <Project Path="tests/Serialization/Multipart/Microsoft.Kiota.Serialization.Multipart.Tests.csproj" />
+    <Project Path="tests/Serialization/Text/Microsoft.Kiota.Serialization.Text.Tests.csproj" />
+    <Project Path="tests/Trimming/Brimborium.Kiota.Trimming.Validation/Microsoft.Kiota.Trimming.Validation.csproj" />
+  </Folder>
 </Solution>

@@ -20,7 +20,8 @@ public class UnionWrapperParseTests
         var parseNode = await _parseNodeFactory.GetRootParseNodeAsync(contentType, payload, TestContext.Current.CancellationToken);
 
         // When
-        var result = parseNode.GetObjectValue<UnionTypeMock>(UnionTypeMock.CreateFromDiscriminator);
+        var result = parseNode.RootNode.GetObjectValue<UnionTypeMock>(UnionTypeMock.CreateFromDiscriminator);
+        parseNode.Dispose();
 
         // Then
         Assert.NotNull(result);
@@ -38,7 +39,8 @@ public class UnionWrapperParseTests
         var parseNode = await _parseNodeFactory.GetRootParseNodeAsync(contentType, payload, TestContext.Current.CancellationToken);
 
         // When
-        var result = parseNode.GetObjectValue<UnionTypeMock>(UnionTypeMock.CreateFromDiscriminator);
+        var result = parseNode.RootNode.GetObjectValue<UnionTypeMock>(UnionTypeMock.CreateFromDiscriminator);
+        parseNode.Dispose();
 
         // Then
         Assert.NotNull(result);
@@ -56,7 +58,8 @@ public class UnionWrapperParseTests
         var parseNode = await _parseNodeFactory.GetRootParseNodeAsync(contentType, payload, TestContext.Current.CancellationToken);
 
         // When
-        var result = parseNode.GetObjectValue<UnionTypeMock>(UnionTypeMock.CreateFromDiscriminator);
+        var result = parseNode.RootNode.GetObjectValue<UnionTypeMock>(UnionTypeMock.CreateFromDiscriminator);
+        parseNode.Dispose();
 
         // Then
         Assert.NotNull(result);
@@ -75,7 +78,8 @@ public class UnionWrapperParseTests
         var parseNode = await _parseNodeFactory.GetRootParseNodeAsync(contentType, payload, TestContext.Current.CancellationToken);
 
         // When
-        var result = parseNode.GetObjectValue<UnionTypeMock>(UnionTypeMock.CreateFromDiscriminator);
+        var result = parseNode.RootNode.GetObjectValue<UnionTypeMock>(UnionTypeMock.CreateFromDiscriminator);
+        parseNode.Dispose();
 
         // Then
         Assert.NotNull(result);

@@ -17,6 +17,7 @@ namespace Microsoft.Kiota.Http.HttpClientLibrary.Tests.Middleware
         private readonly HttpClientRequestAdapter requestAdapter;
         public UserAgentHandlerTests()
         {
+            ApiClientBuilder.SetupDefaults();
             var userAgentHandler = new UserAgentHandler
             {
                 InnerHandler = new FakeSuccessHandler()

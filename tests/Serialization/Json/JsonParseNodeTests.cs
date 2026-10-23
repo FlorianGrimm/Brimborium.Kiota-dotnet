@@ -431,6 +431,8 @@ namespace Microsoft.Kiota.Serialization.Json.Tests
             Assert.Null(result);
         }
 
+        /*
+         * no more supported
         [Fact]
         public void GetTimeValue_ReturnTimeWhenCustomConverterIsUsed()
         {
@@ -453,6 +455,7 @@ namespace Microsoft.Kiota.Serialization.Json.Tests
             Assert.Equal(34, result.Value.Minute);
             Assert.Equal(56, result.Value.Second);
         }
+        */
 
         [Fact]
         public void GetTimeValue_ReturnTime()

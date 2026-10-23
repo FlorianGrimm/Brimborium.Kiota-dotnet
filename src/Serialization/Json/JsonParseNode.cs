@@ -163,9 +163,9 @@ namespace Microsoft.Kiota.Serialization.Json {
         /// </summary>
         /// <param name="factory">The factory to use to create the model object.</param>
         /// <returns>A collection of objects</returns>
-        public IEnumerable<T> GetCollectionOfObjectValues<T>(ParsableFactory<T> factory) where T : IParsable {
+        public List<T> GetCollectionOfObjectValues<T>(ParsableFactory<T> factory) where T : IParsable {
+            List<T> result = new();
             if (this._JsonNode.ValueKind == JsonValueKind.Array) {
-                List<T> result = new();
                 var enumerator = this._JsonNode.EnumerateArray();
                 if (enumerator.MoveNext()) {
                     var currentParseNode = new JsonParseNode(
@@ -187,23 +187,24 @@ namespace Microsoft.Kiota.Serialization.Json {
                         }
                     }
                 }
-                return result;
-            } else {
-                return Array.Empty<T>();
+
             }
+            return result;
         }
 
         /// <summary>
         /// Gets the collection of enum values of the node.
         /// </summary>
         /// <returns>The collection of enum values.</returns>
-        public IEnumerable<T?> GetCollectionOfEnumValues<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>() where T : struct, Enum {
+        public List<T?> GetCollectionOfEnumValues<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>() where T : struct, Enum {
+            List<T?> result = new();
             if (this._JsonNode.ValueKind == JsonValueKind.Array) {
                 var enumerator = this._JsonNode.EnumerateArray();
                 while (enumerator.MoveNext()) {
-                    yield return GetEnumValue<T>(enumerator.Current);
+                    result.Add(GetEnumValue<T>(enumerator.Current));
                 }
             }
+            return result;
         }
 
         /// <summary>
@@ -229,10 +230,10 @@ namespace Microsoft.Kiota.Serialization.Json {
         /// Get the collection of primitives of type <typeparam name="T"/>from the json node
         /// </summary>
         /// <returns>A collection of objects</returns>
-        public IEnumerable<T> GetCollectionOfPrimitiveValues<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>() {
+        public List<T> GetCollectionOfPrimitiveValues<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>() {
+            List<T> result = new();
             if (this._JsonNode.ValueKind == JsonValueKind.Array) {
                 var genericType = typeof(T);
-                List<T> result = new();
                 foreach (var collectionValue in this._JsonNode.EnumerateArray()) {
                     if (genericType == TypeConstants.BooleanType) {
                         var value = (T)(object)this.GetBoolValue(collectionValue)!;
@@ -280,9 +281,8 @@ namespace Microsoft.Kiota.Serialization.Json {
                         throw new InvalidOperationException($"unknown type for deserialization {genericType.FullName}");
                     }
                 }
-                return result;
             }
-            return Array.Empty<T>();
+            return result;
         }
 
         private string? GetStringValue(JsonElement jsonElement) => jsonElement.ValueKind == JsonValueKind.String
@@ -513,7 +513,7 @@ namespace Microsoft.Kiota.Serialization.Json {
                             OnBeforeAssignFieldValues = this.OnBeforeAssignFieldValues,
                             OnAfterAssignFieldValues = this.OnAfterAssignFieldValues
                         };
-                    } else { 
+                    } else {
                         jsonParseNode._JsonNode = fieldValue.Value;
                     }
                     fieldDeserializer.Invoke(jsonParseNode);

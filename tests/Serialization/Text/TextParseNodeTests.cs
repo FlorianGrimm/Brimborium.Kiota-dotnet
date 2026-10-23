@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Globalization;
 using System.Threading;
-using Brimborium.Kiota.Abstractions;
-using Brimborium.Kiota.Abstractions.Serialization;
-using Brimborium.Kiota.Serialization.Text.Tests.Mocks;
+using Microsoft.Kiota.Abstractions;
+using Microsoft.Kiota.Abstractions.Serialization;
+using Microsoft.Kiota.Serialization.Text.Tests.Mocks;
 using Moq;
 using Xunit;
 
-namespace Brimborium.Kiota.Serialization.Text.Tests
+namespace Microsoft.Kiota.Serialization.Text.Tests
 {
     public class TextParseNodeTests
     {
@@ -101,7 +101,7 @@ namespace Brimborium.Kiota.Serialization.Text.Tests
 
             var result = parseNode.GetDateValue();
 
-            Assert.Equal(new Date(2021, 11, 30), result);
+            Assert.Equal(new DateOnly(2021, 11, 30), result);
         }
 
         [Fact]
@@ -123,7 +123,7 @@ namespace Brimborium.Kiota.Serialization.Text.Tests
 
             var result = parseNode.GetTimeValue();
 
-            Assert.Equal(new Time(12, 24, 36), result);
+            Assert.Equal(new TimeOnly(12, 24, 36), result);
         }
 
         [Fact]

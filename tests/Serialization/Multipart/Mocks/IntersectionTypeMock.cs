@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Brimborium.Kiota.Abstractions.Serialization;
+using Microsoft.Kiota.Abstractions.Serialization;
 
-namespace Brimborium.Kiota.Serialization.Multipart.Tests.Mocks;
+namespace Microsoft.Kiota.Serialization.Multipart.Tests.Mocks;
 
 public class IntersectionTypeMock : IParsable, IComposedTypeWrapper
 {

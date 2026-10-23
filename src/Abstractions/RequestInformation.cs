@@ -306,6 +306,7 @@ namespace Microsoft.Kiota.Abstractions {
 
         private const string _ContentTypeHeader = "Content-Type";
 
+#if false
         /// <summary>
         /// Sets the request body to a binary stream.
         /// </summary>
@@ -313,6 +314,7 @@ namespace Microsoft.Kiota.Abstractions {
         [Obsolete("Use SetStreamContent and pass the content type instead")]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public void SetStreamContent(Stream content) => this.SetStreamContent(content, _BinaryContentType);
+#endif
 
         /// <summary>
         /// Sets the request body to a binary stream.

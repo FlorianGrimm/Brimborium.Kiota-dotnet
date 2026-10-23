@@ -1,14 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Brimborium.Kiota.Abstractions;
-using Brimborium.Kiota.Abstractions.Serialization;
-using Brimborium.Kiota.Serialization.Json;
-using Brimborium.Kiota.Serialization.Multipart.Tests.Mocks;
+using Microsoft.Kiota.Abstractions;
+using Microsoft.Kiota.Abstractions.Serialization;
+using Microsoft.Kiota.Serialization.Json;
+using Microsoft.Kiota.Serialization.Multipart.Tests.Mocks;
 using Moq;
 using Xunit;
 
-namespace Brimborium.Kiota.Serialization.Multipart.Tests;
+namespace Microsoft.Kiota.Serialization.Multipart.Tests;
 
 public class MultipartSerializationWriterTests
 {
@@ -20,8 +20,8 @@ public class MultipartSerializationWriterTests
         {
             Id = "48d31887-5fad-4d73-a9f5-3c356e68a038",
             WorkDuration = TimeSpan.FromHours(1),
-            StartWorkTime = new Time(8, 0, 0),
-            BirthDay = new Date(2017, 9, 4),
+            StartWorkTime = new TimeOnly(8, 0, 0),
+            BirthDay = new DateOnly(2017, 9, 4),
             AdditionalData = new Dictionary<string, object>
             {
                 {"mobilePhone", new UntypedNull()}, // write null value
@@ -65,8 +65,8 @@ public class MultipartSerializationWriterTests
         {
             Id = "48d31887-5fad-4d73-a9f5-3c356e68a038",
             WorkDuration = TimeSpan.FromHours(1),
-            StartWorkTime = new Time(8, 0, 0),
-            BirthDay = new Date(2017, 9, 4),
+            StartWorkTime = new TimeOnly(8, 0, 0),
+            BirthDay = new DateOnly(2017, 9, 4),
             AdditionalData = new Dictionary<string, object>
             {
                 {"mobilePhone", new UntypedNull()}, // write null value
@@ -103,8 +103,8 @@ public class MultipartSerializationWriterTests
         {
             Id = "48d31887-5fad-4d73-a9f5-3c356e68a038",
             WorkDuration = TimeSpan.FromHours(1),
-            StartWorkTime = new Time(8, 0, 0),
-            BirthDay = new Date(2017, 9, 4),
+            StartWorkTime = new TimeOnly(8, 0, 0),
+            BirthDay = new DateOnly(2017, 9, 4),
             AdditionalData = new Dictionary<string, object>
             {
                 {"mobilePhone", new UntypedNull()}, // write null value

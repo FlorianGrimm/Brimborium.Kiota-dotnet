@@ -76,6 +76,9 @@ public class FormSerializationWriter : ISerializationWriter {
             case DateTimeOffset dto:
                 this.WriteDateTimeOffsetValue(key, dto);
                 break;
+            case DateTime dt:
+                this.WriteDateTimeOffsetValue(key, new DateTimeOffset(dt));
+                break;
             case TimeSpan timeSpan:
                 this.WriteTimeSpanValue(key, timeSpan);
                 break;

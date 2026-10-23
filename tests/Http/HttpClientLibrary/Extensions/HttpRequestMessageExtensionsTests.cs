@@ -17,6 +17,7 @@ namespace Microsoft.Kiota.Http.HttpClientLibrary.Tests.Extensions
         private readonly HttpClientRequestAdapter requestAdapter;
         public HttpRequestMessageExtensionsTests()
         {
+            ApiClientBuilder.SetupDefaults();
             requestAdapter = new HttpClientRequestAdapter(new AnonymousAuthenticationProvider());
         }
         [Fact]
