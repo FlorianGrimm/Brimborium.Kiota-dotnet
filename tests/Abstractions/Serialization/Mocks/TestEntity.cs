@@ -70,4 +70,7 @@ public class TestEntity : IParsable, IAdditionalDataHolder
             _ => new TestEntity(),
         };
     }
+    public IDictionary<string, object>? GetAdditionalData() {
+        return this.AdditionalData;
+    }
 }

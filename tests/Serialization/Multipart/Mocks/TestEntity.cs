@@ -73,5 +73,8 @@ namespace Microsoft.Kiota.Serialization.Multipart.Tests.Mocks
         {
             return new TestEntity();
         }
+
+        /// <inheritdoc/>
+        public IDictionary<string, object>? GetAdditionalData() => this.AdditionalData;
     }
 }

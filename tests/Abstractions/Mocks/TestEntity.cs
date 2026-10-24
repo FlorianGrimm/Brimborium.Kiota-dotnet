@@ -84,5 +84,9 @@ namespace Microsoft.Kiota.Abstractions.Tests.Mocks
         {
             return new TestEntity();
         }
+
+        public IDictionary<string, object>? GetAdditionalData() {
+            return this.AdditionalData;
+        }
     }
 }

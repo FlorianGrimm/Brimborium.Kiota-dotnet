@@ -84,5 +84,8 @@ namespace Microsoft.Kiota.Serialization.Json.Tests.Mocks
                 _ => new TestEntity(),
             };
         }
+        public IDictionary<string, object>? GetAdditionalData() {
+            return this.AdditionalData;
+        }
     }
 }

@@ -50,4 +50,7 @@ public class UntypedTestEntity : IParsable, IAdditionalDataHolder
             _ => new UntypedTestEntity(),
         };
     }
+    public IDictionary<string, object>? GetAdditionalData() {
+        return this.AdditionalData;
+    }
 }
