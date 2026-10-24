@@ -35,13 +35,13 @@ public partial class DeserializationHelpersTests
     public async Task DeserializesObjectWithoutReflection()
     {
         var strValue = "{'id':'123'}";
-        var mockParseNode = new Mock<GetRootParseNodeResult>();
-        mockParseNode.Setup(x => x.RootNode.GetObjectValue(It.IsAny<ParsableFactory<TestEntity>>())).Returns(new TestEntity()
+        var mockParseNode = new Mock<IParseNode>();
+        mockParseNode.Setup(x => x.GetObjectValue(It.IsAny<ParsableFactory<TestEntity>>())).Returns(new TestEntity()
         {
             Id = "123"
         });
         var mockJsonParseNodeFactory = new Mock<IParseNodeFactory>();
-        mockJsonParseNodeFactory.Setup(x => x.GetRootParseNodeAsync(It.IsAny<string>(), It.IsAny<Stream>(), It.IsAny<CancellationToken>())).ReturnsAsync(mockParseNode.Object);
+        mockJsonParseNodeFactory.Setup(x => x.GetRootParseNodeAsync(It.IsAny<string>(), It.IsAny<Stream>(), It.IsAny<CancellationToken>())).ReturnsAsync(new GetRootParseNodeResult(mockParseNode.Object, null, null));
         mockJsonParseNodeFactory.Setup(x => x.ValidContentType).Returns(_jsonContentType);
         ParseNodeFactoryRegistry.DefaultInstance.ContentTypeAssociatedFactories[_jsonContentType] = mockJsonParseNodeFactory.Object;
 
@@ -59,7 +59,7 @@ public partial class DeserializationHelpersTests
             Id = "123"
         });
         var mockJsonParseNodeFactory = new Mock<IParseNodeFactory>();
-        mockJsonParseNodeFactory.Setup(x => x.GetRootParseNodeAsync(It.IsAny<string>(), It.IsAny<Stream>(), It.IsAny<CancellationToken>())).ReturnsAsync(mockParseNode.Object);
+        mockJsonParseNodeFactory.Setup(x => x.GetRootParseNodeAsync(It.IsAny<string>(), It.IsAny<Stream>(), It.IsAny<CancellationToken>())).ReturnsAsync(new GetRootParseNodeResult(mockParseNode.Object, null, null));
         mockJsonParseNodeFactory.Setup(x => x.ValidContentType).Returns(_jsonContentType);
         ParseNodeFactoryRegistry.DefaultInstance.ContentTypeAssociatedFactories[_jsonContentType] = mockJsonParseNodeFactory.Object;
 
@@ -79,7 +79,7 @@ public partial class DeserializationHelpersTests
             }
         });
         var mockJsonParseNodeFactory = new Mock<IParseNodeFactory>();
-        mockJsonParseNodeFactory.Setup(x => x.GetRootParseNodeAsync(It.IsAny<string>(), It.IsAny<Stream>(), It.IsAny<CancellationToken>())).ReturnsAsync(mockParseNode.Object);
+        mockJsonParseNodeFactory.Setup(x => x.GetRootParseNodeAsync(It.IsAny<string>(), It.IsAny<Stream>(), It.IsAny<CancellationToken>())).ReturnsAsync(new GetRootParseNodeResult(mockParseNode.Object, null, null));
         mockJsonParseNodeFactory.Setup(x => x.ValidContentType).Returns(_jsonContentType);
         ParseNodeFactoryRegistry.DefaultInstance.ContentTypeAssociatedFactories[_jsonContentType] = mockJsonParseNodeFactory.Object;
 
@@ -119,7 +119,7 @@ public partial class DeserializationHelpersTests
             Id = "123"
         });
         var mockJsonParseNodeFactory = new Mock<IParseNodeFactory>();
-        mockJsonParseNodeFactory.Setup(x => x.GetRootParseNodeAsync(It.IsAny<string>(), It.IsAny<Stream>(), It.IsAny<CancellationToken>())).ReturnsAsync(mockParseNode.Object);
+        mockJsonParseNodeFactory.Setup(x => x.GetRootParseNodeAsync(It.IsAny<string>(), It.IsAny<Stream>(), It.IsAny<CancellationToken>())).ReturnsAsync(new GetRootParseNodeResult(mockParseNode.Object, null, null));
         mockJsonParseNodeFactory.Setup(x => x.ValidContentType).Returns(_jsonContentType);
         ParseNodeFactoryRegistry.DefaultInstance.ContentTypeAssociatedFactories[_jsonContentType] = mockJsonParseNodeFactory.Object;
 
@@ -137,7 +137,7 @@ public partial class DeserializationHelpersTests
             Id = "123"
         });
         var mockJsonParseNodeFactory = new Mock<IParseNodeFactory>();
-        mockJsonParseNodeFactory.Setup(x => x.GetRootParseNodeAsync(It.IsAny<string>(), It.IsAny<Stream>(), It.IsAny<CancellationToken>())).ReturnsAsync(mockParseNode.Object);
+        mockJsonParseNodeFactory.Setup(x => x.GetRootParseNodeAsync(It.IsAny<string>(), It.IsAny<Stream>(), It.IsAny<CancellationToken>())).ReturnsAsync(new GetRootParseNodeResult(mockParseNode.Object, null, null));
         mockJsonParseNodeFactory.Setup(x => x.ValidContentType).Returns(_jsonContentType);
         ParseNodeFactoryRegistry.DefaultInstance.ContentTypeAssociatedFactories[_jsonContentType] = mockJsonParseNodeFactory.Object;
 
@@ -157,7 +157,7 @@ public partial class DeserializationHelpersTests
             }
         });
         var mockJsonParseNodeFactory = new Mock<IParseNodeFactory>();
-        mockJsonParseNodeFactory.Setup(x => x.GetRootParseNodeAsync(It.IsAny<string>(), It.IsAny<Stream>(), It.IsAny<CancellationToken>())).ReturnsAsync(mockParseNode.Object);
+        mockJsonParseNodeFactory.Setup(x => x.GetRootParseNodeAsync(It.IsAny<string>(), It.IsAny<Stream>(), It.IsAny<CancellationToken>())).ReturnsAsync(new GetRootParseNodeResult(mockParseNode.Object, null, null));
         mockJsonParseNodeFactory.Setup(x => x.ValidContentType).Returns(_jsonContentType);
         ParseNodeFactoryRegistry.DefaultInstance.ContentTypeAssociatedFactories[_jsonContentType] = mockJsonParseNodeFactory.Object;
 

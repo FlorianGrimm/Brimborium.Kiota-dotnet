@@ -44,7 +44,7 @@ namespace Microsoft.Kiota.Abstractions.Tests.Serialization
             // Arrange
             _mockConcreteFactory
                 .Setup(f => f.GetRootParseNodeAsync("application/json", It.IsAny<Stream>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(_mockParseNode.Object);
+                .ReturnsAsync(new GetRootParseNodeResult(_mockParseNode.Object, null, null));
             var proxyFactory = new TestParseNodeProxyFactory(_mockConcreteFactory.Object, null, null);
             using var stream = new MemoryStream(Encoding.UTF8.GetBytes("{\"test\": true}"));
 
@@ -52,7 +52,7 @@ namespace Microsoft.Kiota.Abstractions.Tests.Serialization
             var result = await proxyFactory.GetRootParseNodeAsync("application/json", stream, TestContext.Current.CancellationToken);
 
             // Assert
-            Assert.Equal(_mockParseNode.Object, result);
+            Assert.Equal(_mockParseNode.Object, result.RootNode);
         }
 
         [Fact]
@@ -64,7 +64,7 @@ namespace Microsoft.Kiota.Abstractions.Tests.Serialization
             _mockParseNode.SetupProperty(n => n.OnAfterAssignFieldValues);
             _mockConcreteFactory
                 .Setup(f => f.GetRootParseNodeAsync("application/json", It.IsAny<Stream>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(_mockParseNode.Object);
+                .ReturnsAsync(new GetRootParseNodeResult(_mockParseNode.Object, null, null));
             var proxyFactory = new TestParseNodeProxyFactory(
                 _mockConcreteFactory.Object,
                 onBefore: _ => onBeforeCalled = true,
@@ -72,7 +72,7 @@ namespace Microsoft.Kiota.Abstractions.Tests.Serialization
             using var stream = new MemoryStream(Encoding.UTF8.GetBytes("{}"));
 
             // Act
-            var node = await proxyFactory.GetRootParseNodeAsync("application/json", stream, TestContext.Current.CancellationToken);
+            var node = (await proxyFactory.GetRootParseNodeAsync("application/json", stream, TestContext.Current.CancellationToken)).RootNode;
             node.OnBeforeAssignFieldValues?.Invoke(Mock.Of<IParsable>());
 
             // Assert
@@ -88,7 +88,7 @@ namespace Microsoft.Kiota.Abstractions.Tests.Serialization
             _mockParseNode.SetupProperty(n => n.OnAfterAssignFieldValues);
             _mockConcreteFactory
                 .Setup(f => f.GetRootParseNodeAsync("application/json", It.IsAny<Stream>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(_mockParseNode.Object);
+                .ReturnsAsync(new GetRootParseNodeResult(_mockParseNode.Object, null, null));
             var proxyFactory = new TestParseNodeProxyFactory(
                 _mockConcreteFactory.Object,
                 onBefore: null,
@@ -96,7 +96,7 @@ namespace Microsoft.Kiota.Abstractions.Tests.Serialization
             using var stream = new MemoryStream(Encoding.UTF8.GetBytes("{}"));
 
             // Act
-            var node = await proxyFactory.GetRootParseNodeAsync("application/json", stream, TestContext.Current.CancellationToken);
+            var node = (await proxyFactory.GetRootParseNodeAsync("application/json", stream, TestContext.Current.CancellationToken)).RootNode;
             node.OnAfterAssignFieldValues?.Invoke(Mock.Of<IParsable>());
 
             // Assert
@@ -117,7 +117,7 @@ namespace Microsoft.Kiota.Abstractions.Tests.Serialization
 
             _mockConcreteFactory
                 .Setup(f => f.GetRootParseNodeAsync("application/json", It.IsAny<Stream>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(_mockParseNode.Object);
+                .ReturnsAsync(new GetRootParseNodeResult(_mockParseNode.Object, null, null));
 
             var proxyFactory = new TestParseNodeProxyFactory(
                 _mockConcreteFactory.Object,
@@ -126,7 +126,7 @@ namespace Microsoft.Kiota.Abstractions.Tests.Serialization
             using var stream = new MemoryStream(Encoding.UTF8.GetBytes("{}"));
 
             // Act
-            var node = await proxyFactory.GetRootParseNodeAsync("application/json", stream, TestContext.Current.CancellationToken);
+            var node = (await proxyFactory.GetRootParseNodeAsync("application/json", stream, TestContext.Current.CancellationToken)).RootNode;
             node.OnBeforeAssignFieldValues?.Invoke(Mock.Of<IParsable>());
             node.OnAfterAssignFieldValues?.Invoke(Mock.Of<IParsable>());
 

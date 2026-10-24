@@ -3,21 +3,7 @@
         <TargetFramework>net10.0</TargetFramework>
         <TargetFrameworks>net10.0</TargetFrameworks>
     </PropertyGroup>
-    <ItemGroup>
-      <Compile Remove="Serialization\DeserializationHelpersTests.cs" />
-      <Compile Remove="Serialization\DeserializationHelpersTests.NonGeneric.cs" />
-      <Compile Remove="Serialization\ParseNodeFactoryRegistryTests.cs" />
-      <Compile Remove="Serialization\ParseNodeProxyFactoryTests.cs" />
-    </ItemGroup>
-    <ItemGroup>
-      <None Include="Serialization\ParseNodeFactoryRegistryTests.cs" />
-    </ItemGroup>
-    <ItemGroup>
-      <None Include="Serialization\DeserializationHelpersTests.cs" />
-      <None Include="Serialization\DeserializationHelpersTests.NonGeneric.cs" />
-      <None Include="Serialization\ParseNodeProxyFactoryTests.cs" />
-    </ItemGroup>
-    
+
     <ItemGroup>
         <PackageReference Include="coverlet.MTP">
             <PrivateAssets>all</PrivateAssets>

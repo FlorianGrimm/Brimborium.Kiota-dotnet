@@ -32,13 +32,13 @@ namespace Microsoft.Kiota.Abstractions.Tests.Serialization
             using var testStream = new MemoryStream(Encoding.UTF8.GetBytes("test input"));
             var mockParseNodeFactory = new Mock<IParseNodeFactory>();
             var mockParseNode = new Mock<IParseNode>();
-            mockParseNodeFactory.Setup(parseNodeFactory => parseNodeFactory.GetRootParseNodeAsync(streamContentType, It.IsAny<Stream>(), It.IsAny<CancellationToken>())).ReturnsAsync(mockParseNode.Object);
+            mockParseNodeFactory.Setup(parseNodeFactory => parseNodeFactory.GetRootParseNodeAsync(streamContentType, It.IsAny<Stream>(), It.IsAny<CancellationToken>())).ReturnsAsync(new GetRootParseNodeResult(mockParseNode.Object, null, null));
             _parseNodeFactoryRegistry.ContentTypeAssociatedFactories.TryAdd(streamContentType, mockParseNodeFactory.Object);
             // Act
             var rootParseNode = await _parseNodeFactoryRegistry.GetRootParseNodeAsync(streamContentType, testStream, TestContext.Current.CancellationToken);
             // Assert
-            Assert.NotNull(rootParseNode);
-            Assert.Equal(mockParseNode.Object, rootParseNode);
+            Assert.NotNull(rootParseNode.RootNode);
+            Assert.Equal(mockParseNode.Object, rootParseNode.RootNode);
         }
         [Fact]
         public async Task ReturnsExpectedRootNodeForVendorSpecificContentType()
@@ -48,13 +48,13 @@ namespace Microsoft.Kiota.Abstractions.Tests.Serialization
             using var testStream = new MemoryStream(Encoding.UTF8.GetBytes("{\"test\": \"input\"}"));
             var mockParseNodeFactory = new Mock<IParseNodeFactory>();
             var mockParseNode = new Mock<IParseNode>();
-            mockParseNodeFactory.Setup(parseNodeFactory => parseNodeFactory.GetRootParseNodeAsync(applicationJsonContentType, It.IsAny<Stream>(), It.IsAny<CancellationToken>())).ReturnsAsync(mockParseNode.Object);
+            mockParseNodeFactory.Setup(parseNodeFactory => parseNodeFactory.GetRootParseNodeAsync(applicationJsonContentType, It.IsAny<Stream>(), It.IsAny<CancellationToken>())).ReturnsAsync(new GetRootParseNodeResult(mockParseNode.Object, null, null));
             _parseNodeFactoryRegistry.ContentTypeAssociatedFactories.TryAdd(applicationJsonContentType, mockParseNodeFactory.Object);
             // Act
             var rootParseNode = await _parseNodeFactoryRegistry.GetRootParseNodeAsync("application/vnd+json", testStream, TestContext.Current.CancellationToken);
             // Assert
-            Assert.NotNull(rootParseNode);
-            Assert.Equal(mockParseNode.Object, rootParseNode);
+            Assert.NotNull(rootParseNode.RootNode);
+            Assert.Equal(mockParseNode.Object, rootParseNode.RootNode);
         }
 
         [Fact]
@@ -94,13 +94,13 @@ namespace Microsoft.Kiota.Abstractions.Tests.Serialization
             using var testStream = new MemoryStream(Encoding.UTF8.GetBytes("test input"));
             var mockParseNodeFactory = new Mock<IParseNodeFactory>();
             var mockParseNode = new Mock<IParseNode>();
-            mockParseNodeFactory.Setup(parseNodeFactory => parseNodeFactory.GetRootParseNodeAsync(streamContentType, It.IsAny<Stream>(), It.IsAny<CancellationToken>())).ReturnsAsync(mockParseNode.Object);
+            mockParseNodeFactory.Setup(parseNodeFactory => parseNodeFactory.GetRootParseNodeAsync(streamContentType, It.IsAny<Stream>(), It.IsAny<CancellationToken>())).ReturnsAsync(new GetRootParseNodeResult(mockParseNode.Object, null, null));
             _parseNodeFactoryRegistry.ContentTypeAssociatedFactories.TryAdd(streamContentType, mockParseNodeFactory.Object);
             // Act
             var rootParseNode = await _parseNodeFactoryRegistry.GetRootParseNodeAsync(streamContentType, testStream, TestContext.Current.CancellationToken);
             // Assert
-            Assert.NotNull(rootParseNode);
-            Assert.Equal(mockParseNode.Object, rootParseNode);
+            Assert.NotNull(rootParseNode.RootNode);
+            Assert.Equal(mockParseNode.Object, rootParseNode.RootNode);
         }
         [Fact]
         public async Task ReturnsExpectedRootNodeForVendorSpecificContentTypeAsync()
@@ -110,13 +110,13 @@ namespace Microsoft.Kiota.Abstractions.Tests.Serialization
             using var testStream = new MemoryStream(Encoding.UTF8.GetBytes("{\"test\": \"input\"}"));
             var mockParseNodeFactory = new Mock<IParseNodeFactory>();
             var mockParseNode = new Mock<IParseNode>();
-            mockParseNodeFactory.Setup(parseNodeFactory => parseNodeFactory.GetRootParseNodeAsync(applicationJsonContentType, It.IsAny<Stream>(), It.IsAny<CancellationToken>())).ReturnsAsync(mockParseNode.Object);
+            mockParseNodeFactory.Setup(parseNodeFactory => parseNodeFactory.GetRootParseNodeAsync(applicationJsonContentType, It.IsAny<Stream>(), It.IsAny<CancellationToken>())).ReturnsAsync(new GetRootParseNodeResult(mockParseNode.Object, null, null));
             _parseNodeFactoryRegistry.ContentTypeAssociatedFactories.TryAdd(applicationJsonContentType, mockParseNodeFactory.Object);
             // Act
             var rootParseNode = await _parseNodeFactoryRegistry.GetRootParseNodeAsync("application/vnd+json", testStream, TestContext.Current.CancellationToken);
             // Assert
-            Assert.NotNull(rootParseNode);
-            Assert.Equal(mockParseNode.Object, rootParseNode);
+            Assert.NotNull(rootParseNode.RootNode);
+            Assert.Equal(mockParseNode.Object, rootParseNode.RootNode);
         }
 
         [Fact]
